@@ -1,0 +1,42 @@
+@url_dev=http://localhost:2024/v1/api
+
+### signup
+POST {{url_dev}}/user/signup
+Content-Type: application/json
+
+{
+  "name": "admin1.email@example.com",
+  "email": "khanh@gmail.com",
+  "password": "khanh"
+}
+
+###login
+POST {{url_dev}}/user/login
+Content-Type: application/json
+
+{
+  "email": "shop1.email@example.com",
+  "password": "shop1"
+}
+
+
+### Get bakery list
+GET {{url_dev}}/bakery/get-list
+
+### Get bakery by id
+GET {{url_dev}}/bakery/get-by-id/66e18db5c29d89510d978420
+
+
+### Get product list
+GET {{url_dev}}/product/get-list
+
+
+### Get product by id
+GET {{url_dev}}/product/get-by-id/66f012117d7902d1f06d84aa
+
+
+
+### Get product by bakery id
+GET {{url_dev}}/product/get-by-bakery/66e5b9b9881b3fab9433beaf
+
+### Get personal cart
