@@ -152,7 +152,9 @@ const styles = {
         marginBottom: '1rem',
     },
     ctaSection: {
-        background: '#f3f4f6',
+        backgroundImage: 'url(https://img.timviec.com.vn/2021/06/dang-tin-tuyen-dung-1.jpg)',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
         padding: '3rem',
         borderRadius: '0.5rem',
         textAlign: 'center' as const,
@@ -203,6 +205,17 @@ const styles = {
             borderColor: '#00b14f',
             color: '#00b14f',
         },
+    },
+    ctaContent: {
+        background: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(8px)',
+        width: '50%',
+        margin: '0 auto',
+        padding: '2rem',
+        borderRadius: '0.5rem',
+        textAlign: 'center' as const,
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        color: colors.text.primary, // Sử dụng màu text từ theme
     },
 };
 
@@ -413,13 +426,15 @@ const HomePage: React.FC = () => {
 
             {/* CTA Section */}
             <div style={styles.ctaSection} className='card-hover'>
-                <Title level={2}>Bạn là nhà tuyển dụng?</Title>
-                <Paragraph style={{ marginBottom: '2rem' }}>
-                    Đăng tin tuyển dụng và tìm kiếm ứng viên phù hợp ngay hôm nay
-                </Paragraph>
-                <Button type="primary" size="large" className='button-hover'>
-                    Đăng tin tuyển dụng
-                </Button>
+                <div style={styles.ctaContent}>
+                    <Title level={2}>Bạn là nhà tuyển dụng?</Title>
+                    <Paragraph style={{ marginBottom: '2rem' }}>
+                        Đăng tin tuyển dụng và tìm kiếm ứng viên phù hợp ngay hôm nay
+                    </Paragraph>
+                    <Button type="primary" size="large" className='button-hover'>
+                        Đăng tin tuyển dụng
+                    </Button>
+                </div>
             </div>
         </div>
     );
