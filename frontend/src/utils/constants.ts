@@ -5,3 +5,7 @@ export const FIREBASE_STORAGE_PATH = {
     POST_ME: 'post',
     CV_ME: 'cv',
 };
+
+export const PROVINCE_ID = {
+    HOCHIMINH_ID: '79',
+}
