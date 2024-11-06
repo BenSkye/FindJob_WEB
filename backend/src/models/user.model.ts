@@ -38,7 +38,12 @@ const userSchema = new Schema(
     },
     roles: {
       type: Array,
-      default: [],
+      default: [], //admin,employer,candidate
+    },
+    companyId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Company',
+      default: null
     },
     verificationToken: {
       type: String,
@@ -56,7 +61,6 @@ const userSchema = new Schema(
       type: Date,
     },
   },
-
   {
     timestamps: true,
     collection: COLLECTION_NAME,
