@@ -29,37 +29,37 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 const { Content } = Layout;
 
-const jobsList = [
+const danhSachCongViec = [
     {
         id: 1,
-        title: 'Senior Frontend Developer',
+        title: 'Lập trình viên Frontend cấp cao',
         company: 'Tech Solutions Inc.',
         location: 'TP.HCM',
         salary: '$1500 - $3000',
-        type: 'Full-time',
+        type: 'Toàn thời gian',
         tags: ['React', 'TypeScript', 'Redux'],
-        posted: '2 days ago',
+        posted: '2 ngày trước',
         urgent: true,
     },
     {
         id: 2,
-        title: 'Backend Developer',
+        title: 'Lập trình viên Backend',
         company: 'Digital Innovation Co.',
         location: 'Hà Nội',
         salary: '$1800 - $2500',
-        type: 'Full-time',
+        type: 'Toàn thời gian',
         tags: ['Node.js', 'MongoDB', 'Express'],
-        posted: '1 day ago',
+        posted: '1 ngày trước',
         urgent: false,
     },
     // ... thêm các công việc khác
 ];
 
-const JobsList: React.FC = () => {
+const DanhSachCongViec: React.FC = () => {
     const navigate = useNavigate();
-    const [searchText, setSearchText] = useState('');
-    const [selectedLocation, setSelectedLocation] = useState<string>('');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [tuKhoaTimKiem, setTuKhoaTimKiem] = useState('');
+    const [viTriChon, setViTriChon] = useState<string>('');
+    const [trangHienTai, setTrangHienTai] = useState(1);
 
     const handleJobClick = (jobId: number) => {
         navigate(`/jobs/${jobId}`);
@@ -67,29 +67,29 @@ const JobsList: React.FC = () => {
 
     return (
         <div className="jobs-page">
-            {/* Search Section */}
+            {/* Phần Tìm Kiếm */}
             <div className="search-section">
                 <div className="search-container">
                     <Title level={2} className="search-title">
-                        IT & Software Jobs
+                        Việc làm IT & Phần mềm
                     </Title>
                     <Row gutter={[16, 16]} className="search-row">
                         <Col xs={24} md={10}>
                             <Input
                                 size="large"
-                                placeholder="Job title or keyword"
+                                placeholder="Tiêu đề công việc hoặc từ khóa"
                                 prefix={<SearchOutlined />}
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
+                                value={tuKhoaTimKiem}
+                                onChange={(e) => setTuKhoaTimKiem(e.target.value)}
                             />
                         </Col>
                         <Col xs={24} md={10}>
                             <Select
                                 size="large"
                                 style={{ width: '100%' }}
-                                placeholder="Select location"
-                                value={selectedLocation}
-                                onChange={setSelectedLocation}
+                                placeholder="Chọn địa điểm"
+                                value={viTriChon}
+                                onChange={setViTriChon}
                             >
                                 <Option value="hcm">TP.HCM</Option>
                                 <Option value="hn">Hà Nội</Option>
@@ -98,46 +98,47 @@ const JobsList: React.FC = () => {
                         </Col>
                         <Col xs={24} md={4}>
                             <Button type="primary" size="large" block>
-                                Search
+                                Tìm Kiếm
                             </Button>
                         </Col>
                     </Row>
                 </div>
             </div>
 
-            {/* Main Content */}
+            {/* Nội Dung Chính */}
             <div className="main-container">
                 <Row gutter={24}>
-                    {/* Filters */}
+                    {/* Bộ Lọc */}
                     <Col xs={24} lg={6}>
                         <Card className="filters-card">
                             <div className="filters-header">
-                                <Title level={4}>Filters</Title>
-                                <Button type="link" icon={<FilterOutlined />}>Reset</Button>
+                                <Title level={4}>Bộ Lọc</Title>
+                                <Button type="link" icon={<FilterOutlined />}>Đặt lại</Button>
                             </div>
                             <Divider />
                             <div className="filter-section">
-                                <Title level={5}>Job Type</Title>
+                                <Title level={5}>Loại Công Việc</Title>
                                 <Checkbox.Group className="filter-group">
-                                    <Checkbox value="fulltime">Full-time</Checkbox>
-                                    <Checkbox value="parttime">Part-time</Checkbox>
-                                    <Checkbox value="remote">Remote</Checkbox>
+                                    <Checkbox value="fulltime">Toàn thời gian</Checkbox>
+                                    <Checkbox value="parttime">Bán thời gian</Checkbox>
+                                    <Checkbox value="remote">Làm từ xa</Checkbox>
                                     <Checkbox value="freelance">Freelance</Checkbox>
                                 </Checkbox.Group>
                             </div>
                             <Divider />
                             <div className="filter-section">
-                                <Title level={5}>Experience Level</Title>
+                                <Title level={5}>Kinh Nghiệm</Title>
                                 <Checkbox.Group className="filter-group">
+                                    <Checkbox value="intern">Intern</Checkbox>
                                     <Checkbox value="fresher">Fresher</Checkbox>
                                     <Checkbox value="junior">Junior</Checkbox>
-                                    <Checkbox value="middle">Middle</Checkbox>
                                     <Checkbox value="senior">Senior</Checkbox>
+
                                 </Checkbox.Group>
                             </div>
                             <Divider />
                             <div className="filter-section">
-                                <Title level={5}>Salary Range</Title>
+                                <Title level={5}>Mức Lương</Title>
                                 <Slider
                                     range
                                     min={0}
@@ -149,19 +150,19 @@ const JobsList: React.FC = () => {
                         </Card>
                     </Col>
 
-                    {/* Job Listings */}
+                    {/* Danh Sách Công Việc */}
                     <Col xs={24} lg={18}>
                         <Card className="jobs-card">
                             <div className="jobs-header">
-                                <Title level={4}>{jobsList.length} Jobs Found</Title>
+                                <Title level={4}>{danhSachCongViec.length} Công Việc Đã Tìm Thấy</Title>
                                 <Select defaultValue="newest" style={{ width: 200 }}>
-                                    <Option value="newest">Newest First</Option>
-                                    <Option value="salary">Salary: High to Low</Option>
-                                    <Option value="relevant">Most Relevant</Option>
+                                    <Option value="newest">Mới nhất</Option>
+                                    <Option value="salary">Lương: Cao đến Thấp</Option>
+                                    <Option value="relevant">Phù hợp nhất</Option>
                                 </Select>
                             </div>
 
-                            {jobsList.map(job => (
+                            {danhSachCongViec.map(job => (
                                 <Card
                                     key={job.id}
                                     className="job-item"
@@ -176,7 +177,7 @@ const JobsList: React.FC = () => {
                                                 <Text className="company-name">{job.company}</Text>
                                                 {job.urgent && (
                                                     <Tag color="red" className="urgent-tag">
-                                                        Urgent
+                                                        Khẩn cấp
                                                     </Tag>
                                                 )}
                                                 <Space className="job-meta" wrap>
@@ -199,7 +200,7 @@ const JobsList: React.FC = () => {
                                         </Col>
                                         <Col xs={24} md={8} className="job-actions">
                                             <Text type="secondary">{job.posted}</Text>
-                                            <Button type="primary">Apply Now</Button>
+                                            <Button type="primary">Ứng Tuyển Ngay</Button>
                                         </Col>
                                     </Row>
                                 </Card>
@@ -207,9 +208,9 @@ const JobsList: React.FC = () => {
 
                             <div className="pagination">
                                 <Pagination
-                                    current={currentPage}
+                                    current={trangHienTai}
                                     total={100}
-                                    onChange={setCurrentPage}
+                                    onChange={setTrangHienTai}
                                     showSizeChanger
                                     showQuickJumper
                                 />
@@ -222,4 +223,4 @@ const JobsList: React.FC = () => {
     );
 };
 
-export default JobsList; 
+export default DanhSachCongViec;

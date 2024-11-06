@@ -16,17 +16,16 @@ const Login: React.FC = () => {
             <Row className="login-wrapper">
                 <Col xs={24} md={12} className="login-left">
                     <div className="login-content">
-                        <img src={logoImage} alt="Job Search" className="login-image circle-logo" />
-                        <Title level={1}>Welcome Back</Title>
-                        <Text className="subtitle">Find your dream job with JobFinder</Text>
-
+                        <img src={logoImage} alt="Tìm việc" className="login-image circle-logo" />
+                        <Title level={1}>Welcome</Title>
+                        <Text className="subtitle">Tìm công việc mơ ước của bạn với JobFinder</Text>
                     </div>
                 </Col>
 
                 <Col xs={24} md={12}>
                     <Card className="login-card">
-                        <Title level={2} className="card-title">Sign In</Title>
-                        <Text className="card-subtitle">Please login to your account</Text>
+                        <Title level={2} className="card-title">Đăng nhập</Title>
+                        <Text className="card-subtitle">Vui lòng đăng nhập vào tài khoản của bạn</Text>
 
                         <Form
                             name="login"
@@ -37,42 +36,42 @@ const Login: React.FC = () => {
                             <Form.Item
                                 name="email"
                                 rules={[
-                                    { required: true, message: 'Please enter your email' },
-                                    { type: 'email', message: 'Please enter a valid email' }
+                                    { required: true, message: 'Vui lòng nhập email' },
+                                    { type: 'email', message: 'Vui lòng nhập email hợp lệ' }
                                 ]}
                             >
                                 <Input
                                     prefix={<UserOutlined />}
-                                    placeholder="Email address"
+                                    placeholder="Địa chỉ email"
                                     className="login-input"
                                 />
                             </Form.Item>
 
                             <Form.Item
                                 name="password"
-                                rules={[{ required: true, message: 'Please enter your password' }]}
+                                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
                             >
                                 <Input.Password
                                     prefix={<LockOutlined />}
-                                    placeholder="Password"
+                                    placeholder="Mật khẩu"
                                     className="login-input"
                                 />
                             </Form.Item>
 
                             <Row justify="space-between" align="middle">
                                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                                    <Checkbox>Remember me</Checkbox>
+                                    <Checkbox>Ghi nhớ đăng nhập</Checkbox>
                                 </Form.Item>
-                                <a href="/forgot-password" className="forgot-link">Forgot Password?</a>
+                                <a href="/forgot-password" className="forgot-link">Quên mật khẩu?</a>
                             </Row>
 
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" block className="login-button">
-                                    Sign In
+                                    Đăng nhập
                                 </Button>
                             </Form.Item>
 
-                            <Divider plain>Or continue with</Divider>
+                            <Divider plain>Hoặc đăng nhập với</Divider>
 
                             <div className="social-buttons">
                                 <Button icon={<GoogleOutlined />} className="social-button">
@@ -84,8 +83,8 @@ const Login: React.FC = () => {
                             </div>
 
                             <div className="register-link">
-                                <Text>Don't have an account? </Text>
-                                <a href="/register">Sign up now</a>
+                                <Text>Bạn chưa có tài khoản? </Text>
+                                <a href="/register">Đăng ký ngay</a>
                             </div>
                         </Form>
                     </Card>

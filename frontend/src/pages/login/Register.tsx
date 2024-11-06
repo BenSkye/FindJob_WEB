@@ -9,7 +9,7 @@ const { Option } = Select;
 
 const Register: React.FC = () => {
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        console.log('Thành công:', values);
     };
 
     return (
@@ -18,15 +18,15 @@ const Register: React.FC = () => {
                 <Col xs={24} md={12} className="register-left">
                     <div className="register-content">
                         <img src={logoImage} alt="Job Search" className="circle-logo" />
-                        <Title level={1}>Join JobFinder</Title>
-                        <Text className="subtitle">Create an account and get access to thousands of job opportunities</Text>
+                        <Title level={1}>Tham gia JobFinder</Title>
+                        <Text className="subtitle">Tạo tài khoản và truy cập vào hàng ngàn cơ hội việc làm</Text>
                     </div>
                 </Col>
 
                 <Col xs={24} md={12}>
                     <Card className="register-card">
-                        <Title level={2} className="card-title">Create Account</Title>
-                        <Text className="card-subtitle">Fill in your details to get started</Text>
+                        <Title level={2} className="card-title">Tạo Tài Khoản</Title>
+                        <Text className="card-subtitle">Điền thông tin của bạn để bắt đầu</Text>
 
                         <Form
                             name="register"
@@ -38,22 +38,22 @@ const Register: React.FC = () => {
                                 <Col span={12}>
                                     <Form.Item
                                         name="firstName"
-                                        rules={[{ required: true, message: 'Please enter your first name' }]}
+                                        rules={[{ required: true, message: 'Vui lòng nhập tên của bạn' }]}
                                     >
                                         <Input
                                             prefix={<UserOutlined />}
-                                            placeholder="First Name"
+                                            placeholder="Tên"
                                         />
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item
                                         name="lastName"
-                                        rules={[{ required: true, message: 'Please enter your last name' }]}
+                                        rules={[{ required: true, message: 'Vui lòng nhập họ của bạn' }]}
                                     >
                                         <Input
                                             prefix={<UserOutlined />}
-                                            placeholder="Last Name"
+                                            placeholder="Họ"
                                         />
                                     </Form.Item>
                                 </Col>
@@ -62,46 +62,46 @@ const Register: React.FC = () => {
                             <Form.Item
                                 name="email"
                                 rules={[
-                                    { required: true, message: 'Please enter your email' },
-                                    { type: 'email', message: 'Please enter a valid email' }
+                                    { required: true, message: 'Vui lòng nhập email của bạn' },
+                                    { type: 'email', message: 'Vui lòng nhập một email hợp lệ' }
                                 ]}
                             >
                                 <Input
                                     prefix={<MailOutlined />}
-                                    placeholder="Email address"
+                                    placeholder="Địa chỉ email"
                                 />
                             </Form.Item>
 
                             <Form.Item
                                 name="phone"
-                                rules={[{ required: true, message: 'Please enter your phone number' }]}
+                                rules={[{ required: true, message: 'Vui lòng nhập số điện thoại của bạn' }]}
                             >
                                 <Input
                                     prefix={<PhoneOutlined />}
-                                    placeholder="Phone number"
+                                    placeholder="Số điện thoại"
                                 />
                             </Form.Item>
 
                             <Form.Item
                                 name="userType"
-                                rules={[{ required: true, message: 'Please select user type' }]}
+                                rules={[{ required: true, message: 'Vui lòng chọn loại người dùng' }]}
                             >
-                                <Select placeholder="I am a...">
-                                    <Option value="jobseeker">Job Seeker</Option>
-                                    <Option value="employer">Employer</Option>
+                                <Select placeholder="Tôi là...">
+                                    <Option value="jobseeker">Người tìm việc</Option>
+                                    <Option value="employer">Nhà tuyển dụng</Option>
                                 </Select>
                             </Form.Item>
 
                             <Form.Item
                                 name="password"
                                 rules={[
-                                    { required: true, message: 'Please enter your password' },
-                                    { min: 6, message: 'Password must be at least 6 characters' }
+                                    { required: true, message: 'Vui lòng nhập mật khẩu của bạn' },
+                                    { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự' }
                                 ]}
                             >
                                 <Input.Password
                                     prefix={<LockOutlined />}
-                                    placeholder="Password"
+                                    placeholder="Mật khẩu"
                                 />
                             </Form.Item>
 
@@ -109,30 +109,30 @@ const Register: React.FC = () => {
                                 name="confirmPassword"
                                 dependencies={['password']}
                                 rules={[
-                                    { required: true, message: 'Please confirm your password' },
+                                    { required: true, message: 'Vui lòng xác nhận mật khẩu của bạn' },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (!value || getFieldValue('password') === value) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error('Passwords do not match'));
+                                            return Promise.reject(new Error('Mật khẩu không khớp'));
                                         },
                                     }),
                                 ]}
                             >
                                 <Input.Password
                                     prefix={<LockOutlined />}
-                                    placeholder="Confirm Password"
+                                    placeholder="Xác nhận mật khẩu"
                                 />
                             </Form.Item>
 
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" block className="register-button">
-                                    Create Account
+                                    Tạo Tài Khoản
                                 </Button>
                             </Form.Item>
 
-                            <Divider plain>Or register with</Divider>
+                            <Divider plain>Hoặc đăng ký với</Divider>
 
                             <div className="social-buttons">
                                 <Button icon={<GoogleOutlined />} className="social-button">
@@ -144,8 +144,8 @@ const Register: React.FC = () => {
                             </div>
 
                             <div className="login-link">
-                                <Text>Already have an account? </Text>
-                                <a href="/login">Sign in</a>
+                                <Text>Bạn đã có tài khoản? </Text>
+                                <a href="/login">Đăng nhập</a>
                             </div>
                         </Form>
                     </Card>
