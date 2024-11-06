@@ -21,7 +21,8 @@ const styles: { [key: string]: React.CSSProperties } = {
         backgroundColor: colors.background.paper,
         borderRadius: '8px',
         boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-        padding: '24px'
+        padding: '24px',
+        overflow: 'hidden',
     }
 };
 
