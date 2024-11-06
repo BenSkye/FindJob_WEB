@@ -1,0 +1,139 @@
+.jobs-page {
+    min-height: 100vh;
+    background-color: #f0f2f5;
+}
+
+/* Search Section */
+.search-section {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    padding: 40px 0;
+    margin-bottom: 24px;
+}
+
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.search-title {
+    color: white !important;
+    text-align: center;
+    margin-bottom: 24px !important;
+}
+
+.search-row {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Main Content */
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 24px;
+}
+
+/* Filters Card */
+.filters-card {
+    margin-bottom: 24px;
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-section {
+    margin: 16px 0;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Jobs List */
+.jobs-card {
+    background: #fff;
+}
+
+.jobs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.job-item {
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.job-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.job-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.job-title {
+    margin-bottom: 4px !important;
+}
+
+.company-name {
+    color: #666;
+    margin-right: 8px;
+}
+
+.urgent-tag {
+    margin-left: 8px;
+}
+
+.job-meta {
+    margin: 8px 0;
+}
+
+.job-tags {
+    margin-top: 8px;
+}
+
+.job-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.pagination {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-container {
+        padding: 0 16px;
+    }
+
+    .main-container {
+        padding: 0 16px 16px;
+    }
+
+    .jobs-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .job-actions {
+        align-items: flex-start;
+        margin-top: 16px;
+    }
+}

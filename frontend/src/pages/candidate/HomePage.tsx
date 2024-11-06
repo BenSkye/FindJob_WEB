@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Input, Button, Card, Tag, Row, Col, Statistic } from 'antd';
 import { SearchOutlined, EnvironmentOutlined, DollarOutlined, TeamOutlined } from '@ant-design/icons';
-
+import { Link } from 'react-router-dom';
 const { Title, Paragraph } = Typography;
 const { Search } = Input;
 
@@ -157,37 +157,40 @@ const HomePage: React.FC = () => {
 
             {/* Featured Jobs Section */}
             <div>
+
                 <Title level={2} style={styles.sectionTitle}>Việc làm nổi bật</Title>
-                <Row gutter={[16, 16]}>
-                    {featuredJobs.map(job => (
-                        <Col key={job.id} xs={24} sm={12} lg={8}>
-                            <Card className='card-hover'>
-                                {job.urgent && (
-                                    <Tag color="red" style={{ marginBottom: '0.5rem' }}>
-                                        Tuyển gấp
-                                    </Tag>
-                                )}
-                                <Title level={4}>{job.title}</Title>
-                                <Paragraph>{job.company}</Paragraph>
-                                <div style={styles.jobMeta}>
-                                    <span>
-                                        <EnvironmentOutlined /> {job.location}
-                                    </span>
-                                    <span>
-                                        <DollarOutlined /> {job.salary}
-                                    </span>
-                                </div>
-                                <div style={styles.tagContainer}>
-                                    {job.tags.map(tag => (
-                                        <Tag key={tag} color="blue">
-                                            {tag}
+                <Link to="/jobsdetail">
+                    <Row gutter={[16, 16]}>
+                        {featuredJobs.map(job => (
+                            <Col key={job.id} xs={24} sm={12} lg={8}>
+                                <Card className='card-hover'>
+                                    {job.urgent && (
+                                        <Tag color="red" style={{ marginBottom: '0.5rem' }}>
+                                            Tuyển gấp
                                         </Tag>
-                                    ))}
-                                </div>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
+                                    )}
+                                    <Title level={4}>{job.title}</Title>
+                                    <Paragraph>{job.company}</Paragraph>
+                                    <div style={styles.jobMeta}>
+                                        <span>
+                                            <EnvironmentOutlined /> {job.location}
+                                        </span>
+                                        <span>
+                                            <DollarOutlined /> {job.salary}
+                                        </span>
+                                    </div>
+                                    <div style={styles.tagContainer}>
+                                        {job.tags.map(tag => (
+                                            <Tag key={tag} color="blue">
+                                                {tag}
+                                            </Tag>
+                                        ))}
+                                    </div>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </Link>
                 <div style={styles.buttonContainer}>
                     <Button className='button-hover' type="primary" size="large" style={styles.button}>
                         Xem tất cả việc làm
@@ -198,19 +201,21 @@ const HomePage: React.FC = () => {
             {/* Categories Section */}
             <div>
                 <Title level={2} style={styles.sectionTitle}>Ngành nghề phổ biến</Title>
-                <Row gutter={[16, 16]}>
-                    {categories.map(category => (
-                        <Col key={category.title} xs={24} sm={12} lg={6}>
-                            <Card className='card-hover'>
-                                <div style={styles.categoryIcon}>
-                                    {category.icon}
-                                </div>
-                                <Title level={4}>{category.title}</Title>
-                                <Paragraph>{category.count} việc làm</Paragraph>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
+                <Link to="/jobslist">
+                    <Row gutter={[16, 16]}>
+                        {categories.map(category => (
+                            <Col key={category.title} xs={24} sm={12} lg={6}>
+                                <Card className='card-hover'>
+                                    <div style={styles.categoryIcon}>
+                                        {category.icon}
+                                    </div>
+                                    <Title level={4}>{category.title}</Title>
+                                    <Paragraph>{category.count} việc làm</Paragraph>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </Link>
             </div>
 
             {/* CTA Section */}

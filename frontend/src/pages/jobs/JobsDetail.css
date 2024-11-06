@@ -1,0 +1,96 @@
+.job-detail-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+.job-main-card,
+.job-action-card,
+.company-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.company-card {
+    margin-top: 24px;
+}
+
+.job-header {
+    margin-bottom: 24px;
+}
+
+.company-logo {
+    background-color: #f5f5f5;
+    padding: 8px;
+    border: 1px solid #e8e8e8;
+}
+
+.job-title-section {
+    flex: 1;
+}
+
+.company-name {
+    color: #666;
+    margin-top: 4px !important;
+}
+
+.job-tags {
+    margin-top: 12px;
+}
+
+.job-quick-info {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.job-description,
+.job-requirements,
+.job-benefits,
+.required-skills {
+    margin-top: 24px;
+}
+
+.action-buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+}
+
+.action-buttons button {
+    flex: 1;
+}
+
+button.saved {
+    color: #ff4d4f;
+}
+
+.loading-container,
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    font-size: 18px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .job-detail-container {
+        padding: 16px;
+    }
+
+    .job-header {
+        flex-direction: column;
+    }
+
+    .company-logo {
+        margin-bottom: 16px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}
