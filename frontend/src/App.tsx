@@ -4,7 +4,6 @@ import { ConfigProvider } from 'antd';
 import { routes } from './routes/routes';
 import Loading from './components/common/Loading';
 
-// Theme config
 import theme from './config/theme';
 
 const Router = () => {
