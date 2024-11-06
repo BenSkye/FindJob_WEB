@@ -17,7 +17,7 @@ const apiKeySchema = new Schema(
         permissions: {
             type: [String],
             require: true,
-            enum: ['all', 'member', 'admin', 'shop']
+            enum: ['all', 'admin', 'employer', 'candidate']
         },
         user: {
             type: Schema.Types.ObjectId,
