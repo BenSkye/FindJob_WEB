@@ -62,4 +62,5 @@ class CREATED extends SuccessResponse {
     }
 }
 
+
 export { CREATED, OK, SuccessResponse };

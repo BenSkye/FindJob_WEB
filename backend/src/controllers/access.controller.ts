@@ -35,6 +35,13 @@ class AccessController {
     }).send(res);
   });
 
+  signUpEmployer = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    new CREATED({
+      message: 'Create new employer successfully',
+      metadata: await AccessService.signupEmployer(req.body),
+    }).send(res);
+  });
+
   verifyEmail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
     const { token } = req.query;
