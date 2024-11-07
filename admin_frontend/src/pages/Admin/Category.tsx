@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, message, Space } from 'antd';
+import { Button, message, Modal, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import { Category } from '../../services/types/category.types';
-import { adminGetCategory, adminCreateCategory } from '../../services/api/adminCategoryService';
+import { Category, SubCategory } from '../../services/types/category.types';
+import { adminGetCategory, adminCreateCategory, addSubCategory } from '../../services/api/adminCategoryService';
 import CustomTable from '../../components/Category/Table';
 import AddModal from '../../components/Category/AddModalCate';
 
@@ -11,6 +11,9 @@ const CategoryPage: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isSubCategoryModalVisible, setIsSubCategoryModalVisible] = useState(false);
+    const [currentCategoryId, setCurrentCategoryId] = useState<string | null>(null);
+    const [newSubCategoryName, setNewSubCategoryName] = useState<string>('');
 
     const fetchCategories = async () => {
         try {
@@ -37,19 +40,56 @@ const CategoryPage: React.FC = () => {
     const handleCreate = async (values: any) => {
         try {
             setLoading(true);
-            console.log('values:', values);
-            await adminCreateCategory({
+            const formattedData = {
                 name: values.name,
-                subCategories: values.subCategories || []
-            });
+                subCategories: values.subCategories 
+                    ? values.subCategories.map((sub: string) => ({ name: sub }))
+                    : []
+            };
+
+            await adminCreateCategory(formattedData);
             message.success('Tạo danh mục thành công');
             setIsModalVisible(false);
-            fetchCategories(); // Refresh the list
+            fetchCategories();
         } catch (error) {
             console.error('Error creating category:', error);
             message.error('Không thể tạo danh mục');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleAddSubCategory = async (categoryId: string, subCategory: SubCategory) => {
+        try {
+            setLoading(true);
+            await addSubCategory(categoryId, subCategory);
+            message.success('Thêm danh mục con thành công');
+            fetchCategories();
+        } catch (error) {
+            console.error('Error adding sub category:', error);
+            message.error('Không thể thêm danh mục con');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddSubCategoryClick = (category: Category) => {
+        if (!category._id) {
+            console.error('Category ID is undefined:', category);
+            return;
+        }
+        setCurrentCategoryId(category._id);
+        setIsSubCategoryModalVisible(true);
+    };
+
+    const handleSubCategorySubmit = () => {
+        if (currentCategoryId && newSubCategoryName) {
+            const newSubCategory = { _id: 'new-id', name: newSubCategoryName };
+            handleAddSubCategory(currentCategoryId, newSubCategory);
+            setIsSubCategoryModalVisible(false);
+            setNewSubCategoryName('');
+        } else {
+            message.error('Tên danh mục con không được để trống');
         }
     };
 
@@ -75,14 +115,6 @@ const CategoryPage: React.FC = () => {
         },
     ];
 
-    const handleEdit = (category: Category) => {
-        console.log('Edit category:', category);
-    };
-
-    const handleDelete = (id: string) => {
-        console.log('Delete category:', id);
-    };
-
     return (
         <div className="category-page">
             <div className="page-header" style={{ marginBottom: 20 }}>
@@ -96,8 +128,7 @@ const CategoryPage: React.FC = () => {
                 data={categories}
                 loading={loading}
                 columns={columns}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+                onAddSubCategory={handleAddSubCategoryClick}
                 pageSize={10}
             />
 
@@ -109,6 +140,19 @@ const CategoryPage: React.FC = () => {
                 mainFieldLabel="Tên danh mục"
                 mainFieldPlaceholder="Nhập tên danh mục"
             />
+
+            <Modal
+                title="Thêm Danh Mục Con"
+                visible={isSubCategoryModalVisible}
+                onOk={handleSubCategorySubmit}
+                onCancel={() => setIsSubCategoryModalVisible(false)}
+            >
+                <Input
+                    placeholder="Nhập tên danh mục con"
+                    value={newSubCategoryName}
+                    onChange={(e) => setNewSubCategoryName(e.target.value)}
+                />
+            </Modal>
         </div>
     );
 };

@@ -1,4 +1,10 @@
+import Login from "../../pages/login/Login";
 import apiClient from "./apiClient";
+
+interface GoogleSignUpData {
+    credential: string;
+}
+
 
 export const signup = async (data: unknown) => {
     try {
@@ -12,6 +18,19 @@ export const signup = async (data: unknown) => {
     }
 };
 
+export const login = async (email: string, password: string) => {
+    try {
+        const response = await apiClient.post('/user/login', {
+            email, password
+        });
+        console.log('response:', response.data);
+        return response.data;
+    }
+    catch (error: any) {
+        console.error('Error login:', error);
+        return error.response.data;
+    }
+}
 
 export const signupEmployer = async (data: unknown) => {
     try {
@@ -58,3 +77,11 @@ export const verifyEmail = async (token: string) => {
     }
 };
 
+export const googleSignUp = async (data: GoogleSignUpData) => {
+    try {
+        const response = await apiClient.post(`user/google-signup`, data);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

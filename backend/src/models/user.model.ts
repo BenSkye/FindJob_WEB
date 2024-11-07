@@ -38,7 +38,7 @@ const userSchema = new Schema(
     },
     roles: {
       type: Array,
-      default: [], //admin,employer,candidate
+      default: [],
     },
     companyId: {
       type: Schema.Types.ObjectId,
@@ -60,6 +60,9 @@ const userSchema = new Schema(
     verificationTokenExpire: {
       type: Date,
     },
+    googleId: { type: String },
+    authType: { type: String, enum: ['local', 'google'], default: 'local' },
+    avatar: { type: String },
   },
   {
     timestamps: true,

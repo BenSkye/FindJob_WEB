@@ -76,13 +76,27 @@
 .social-buttons {
     display: flex;
     gap: 16px;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 24px;
+}
+
+.google-login-button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.google-login-button>div {
+    width: 100% !important;
 }
 
 .social-button {
     flex: 1;
-    height: 48px;
-    border-radius: 8px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .register-link {
@@ -117,4 +131,16 @@
 .circle-logo:hover {
     transform: scale(1.05);
     transition: transform 0.3s ease;
+}
+
+/* Add these styles */
+.ant-input-textarea.login-input {
+    resize: none;
+    border-radius: 6px;
+}
+
+.ant-input-textarea.login-input:hover,
+.ant-input-textarea.login-input:focus {
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }

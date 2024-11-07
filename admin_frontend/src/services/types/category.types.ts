@@ -1,10 +1,10 @@
 interface SubCategory {
-    id: string;
+    _id: string;
     name: string;
 }
 
 interface Category {
-    id: string;
+    _id: string;
     name: string;
     subCategories: SubCategory[];
     createdAt: string;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
 import { UserOutlined, BellOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +9,12 @@ const { Header: AntHeader } = Layout;
 
 interface HeaderProps {
     userType?: 'candidate' | 'employer';
+}
+
+interface User {
+    name: string;
+    email: string;
+    avatar?: string;
 }
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -82,6 +88,22 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        // Kiểm tra user trong localStorage khi component mount
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            setUser(JSON.parse(userStr));
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        setUser(null);
+        navigate('/login');
+    };
 
     const userMenu = (
         <Menu
@@ -90,13 +112,13 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     key: 'profile',
                     label: 'Thông tin cá nhân',
                     icon: <UserOutlined />,
-                    onClick: () => navigate(`/${userType}/profile`)
+                    onClick: () => navigate('/profile')
                 },
                 {
                     key: 'logout',
                     label: 'Đăng xuất',
                     icon: <LogoutOutlined />,
-                    onClick: () => navigate('/')
+                    onClick: handleLogout
                 },
             ]}
         />
@@ -109,7 +131,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     <img src={logo} alt="Logo" style={styles.logo} />
                 </Link>
 
-                {!userType ? (
+                {!user ? (
                     <div style={styles.authSection}>
                         <Button
                             className='button-hover'
@@ -131,8 +153,12 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                         <BellOutlined style={styles.bellIcon} />
                         <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
-                                <Avatar icon={<UserOutlined />} style={styles.avatar} />
-                                <span>Tên người dùng</span>
+                                <Avatar
+                                    src={user.avatar}
+                                    icon={!user.avatar && <UserOutlined />}
+                                    style={styles.avatar}
+                                />
+                                <span>{user.name}</span>
                             </div>
                         </Dropdown>
                     </div>

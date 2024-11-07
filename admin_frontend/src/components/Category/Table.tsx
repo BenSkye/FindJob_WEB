@@ -1,10 +1,9 @@
 import React from 'react';
 import { Table as AntTable, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface DataType {
-    id: string;
+    _id: string;
     [key: string]: any;
 }
 
@@ -12,8 +11,7 @@ interface CustomTableProps<T extends DataType> {
     data: T[];
     loading: boolean;
     columns: ColumnsType<T>;
-    onEdit?: (record: T) => void;
-    onDelete?: (id: string) => void;
+    onAddSubCategory?: (record: T) => void;
     pageSize?: number;
 }
 
@@ -21,33 +19,21 @@ const CustomTable = <T extends DataType>({
     data,
     loading,
     columns,
-    onEdit,
-    onDelete,
+    onAddSubCategory,
     pageSize = 10,
 }: CustomTableProps<T>) => {
-    // Thêm action column nếu có onEdit hoặc onDelete
-    const actionColumn = (onEdit || onDelete) ? {
+    const actionColumn = onAddSubCategory ? {
         title: 'Thao tác',
         key: 'action',
         width: '20%',
         render: (_: any, record: T) => (
             <Space size="middle">
-                {onEdit && (
+                {onAddSubCategory && (
                     <Button 
-                        type="primary" 
-                        icon={<EditOutlined />}
-                        onClick={() => onEdit(record)}
+                        type="default" 
+                        onClick={() => onAddSubCategory(record)}
                     >
-                        Sửa
-                    </Button>
-                )}
-                {onDelete && (
-                    <Button 
-                        danger 
-                        icon={<DeleteOutlined />}
-                        onClick={() => onDelete(record.id)}
-                    >
-                        Xóa
+                        Thêm danh mục con
                     </Button>
                 )}
             </Space>
@@ -63,11 +49,11 @@ const CustomTable = <T extends DataType>({
             columns={finalColumns}
             dataSource={data}
             loading={loading}
-            rowKey="id"
+            rowKey="_id"
             pagination={{
                 pageSize: pageSize,
                 showSizeChanger: true,
-                showTotal: (total) => `Tổng số ${total} bản ghi`,
+                showTotal: (total) => `Tổng số ${total} danh mục`,
             }}
         />
     );
