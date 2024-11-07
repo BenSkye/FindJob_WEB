@@ -4,6 +4,7 @@ import { apiKey, permission } from '../auth/checkAuth';
 import checkoutRouter from './checkout';
 import payosRouter from './payos';
 import categoryRouter from './category';
+import levelRouter from './level';
 
 
 const router = Router();
@@ -17,5 +18,6 @@ router.use('/v1/api/checkout', checkoutRouter);
 router.use('/v1/api/user', accessRouter);
 router.use('/v1/api/payos', payosRouter);
 router.use('/v1/api/category', categoryRouter);
+router.use('/v1/api/level', levelRouter);
 
 export default router;
