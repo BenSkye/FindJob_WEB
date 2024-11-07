@@ -13,6 +13,13 @@ class CheckoutController {
         }).send(res);
     });
 
+    checkoutPublishJob = asyncHandler(async (req: any, res: any, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Order successfully',
+            metadata: await CheckoutService.checkoutPublishJob(req.keyStore.user, req.params.jobId),
+        }).send(res);
+    });
+
     getPayOsSubscriptionReturn = asyncHandler(async (req: any, res: any, next: NextFunction) => {
         await CheckoutService.getPayOsSubscriptionReturn(req.query)
         const redirectUrl = new URL(process.env.FRONTEND_URL + '/subscription');
@@ -22,6 +29,18 @@ class CheckoutController {
     getPayOsSubscriptionCancel = asyncHandler(async (req: any, res: any, next: NextFunction) => {
         await CheckoutService.getPayOsSubscriptionCancel(req.query)
         const redirectUrl = new URL(process.env.FRONTEND_URL + '/subscription');
+        res.redirect(redirectUrl.toString());
+    });
+
+    getPayOsPublishJobReturn = asyncHandler(async (req: any, res: any, next: NextFunction) => {
+        await CheckoutService.getPayOsPublishJobReturn(req.query)
+        const redirectUrl = new URL(process.env.FRONTEND_URL + '/job');
+        res.redirect(redirectUrl.toString());
+    });
+
+    getPayOsPublishJobCancel = asyncHandler(async (req: any, res: any, next: NextFunction) => {
+        await CheckoutService.getPayOsPublishJobCancel(req.query)
+        const redirectUrl = new URL(process.env.FRONTEND_URL + '/job');
         res.redirect(redirectUrl.toString());
     });
 

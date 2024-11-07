@@ -38,10 +38,6 @@ const applicationSchema = new Schema(
             type: String,
             trim: true,
         },
-        notes: {
-            type: String,
-            trim: true,
-        },
         isReadByCandidate: {
             type: Boolean,
             default: true,

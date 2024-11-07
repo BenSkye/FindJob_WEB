@@ -5,6 +5,8 @@ import { createPaymentLink } from "./payOs.service";
 import subscriptionRepo from "../repositories/subscription.repo";
 import paymentRepo from "../repositories/payment.repo";
 import SubscriptionService from "./subscription.service";
+import JobService from "./job.service";
+import jobRepo from "../repositories/job.repo";
 class CheckoutService {
 
     static checkoutSubscription = async (userId: string) => {
@@ -57,6 +59,79 @@ class CheckoutService {
 
     static getPayOsSubscriptionCancel = async (reqQuery: any) => {
         console.log('reqQueryPayosCancel:::', reqQuery);
+        await paymentRepo.deletePayment(reqQuery.orderCode);
+    }
+
+
+    static checkoutPublishJob = async (userId: string, jobId: string) => {
+        const paymentCode = generateOrderCode();
+        const paymentData = {
+            userId,
+            amount: 5000,
+            paymentCode,
+            paymentDate: new Date()
+        }
+        const paymentNew = await paymentRepo.createPayment(paymentData);
+        const cancelUrl = '/cancel-publish-job-payment';
+        const returnUrl = '/return-publish-job-payment';
+        await JobService.publistJobWhenPayment(jobId, userId, paymentNew._id.toString());
+        const paymentLink = await createPaymentLink(paymentCode, paymentNew.amount, 'thanh toan dang tin', cancelUrl, returnUrl);
+        const paymentUrl = paymentLink.checkoutUrl;
+        return {
+            paymentUrl
+        };
+    }
+
+    static getPayOsPublishJobReturn = async (reqQuery: any) => {
+        let jobUpdate = null;
+        if (reqQuery.code === '00') {
+            const paymentCode = reqQuery.orderCode;
+            const payment = await paymentRepo.getPaymentByPaymentCode(paymentCode);
+            if (!payment) {
+                throw new BadRequestError('Payment not found');
+            }
+            jobUpdate = await jobRepo.getJob({ paymentId: payment._id.toString() });
+        } else {
+            //delete payment and update lại job
+            const paymentCode = reqQuery.orderCode;
+            const payment = await paymentRepo.getPaymentByPaymentCode(paymentCode);
+            if (!payment) {
+                throw new BadRequestError('Payment not found');
+            }
+            const job = await jobRepo.getJob({ paymentId: payment._id.toString() });
+            if (!job) {
+                throw new BadRequestError('Job not found');
+            }
+            const jobData = {
+                status: 'draft',
+                paymentId: null,
+                isPay: false,
+            }
+            jobUpdate = await jobRepo.updateJob(job._id.toString(), jobData);
+            await paymentRepo.deletePayment(reqQuery.orderCode);
+        }
+        return {
+            jobUpdate
+        };
+    }
+
+    static getPayOsPublishJobCancel = async (reqQuery: any) => {
+        console.log('reqQueryPayosPublishJobCancel:::', reqQuery);
+        const paymentCode = reqQuery.orderCode;
+        const payment = await paymentRepo.getPaymentByPaymentCode(paymentCode);
+        if (!payment) {
+            throw new BadRequestError('Payment not found');
+        }
+        const job = await jobRepo.getJob({ paymentId: payment._id.toString() });
+        if (!job) {
+            throw new BadRequestError('Job not found');
+        }
+        const jobData = {
+            status: 'draft',
+            paymentId: null,
+            isPay: false,
+        }
+        await jobRepo.updateJob(job._id.toString(), jobData);
         await paymentRepo.deletePayment(reqQuery.orderCode);
     }
 
