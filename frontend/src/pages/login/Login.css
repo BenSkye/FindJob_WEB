@@ -76,13 +76,27 @@
 .social-buttons {
     display: flex;
     gap: 16px;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 24px;
+}
+
+.google-login-button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.google-login-button>div {
+    width: 100% !important;
 }
 
 .social-button {
     flex: 1;
-    height: 48px;
-    border-radius: 8px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .register-link {

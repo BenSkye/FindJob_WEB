@@ -5,7 +5,7 @@ import { createTokenPair, verifyJWT } from '../auth/authUtils';
 import { getInfoData } from '../utils';
 import { AuthFailureError, BadRequestError, ForbiddenError, NotFoundError } from '../core/error.response';
 import nodemailer from 'nodemailer';
-
+import { OAuth2Client } from 'google-auth-library';
 //import service
 import KeyTokenService from './keyToken.service';
 import { findByEmail } from './user.service';
@@ -86,6 +86,7 @@ class AccessService {
   static signup = async ({ name, email, password, role, phone, address }: { name: string, email: string, password: string, role: string, phone: string, address: string }) => {
     //step1: check email exist
     const holderUser = await userModel.findOne({ email }).lean();
+
     console.log('exist', holderUser)
     if (holderUser) {
       throw new BadRequestError('Email already exists');
@@ -105,6 +106,8 @@ class AccessService {
       address,
     });
 
+    console.log("newuser", newUser)
+
     if (newUser) {
       const privateKey = crypto.randomBytes(64).toString('hex');
       const publicKey = crypto.randomBytes(64).toString('hex');
@@ -118,6 +121,7 @@ class AccessService {
       console.log('Create Token Success', tokens);
       console.log('role', newUser.roles);
       const apiKey = await createKey(newUser.roles, newUser._id);
+      console.log("apikey", apiKey)
       if (!apiKey) {
         throw new BadRequestError('Create API Key Fail');
       }
@@ -163,6 +167,101 @@ class AccessService {
     }
 
   };
+
+  static googleSignup = async (credential: string) => {
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    try {
+      // Verify Google token
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID
+      });
+
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        throw new BadRequestError('Invalid Google token payload');
+      }
+
+      const { email, name, picture, sub: googleId } = payload;
+
+      // Check if user already exists
+      let user = await userModel.findOne({ email }).lean();
+
+      if (user) {
+        // If user exists, create new tokens
+        const privateKey = crypto.randomBytes(64).toString('hex');
+        const publicKey = crypto.randomBytes(64).toString('hex');
+
+        const tokens = await createTokenPair(
+          { userId: user._id, email },
+          publicKey,
+          privateKey
+        );
+
+        await KeyTokenService.createKeyToken(
+          user._id,
+          publicKey,
+          privateKey,
+          (tokens as { refreshToken: string }).refreshToken
+        );
+
+        return {
+          user: getInfoData({
+            fields: ['_id', 'name', 'email', 'roles', 'avatar'],
+            object: user
+          }),
+          tokens
+        };
+      }
+
+      // Create new user if not exists
+      const newUser = await userModel.create({
+        name: name || email.split('@')[0],
+        email,
+        password: crypto.randomBytes(20).toString('hex'),
+        roles: ['candidate'],
+        verify: true,
+        avatar: picture || '',
+        authType: 'google',
+        googleId,
+        status: 'active'
+      });
+
+      // Create tokens for new user
+      const privateKey = crypto.randomBytes(64).toString('hex');
+      const publicKey = crypto.randomBytes(64).toString('hex');
+
+      const tokens = await createTokenPair(
+        { userId: newUser._id, email },
+        publicKey,
+        privateKey
+      );
+
+      await KeyTokenService.createKeyToken(
+        newUser._id,
+        publicKey,
+        privateKey,
+        (tokens as { refreshToken: string }).refreshToken
+      );
+
+      // Create API key for new user
+      const apiKey = await createKey(newUser.roles, newUser._id);
+
+      return {
+        user: getInfoData({
+          fields: ['_id', 'name', 'email', 'roles', 'avatar'],
+          object: newUser
+        }),
+        tokens,
+        apiKey: apiKey.key
+      };
+
+    } catch (error) {
+      console.error('Google Sign Up Error:', error);
+      throw new BadRequestError('Failed to authenticate with Google');
+    }
+  }
 
   static signupEmployer = async ({ name, email, password, companyName, phone, address }: { name: string, email: string, password: string, companyName: string, phone: string, address: string }) => {
     //step1: check email exist

@@ -3,7 +3,7 @@ import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import { routes } from './routes/routes';
 import Loading from './components/common/Loading';
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import theme from './config/theme';
 
 const Router = () => {
@@ -13,13 +13,15 @@ const Router = () => {
 
 const App: React.FC = () => {
   return (
-    <ConfigProvider theme={theme}>
-      <BrowserRouter>
-        <Suspense fallback={<Loading.FullPage />}>
-          <Router />
-        </Suspense>
-      </BrowserRouter>
-    </ConfigProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ConfigProvider theme={theme}>
+        <BrowserRouter>
+          <Suspense fallback={<Loading.FullPage />}>
+            <Router />
+          </Suspense>
+        </BrowserRouter>
+      </ConfigProvider>
+    </GoogleOAuthProvider>
   );
 };
 
