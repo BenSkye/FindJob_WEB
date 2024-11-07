@@ -5,6 +5,7 @@ import { routes } from './routes/routes';
 import Loading from './components/common/Loading';
 
 import theme from './config/theme';
+import { AuthProvider } from './contexts/AuthContext';
 
 const Router = () => {
   const element = useRoutes(routes);
@@ -16,7 +17,9 @@ const App: React.FC = () => {
     <ConfigProvider theme={theme}>
       <BrowserRouter>
         <Suspense fallback={<Loading.FullPage />}>
-          <Router />
+          <AuthProvider>
+            <Router />
+          </AuthProvider>
         </Suspense>
       </BrowserRouter>
     </ConfigProvider>

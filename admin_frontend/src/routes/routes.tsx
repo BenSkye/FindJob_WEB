@@ -7,6 +7,7 @@ import User from '../pages/Admin/User';
 import Level from '../pages/Admin/Level';
 import Category from '../pages/Admin/Category';
 import Setting from '../pages/Admin/Setting';
+import Login from '../pages/Admin/login/Login';
 const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => ({
   default: () => {
     const Layout = module.default;
@@ -53,6 +54,6 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/admin/login',
-    element: <AdminLogin />,
+    element: <Login />,
   }
 ];
