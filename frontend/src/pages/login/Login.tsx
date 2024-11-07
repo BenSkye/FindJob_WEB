@@ -4,7 +4,7 @@ import { UserOutlined, LockOutlined, GoogleOutlined, LinkedinOutlined } from '@a
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';
-import { login, googleSignUp } from '../../services/api/userApi';
+import { login, googleSignUp } from '../../services/api/authenService';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -77,20 +77,19 @@ const Login: React.FC = () => {
         setLoading(true);
         try {
             const response = await login(values.email, values.password);
-            console.log('11213', response);
+            console.log('Login Response:', response);
+
             if (response.status === 200) {
+                // Lưu token và thông tin user
+                localStorage.setItem('accessToken', response.data.metadata.tokens.accessToken);
+                localStorage.setItem('user', JSON.stringify(response.data.metadata.user));
+
                 showNotification(
                     'success',
                     'Đăng nhập thành công!',
                     'Chào mừng bạn đã quay trở lại!'
                 );
                 navigate('/');
-            } else {
-                showNotification(
-                    'error',
-                    'Đăng nhập thất bại',
-                    'Email hoặc mật khẩu không chính xác. Vui lòng thử lại!'
-                );
             }
         } catch (error) {
             console.log(error);
@@ -103,6 +102,7 @@ const Login: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <>

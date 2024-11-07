@@ -1,0 +1,100 @@
+.admin-sider {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 10;
+}
+
+.site-layout {
+    background: #f0f2f5;
+    min-height: calc(100vh - 64px);
+}
+
+.admin-welcome-banner {
+    padding: 24px;
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    color: white;
+}
+
+.welcome-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.welcome-content h2 {
+    color: white;
+    margin-bottom: 8px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.welcome-content p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 16px;
+    margin: 0;
+}
+
+.admin-content {
+    margin: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    min-height: 280px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-content {
+        margin: 16px;
+        padding: 16px;
+    }
+
+    .admin-welcome-banner {
+        padding: 16px;
+    }
+
+    .welcome-content h2 {
+        font-size: 20px;
+    }
+
+    .welcome-content p {
+        font-size: 14px;
+    }
+}
+
+/* Custom Sidebar Menu Styles */
+.ant-menu-item {
+    margin: 4px 8px !important;
+    border-radius: 6px !important;
+}
+
+.ant-menu-item:hover {
+    background-color: black !important;
+    color: #1890ff !important;
+}
+
+.ant-menu-item-selected {
+    background-color: #1890ff !important;
+    color: white !important;
+}
+
+.ant-menu-item-selected span {
+    color: white !important;
+}
+
+.ant-menu-item-selected .anticon {
+    color: white !important;
+}
+
+.ant-menu-inline {
+    border-right: none !important;
+}
+
+/* Hover effect for non-selected items */
+.ant-menu-item:not(.ant-menu-item-selected):hover {
+    color: #1890ff !important;
+}
+
+.ant-menu-item:not(.ant-menu-item-selected):hover .anticon {
+    color: #1890ff !important;
+}

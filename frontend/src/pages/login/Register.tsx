@@ -3,11 +3,11 @@ import { Form, Input, Button, Card, Typography, Divider, Row, Col, Select, notif
 import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, GoogleOutlined, LinkedinOutlined } from '@ant-design/icons';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';
-import { register } from '../../services/api/userApi';
+import { signup } from '../../services/api/authenService';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { googleSignUp } from '../../services/api/userApi';
+import { googleSignUp } from '../../services/api/authenService';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -26,38 +26,42 @@ const Register: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [api, contextHolder] = notification.useNotification();
 
-    const showNotification = (type: 'success' | 'error', message: string, description: string) => {
+    const showNotification = (
+        type: 'success' | 'error',
+        message: string,
+        description: string,
+        duration: number = 3 // default duration is 3 seconds
+    ) => {
         api[type]({
             message: message,
             description: description,
             placement: 'top',
-            duration: 3,
+            duration: duration,
             style: {
-                marginTop: '50px'
+                marginTop: '0px'
             }
         });
     };
 
+
     const onFinish = async (values: any) => {
         setLoading(true);
         try {
-            // Tạo payload cho API theo đúng format backend yêu cầu
             const registerData = {
-                name: `${values.firstName} ${values.lastName}`, // Ghép firstName và lastName
+                name: `${values.firstName} ${values.lastName}`,
                 email: values.email,
                 password: values.password,
                 phone: values.phone,
-                role: values.userType === 'employer' ? 'employer' : 'candidate',
-                address: '' // Có thể thêm trường address nếu cần
+                address: values.address,
+                role: 'candidate'
             };
 
             console.log('Register Data:', registerData);
 
-            const response = await register(registerData);
+            const response = await signup(registerData);
             console.log('Register Response:', response);
 
-            if (response.status === 200) {
-                // Lưu token và thông tin user nếu có
+            if (response.status === 201) {
                 if (response.metadata?.tokens) {
                     localStorage.setItem('accessToken', response.metadata.tokens.accessToken);
                     localStorage.setItem('user', JSON.stringify(response.metadata.user));
@@ -66,10 +70,27 @@ const Register: React.FC = () => {
                 showNotification(
                     'success',
                     'Đăng ký thành công!',
-                    'Chào mừng bạn đến với JobFinder!'
+                    'Vui lòng kiểm tra email để xác thực tài khoản của bạn.'
                 );
-                navigate('/login');
+
+                setTimeout(() => {
+                    navigate('/login');
+                }, 2000);
+            } else if (response.code === 400) {
+                showNotification(
+                    'error',
+                    'Tài khoản đã tồn tại',
+                    response.message
+                );
             }
+            else {
+                showNotification(
+                    'error',
+                    'Đăng ký thất bại',
+                    response.message
+                );
+            }
+
         } catch (error: any) {
             console.error('Register Error:', error);
 
@@ -90,7 +111,6 @@ const Register: React.FC = () => {
         }
     };
 
-    // Thêm validate cho form
     const validatePhone = (_: any, value: string) => {
         const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
         if (!value) {
@@ -109,8 +129,6 @@ const Register: React.FC = () => {
         if (value.length < 6) {
             return Promise.reject('Mật khẩu phải có ít nhất 6 ký tự');
         }
-        // Thêm các điều kiện khác nếu cần
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
         return Promise.resolve();
     };
 
@@ -236,13 +254,17 @@ const Register: React.FC = () => {
                                 </Form.Item>
 
                                 <Form.Item
-                                    name="userType"
-                                    rules={[{ required: true, message: 'Vui lòng chọn loại người dùng' }]}
+                                    name="address"
+                                    rules={[
+                                        { required: true, message: 'Vui lòng nhập địa chỉ của bạn' },
+                                        { max: 200, message: 'Địa chỉ không được quá 200 ký tự' }
+                                    ]}
                                 >
-                                    <Select placeholder="Tôi là..." className="login-input">
-                                        <Option value="jobseeker">Người tìm việc</Option>
-                                        <Option value="employer">Nhà tuyển dụng</Option>
-                                    </Select>
+                                    <Input.TextArea
+                                        placeholder="Địa chỉ của bạn"
+                                        className="login-input"
+                                        autoSize={{ minRows: 2, maxRows: 4 }}
+                                    />
                                 </Form.Item>
 
                                 <Form.Item

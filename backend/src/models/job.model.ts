@@ -10,8 +10,9 @@ const jobSchema = new Schema(
             ref: 'User',
             required: true,
         },
-        companyName: {
-            type: String,
+        companyId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Company',
             required: true,
         },
         title: {
@@ -19,13 +20,6 @@ const jobSchema = new Schema(
             required: true,
             trim: true,
         },
-        thumbnail: {
-            type: String,
-            required: true,
-        },
-        images: [{
-            type: Array, // URL của hình ảnh
-        }],
         requirements: {
             type: String,
             required: true,
@@ -46,10 +40,10 @@ const jobSchema = new Schema(
                 default: false,
             },
         },
-        benefits: [{
+        benefits: {
             type: String,
             required: true,
-        }],
+        },
         location: {
             type: String,
             required: true,
@@ -71,6 +65,7 @@ const jobSchema = new Schema(
         paymentId: {
             type: Schema.Types.ObjectId,
             ref: 'Payment',
+            default: null,
         },
         applications: [{
             type: Schema.Types.ObjectId,
@@ -80,21 +75,24 @@ const jobSchema = new Schema(
             type: Date,
             required: true,
         },
-        category: {
-            mainCategory: {
-                type: Schema.Types.ObjectId,
-                ref: 'Category',
-                required: true
-            },
-            subCategory: {
-                type: String, // lưu name của subCategory
-                required: true
-            }
+        mainCategory: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
+        },
+        subCategory: {
+            type: String, // lưu name của subCategory
+            required: true
         },
         isHot: {
             type: Boolean,
             default: false, //job đang gấp cần tìm người ứng tuyển nhanh
         },
+        level: {
+            type: Schema.Types.ObjectId,
+            ref: 'Level',
+            required: true,
+        }
     },
     {
         timestamps: true,

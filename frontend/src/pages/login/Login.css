@@ -132,3 +132,15 @@
     transform: scale(1.05);
     transition: transform 0.3s ease;
 }
+
+/* Add these styles */
+.ant-input-textarea.login-input {
+    resize: none;
+    border-radius: 6px;
+}
+
+.ant-input-textarea.login-input:hover,
+.ant-input-textarea.login-input:focus {
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
