@@ -10,11 +10,11 @@ import nodemailer from 'nodemailer';
 import KeyTokenService from './keyToken.service';
 import { findByEmail } from './user.service';
 import { createKey, findByUserId } from './apiKey.service';
-import CartService from './cart.service';
+import { companyModel } from '../models/company.model';
 const RoleUser = {
-  MEMBER: 'member',
   ADMIN: 'admin',
-  SHOP: 'shop',
+  EMPLOYER: 'employer',
+  CANDIDATE: 'candidate',
 };
 
 class AccessService {
@@ -49,7 +49,7 @@ class AccessService {
     return delKey;
   }
 
-  
+
   static login = async (email: string, password: string, refreshToken = null) => {
     //1 check email in dbs
     const foundUser = await findByEmail(email);
@@ -77,13 +77,13 @@ class AccessService {
       throw new NotFoundError('API Key not found');
     }
     return {
-      user: getInfoData({ fields: ['_id', 'name', 'email','roles'], object: foundUser }),
+      user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: foundUser }),
       tokens,
       apiKey: apiKey.key
     }
   }
 
-  static signup = async ({ name, email, password, role }: { name: string, email: string, password: string, role: string }) => {
+  static signup = async ({ name, email, password, role, phone, address }: { name: string, email: string, password: string, role: string, phone: string, address: string }) => {
     //step1: check email exist
     const holderUser = await userModel.findOne({ email }).lean();
     console.log('exist', holderUser)
@@ -93,14 +93,16 @@ class AccessService {
 
     const passwordHash = await bcrypt.hash(password, 10);
     if (!role) {
-      role = RoleUser.MEMBER;
+      role = RoleUser.CANDIDATE;
     }
     const newUser = await userModel.create({
       name,
       email,
       password: passwordHash,
       roles: [role],
-      verify: false,
+      verify: true,
+      phone,
+      address,
     });
 
     if (newUser) {
@@ -119,41 +121,36 @@ class AccessService {
       if (!apiKey) {
         throw new BadRequestError('Create API Key Fail');
       }
-      if (newUser.roles.includes(RoleUser.MEMBER)) {
-        const userCart = await CartService.createCart(newUser._id.toString());//create cart for new user when signup
-      }
+      // const verificationToken = crypto.randomBytes(32).toString('hex');
+      // const verificationTokenHash = crypto.createHash('sha256').update(verificationToken).digest('hex');
+      // const verificationTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // Token expires in 10 minutes
 
+      // newUser.verificationToken = verificationTokenHash;
+      // newUser.verificationTokenExpire = verificationTokenExpire;
+      // await newUser.save();
 
-      const verificationToken = crypto.randomBytes(32).toString('hex');
-      const verificationTokenHash = crypto.createHash('sha256').update(verificationToken).digest('hex');
-      const verificationTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // Token expires in 10 minutes
+      // // Step 8: Send verification email
+      // const verificationUrl = `http://localhost:2709/verify-email?token=${verificationToken}`;
+      // const transporter = nodemailer.createTransport({
+      //   service: 'Gmail',
+      //   auth: {
+      //     user: 'khanhhgse173474@fpt.edu.vn',
+      //     pass: 'zkoawauogcjlccfg',
+      //   },
+      // });
 
-      newUser.verificationToken = verificationTokenHash;
-      newUser.verificationTokenExpire = verificationTokenExpire;
-      await newUser.save();
+      // const mailOptions = {
+      //   from: 'khanhhgse173474@fpt.edu.vn',
+      //   to: email,
+      //   subject: 'Email Verification',
+      //   html: `
+      //     <p>Thank you for signing up! Please verify your email by clicking the link below:</p>
+      //     <a href="${verificationUrl}" target="_blank">Verify Email</a>
+      //     <p>This link will expire in 10 minutes.</p>
+      //   `,
+      // };
 
-      // Step 8: Send verification email
-      const verificationUrl = `http://localhost:2709/verify-email?token=${verificationToken}`;
-      const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: 'khanhhgse173474@fpt.edu.vn',
-          pass: 'zkoawauogcjlccfg',
-        },
-      });
-
-      const mailOptions = {
-        from: 'khanhhgse173474@fpt.edu.vn',
-        to: email,
-        subject: 'Email Verification',
-        html: `
-          <p>Thank you for signing up! Please verify your email by clicking the link below:</p>
-          <a href="${verificationUrl}" target="_blank">Verify Email</a>
-          <p>This link will expire in 10 minutes.</p>
-        `,
-      };
-
-      await transporter.sendMail(mailOptions);
+      // await transporter.sendMail(mailOptions);
       return {
         user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: newUser }),
         tokens,
@@ -167,6 +164,101 @@ class AccessService {
 
   };
 
+  static signupEmployer = async ({ name, email, password, companyName, phone, address }: { name: string, email: string, password: string, companyName: string, phone: string, address: string }) => {
+    //step1: check email exist
+    const holderUser = await userModel.findOne({ email }).lean();
+    console.log('exist', holderUser)
+    if (holderUser) {
+      throw new BadRequestError('Email already exists');
+    }
+
+    // 1. Kiểm tra xem company đã tồn tại chưa
+    let company = await companyModel.findOne({
+      name: { $regex: new RegExp(`^${companyName}$`, 'i') }
+    });
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const role = RoleUser.EMPLOYER;
+    const newUser = await userModel.create({
+      name,
+      email,
+      password: passwordHash,
+      roles: [role],
+      companyId: company?._id || null,
+      verify: true,
+      phone,
+      address,
+    });
+
+    if (newUser) {
+      if (!company) {
+        company = await companyModel.create({
+          name: companyName,
+          description: '',
+        });
+
+        // Cập nhật lại companyId cho user
+        await userModel.findByIdAndUpdate(newUser._id, {
+          companyId: company._id
+        });
+      }
+      const privateKey = crypto.randomBytes(64).toString('hex');
+      const publicKey = crypto.randomBytes(64).toString('hex');
+      console.log({ privateKey, publicKey }); //save collection KeyStore
+      const keyStore = await KeyTokenService.createKeyToken(newUser._id, publicKey.toString(), privateKey.toString(), '');
+      if (!keyStore) {
+        throw new BadRequestError('keyStore not found');
+      }
+      const tokens = await createTokenPair({ userId: newUser._id, email }, publicKey.toString(), privateKey.toString());
+
+      console.log('Create Token Success', tokens);
+      console.log('role', newUser.roles);
+      const apiKey = await createKey(newUser.roles, newUser._id);
+      if (!apiKey) {
+        throw new BadRequestError('Create API Key Fail');
+      }
+      // const verificationToken = crypto.randomBytes(32).toString('hex');
+      // const verificationTokenHash = crypto.createHash('sha256').update(verificationToken).digest('hex');
+      // const verificationTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // Token expires in 10 minutes
+
+      // newUser.verificationToken = verificationTokenHash;
+      // newUser.verificationTokenExpire = verificationTokenExpire;
+      // await newUser.save();
+
+      // // Step 8: Send verification email
+      // const verificationUrl = `http://localhost:2709/verify-email?token=${verificationToken}`;
+      // const transporter = nodemailer.createTransport({
+      //   service: 'Gmail',
+      //   auth: {
+      //     user: 'khanhhgse173474@fpt.edu.vn',
+      //     pass: 'zkoawauogcjlccfg',
+      //   },
+      // });
+
+      // const mailOptions = {
+      //   from: 'khanhhgse173474@fpt.edu.vn',
+      //   to: email,
+      //   subject: 'Email Verification',
+      //   html: `
+      //       <p>Thank you for signing up! Please verify your email by clicking the link below:</p>
+      //       <a href="${verificationUrl}" target="_blank">Verify Email</a>
+      //       <p>This link will expire in 10 minutes.</p>
+      //     `,
+      // };
+
+      // await transporter.sendMail(mailOptions);
+      return {
+        user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: newUser }),
+        tokens,
+        apiKey: apiKey.key
+      }
+    }
+    return {
+      code: 200,
+      metadata: null
+    }
+
+  }
 
   static verifyEmail = async (token: string) => {
     try {

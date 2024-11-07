@@ -3,6 +3,8 @@ import { Outlet, RouteObject } from 'react-router-dom';
 import EmployerRoute from './EmployerRoute';
 import Login from '../pages/login/Login';
 import Register from '../pages/login/Register';
+import JobSearch from '../pages/candidate/JobSearch';
+
 // Lazy load các layouts với dynamic import
 const MainLayout = lazy(() => import('../layouts/MainLayout').then(module => ({
   default: () => {
@@ -58,6 +60,7 @@ export const routes: RouteObject[] = [
       { index: true, element: <HomePage /> },
       { path: '/jobsdetail', element: <JobsDetail /> },
       { path: '/jobslist', element: <JobsList /> },
+      { path: '/job-search', element: <JobSearch /> },
     ]
   },
   {
@@ -65,6 +68,7 @@ export const routes: RouteObject[] = [
     element: <CandidateLayout />,
     children: [
       // Thêm routes cho candidate sau
+
     ]
   },
   {
@@ -76,6 +80,7 @@ export const routes: RouteObject[] = [
     ),
     children: [
       // Thêm routes cho employer sau
+
     ]
   },
   {
