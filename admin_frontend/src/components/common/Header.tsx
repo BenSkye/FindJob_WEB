@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
 import { UserOutlined, BellOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const { Header: AntHeader } = Layout;
 
@@ -40,7 +41,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         height: '48px',
         width: 'auto',
         objectFit: 'contain',
-        // filter: 'brightness(0) invert(1)'
     },
     authSection: {
         display: 'flex',
@@ -51,11 +51,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         backgroundColor: 'transparent',
         borderColor: colors.brand.primary.contrast,
         color: colors.brand.primary.contrast
-    },
-    registerButton: {
-        backgroundColor: colors.brand.primary.contrast,
-        color: colors.brand.primary.main,
-        border: 'none'
     },
     userSection: {
         display: 'flex',
@@ -82,6 +77,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
+    const authContext = useContext(AuthContext);
 
     const userMenu = (
         <Menu
@@ -96,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     key: 'logout',
                     label: 'Đăng xuất',
                     icon: <LogoutOutlined />,
-                    onClick: () => navigate('/')
+                    onClick: authContext?.logout
                 },
             ]}
         />
@@ -109,21 +105,14 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     <img src={logo} alt="Logo" style={styles.logo} />
                 </Link>
 
-                {!userType ? (
+                {!authContext?.isAuthenticated ? (
                     <div style={styles.authSection}>
                         <Button
                             className='button-hover'
                             style={styles.loginButton}
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate('/admin/login')}
                         >
                             Đăng nhập
-                        </Button>
-                        <Button
-                            className='button-hover'
-                            style={styles.registerButton}
-                            onClick={() => navigate('/register')}
-                        >
-                            Đăng ký
                         </Button>
                     </div>
                 ) : (
@@ -132,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                         <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
                                 <Avatar icon={<UserOutlined />} style={styles.avatar} />
-                                <span>Tên người dùng</span>
+                                <span>{authContext?.user?.name}</span>
                             </div>
                         </Dropdown>
                     </div>

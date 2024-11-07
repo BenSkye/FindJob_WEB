@@ -1,19 +1,14 @@
 import { Category, SubCategory } from "../types/category.types";
-import axios from "axios";
 import apiClient from "./apiClient";
-const BASE_URL = import.meta.env.VITE_BE_APP_API_URL;
 
-export const adminGetCategory = async (): Promise<Category[]> => {
+export const adminGetCategory = async (): Promise<any> => {
     try {
         const response = await apiClient.get('/category/list');
-        console.log('response:', response.data);
         return response.data;
     } catch (error: any) {
         console.error('Error get category:', error);
-        return error.response.data;
         throw error;
     }
-
 };
 
 interface CreateCategoryDto {
@@ -21,15 +16,22 @@ interface CreateCategoryDto {
     subCategories: { name: string }[];
 }
 
-export const adminCreateCategory = async (categoryData: CreateCategoryDto): Promise<Category> => {
+export const adminCreateCategory = async (categoryData: CreateCategoryDto): Promise<any> => {
     try {
         const response = await apiClient.post('/category/create', categoryData);
-        console.log('response:', response.data);
         return response.data;
     } catch (error: any) {
         console.error('Error create category:', error);
-        return error.response.data;
         throw error;
     }
 };
 
+export const addSubCategory = async (categoryId: string, subCategory: SubCategory): Promise<any> => {
+    try {
+        const response = await apiClient.put(`/category/add-sub-category/${categoryId}`, subCategory);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error add sub category:', error);
+        throw error;
+    }
+};

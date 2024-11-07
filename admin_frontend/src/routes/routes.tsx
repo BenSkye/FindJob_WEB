@@ -1,6 +1,5 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { Outlet, RouteObject } from 'react-router-dom';
-import AdminLogin from '../pages/Admin/AdminLogin';
 import Dashboard from '../pages/Admin/Dashboard';
 import PostJob from '../pages/Admin/PostJob';
 import User from '../pages/Admin/User';
@@ -8,6 +7,10 @@ import Level from '../pages/Admin/Level';
 import Category from '../pages/Admin/Category';
 import Setting from '../pages/Admin/Setting';
 import Login from '../pages/Admin/login/Login';
+import NotFound from '../components/common/404';
+import Forbidden from '../components/common/403';
+import ProtectedRoute from '../components/ProtectedRoute';
+
 const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => ({
   default: () => {
     const Layout = module.default;
@@ -24,7 +27,11 @@ const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => (
 export const routes: RouteObject[] = [
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: '/admin/dashboard',
@@ -55,5 +62,9 @@ export const routes: RouteObject[] = [
   {
     path: '/admin/login',
     element: <Login />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   }
 ];
