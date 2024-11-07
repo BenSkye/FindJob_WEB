@@ -73,8 +73,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </Sider>
                 <Layout className="p-6">
                     <div className="flex-between mb-4">
-                        <h2>Dashboard</h2>
-                        <Notification />
+
                     </div>
                     <Content className="bg-white p-6 rounded-lg">
                         {children}
