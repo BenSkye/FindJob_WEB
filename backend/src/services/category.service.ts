@@ -1,4 +1,4 @@
-import categoryRepo from "../repositories/category,repo";
+import categoryRepo from "../repositories/category.repo";
 
 
 class CategoryService {

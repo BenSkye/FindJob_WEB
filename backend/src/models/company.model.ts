@@ -57,13 +57,11 @@ const companySchema = new Schema(
             unique: true,
             default: null
         },
-        category: {
-            mainCategory: {
-                type: Schema.Types.ObjectId,
-                ref: 'Category',
-                default: null
-            }
-        },
+        mainCategory: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
+            default: null
+        }
     },
     {
         timestamps: true,

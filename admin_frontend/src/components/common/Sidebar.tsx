@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
         <Menu
             mode="inline"
             selectedKeys={[location.pathname]}
+            className="custom-sidebar-menu"
             items={menuItems.map(item => ({
                 key: item.path,
                 icon: item.icon,
