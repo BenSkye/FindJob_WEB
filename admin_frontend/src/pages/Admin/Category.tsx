@@ -84,7 +84,7 @@ const CategoryPage: React.FC = () => {
 
     const handleSubCategorySubmit = () => {
         if (currentCategoryId && newSubCategoryName) {
-            const newSubCategory = { _id: 'new-id', name: newSubCategoryName };
+            const newSubCategory = { name: newSubCategoryName };
             handleAddSubCategory(currentCategoryId, newSubCategory);
             setIsSubCategoryModalVisible(false);
             setNewSubCategoryName('');

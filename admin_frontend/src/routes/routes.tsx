@@ -9,7 +9,7 @@ import Setting from '../pages/Admin/Setting';
 import Login from '../pages/Admin/login/Login';
 import NotFound from '../components/common/404';
 import Forbidden from '../components/common/403';
-import ProtectedRoute from '../components/ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute';
 
 const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => ({
   default: () => {

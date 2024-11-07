@@ -1,7 +1,7 @@
 import { Category, SubCategory } from "../types/category.types";
 import apiClient from "./apiClient";
 
-export const adminGetCategory = async (): Promise<any> => {
+export const adminGetCategory = async (): Promise<Category[]> => {
     try {
         const response = await apiClient.get('/category/list');
         return response.data;
