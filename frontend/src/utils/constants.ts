@@ -4,6 +4,7 @@ export const FIREBASE_STORAGE_PATH = {
     USER_ME: 'user',   
     POST_ME: 'post',
     CV_ME: 'cv',
+    AVATAR_ME: 'avatar',
 };
 
 export const PROVINCE_ID = {

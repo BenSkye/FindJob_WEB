@@ -4,7 +4,7 @@ import { ITemplate } from '../../services/types/template.types';
 import { getAllTemplates } from '../../services/api/templateApi';
 import { SAMPLE_CV_CONTENT } from '../../services/api/sampleData';
 import CvPreview from '../../components/template/CvPreview';
-
+import { colors } from '../../config/theme';
 const Template = () => {
     const [templates, setTemplates] = useState<ITemplate[]>([]);
     const [selectedTemplate, setSelectedTemplate] = useState<ITemplate | null>(null);
@@ -120,7 +120,7 @@ const Template = () => {
             marginTop: '1.5rem'
         },
         button: {
-            backgroundColor: '#3b82f6',
+            backgroundColor: colors.brand.primary.main,
             color: '#ffffff',
             padding: '0.75rem 2rem',
             borderRadius: '0.5rem',
@@ -130,9 +130,6 @@ const Template = () => {
             transition: 'all 0.3s ease',
             border: 'none',
             cursor: 'pointer'
-        },
-        buttonHover: {
-            backgroundColor: '#2563eb'
         },
         loadingContainer: {
             display: 'flex',
@@ -223,8 +220,8 @@ const Template = () => {
                             </div>
                             <div style={styles.buttonContainer}>
                                 <Link
-                                    to={`/cv/create/${selectedTemplate._id}`}
-                                    style={styles.button}
+                                    to={`/create-template/${selectedTemplate._id}`}
+                                    style={{ ...styles.button, backgroundColor: colors.brand.primary.main }}
                                     onMouseEnter={(e) => {
                                         Object.assign(e.currentTarget.style, styles.buttonHover);
                                     }}
@@ -247,12 +244,14 @@ const Template = () => {
             </div>
 
 
-            {templates.length === 0 && (
-                <div style={styles.noTemplates}>
-                    Template hiện tại không có sẵn. Vui lòng kiểm tra lại sau.
-                </div>
-            )}
-        </div>
+            {
+                templates.length === 0 && (
+                    <div style={styles.noTemplates}>
+                        Template hiện tại không có sẵn. Vui lòng kiểm tra lại sau.
+                    </div>
+                )
+            }
+        </div >
     );
 };
 
