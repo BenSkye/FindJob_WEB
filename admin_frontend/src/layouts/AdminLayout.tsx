@@ -8,8 +8,7 @@ import {
 } from '@ant-design/icons';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
-import Notification from '../components/common/Notification';
-
+import '../layouts/AdminLayoutStyle.css';
 const { Content, Sider } = Layout;
 
 interface AdminLayoutProps {
@@ -39,15 +38,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             path: '/admin/users',
         },
         {
-            key: 'leave-job',
+            key: 'levels',
             icon: <TeamOutlined />,
             label: 'Quản lý cấp bậc',
-            path: '/admin/leave-job',
+            path: '/admin/levels',
         },
         {
             key: 'job-category',
             icon: <TeamOutlined />,
-            label: 'Quản lý danh mục tin tuyển dụng',
+            label: 'Quản lý danh mục',
             path: '/admin/job-category',
         },
         {
@@ -68,14 +67,18 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     collapsed={collapsed}
                     onCollapse={setCollapsed}
                     theme="light"
+                    className="admin-sider"
                 >
                     <Sidebar menuItems={menuItems} />
                 </Sider>
-                <Layout className="p-6">
-                    <div className="flex-between mb-4">
-
+                <Layout className="site-layout">
+                    <div className="admin-welcome-banner">
+                        <div className="welcome-content">
+                            <h2>Chào mừng đến với Trang Quản trị</h2>
+                            <p>Quản lý và điều hành hệ thống tuyển dụng của bạn tại đây</p>
+                        </div>
                     </div>
-                    <Content className="bg-white p-6 rounded-lg">
+                    <Content className="admin-content">
                         {children}
                     </Content>
                 </Layout>
