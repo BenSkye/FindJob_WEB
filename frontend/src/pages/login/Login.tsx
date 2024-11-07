@@ -22,12 +22,11 @@ const Login: React.FC = () => {
             placement: 'top',
             duration: 3,
             style: {
-                marginTop: '50px'
+                marginTop: '20px'
             }
         });
     };
 
-    // Xử lý đăng nhập Google thành công
     const handleGoogleSuccess = async (credentialResponse: any) => {
         try {
             console.log('Google Response:', credentialResponse);
@@ -43,8 +42,14 @@ const Login: React.FC = () => {
             console.log('API Response:', response);
 
             if (response.status === 200) {
+                const userData = response.data.metadata.user;
                 localStorage.setItem('accessToken', response.data.metadata.tokens.accessToken);
-                localStorage.setItem('user', JSON.stringify(response.data.metadata.user));
+                localStorage.setItem('user', JSON.stringify({
+                    name: userData.name,
+                    email: userData.email,
+                    avatar: userData.avatar,
+                    role: userData.roles[0]
+                }));
 
                 showNotification(
                     'success',
@@ -63,7 +68,6 @@ const Login: React.FC = () => {
         }
     };
 
-    // Xử lý lỗi đăng nhập Google
     const handleGoogleError = () => {
         console.error('Google Sign In Error');
         showNotification(
@@ -80,19 +84,30 @@ const Login: React.FC = () => {
             console.log('Login Response:', response);
 
             if (response.status === 200) {
-                // Lưu token và thông tin user
-                localStorage.setItem('accessToken', response.data.metadata.tokens.accessToken);
-                localStorage.setItem('user', JSON.stringify(response.data.metadata.user));
+                const userData = response.metadata.user;
+                localStorage.setItem('accessToken', response.metadata.tokens.accessToken);
+                localStorage.setItem('user', JSON.stringify({
+                    name: userData.name,
+                    email: userData.email,
+                    avatar: userData.avatar,
+                    role: userData.roles[0]
+                }));
 
                 showNotification(
                     'success',
                     'Đăng nhập thành công!',
                     'Chào mừng bạn đã quay trở lại!'
                 );
-                navigate('/');
+
+                // Điều hướng dựa vào role
+                if (userData.roles.includes('admin')) {
+                    navigate('/admin/dashboard');
+                } else {
+                    navigate('/');
+                }
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            console.error('Login Error:', error);
             showNotification(
                 'error',
                 'Đăng nhập thất bại',
@@ -102,7 +117,6 @@ const Login: React.FC = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <>

@@ -50,39 +50,79 @@ class AccessService {
     return delKey;
   }
 
-
   static login = async (email: string, password: string, refreshToken = null) => {
-    //1 check email in dbs
-    const foundUser = await findByEmail(email);
-    if (!foundUser) {
-      throw new BadRequestError('User not Registered');
-    }
-    //2- match password
-    const match = await bcrypt.compare(password, foundUser.password);
-    if (!match) {
-      throw new AuthFailureError('Password not match');
-    }
-    //3- create AT vs RT and save
-    const privateKey = crypto.randomBytes(64).toString('hex');
-    const publicKey = crypto.randomBytes(64).toString('hex');
-    //4 generate tokens
-    const tokens = await createTokenPair({ userId: foundUser._id, email, name: foundUser.name }, publicKey.toString(), privateKey.toString());
+    try {
+      //1 check email in dbs
+      const foundUser = await findByEmail(email);
+      console.log('foundUser', foundUser);
+      if (!foundUser) {
+        throw new BadRequestError('User not Registered');
+      }
 
-    if (!tokens) {
-      throw new BadRequestError('Create Token Fail');
-    }
+      //2- check if password exists
+      if (!password) {
+        throw new BadRequestError('Password is required');
+      }
 
-    await KeyTokenService.createKeyToken(foundUser._id, publicKey.toString(), privateKey.toString(), (tokens as { refreshToken: string }).refreshToken);
-    const apiKey = await findByUserId(foundUser._id);
-    if (!apiKey) {
-      throw new NotFoundError('API Key not found');
-    }
-    return {
-      user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: foundUser }),
-      tokens,
-      apiKey: apiKey.key
+      if (!foundUser.password) {
+        throw new BadRequestError('User password not found');
+      }
+
+      console.log('Input password:', password);
+      console.log('Stored hash:', foundUser.password);
+
+      //3- match password
+      const match = await bcrypt.compare(String(password), String(foundUser.password));
+      console.log('match', match);
+      if (!match) {
+        throw new AuthFailureError('Password not match');
+      }
+
+      //4- create AT vs RT and save
+      const privateKey = crypto.randomBytes(64).toString('hex');
+      const publicKey = crypto.randomBytes(64).toString('hex');
+
+      //5 generate tokens
+      const tokens = await createTokenPair(
+        {
+          userId: foundUser._id,
+          email,
+          name: foundUser.name
+        },
+        publicKey,
+        privateKey
+      );
+
+      if (!tokens) {
+        throw new BadRequestError('Create Token Fail');
+      }
+
+      await KeyTokenService.createKeyToken(
+        foundUser._id,
+        publicKey,
+        privateKey,
+        (tokens as { refreshToken: string }).refreshToken
+      );
+
+      const apiKey = await findByUserId(foundUser._id);
+      if (!apiKey) {
+        throw new NotFoundError('API Key not found');
+      }
+
+      return {
+        user: getInfoData({
+          fields: ['_id', 'name', 'email', 'roles'],
+          object: foundUser
+        }),
+        tokens,
+        apiKey: apiKey.key
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      throw error;
     }
   }
+
 
   static signup = async ({ name, email, password, role, phone, address }: { name: string, email: string, password: string, role: string, phone: string, address: string }) => {
     //step1: check email exist
