@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import Forbidden from './common/403';
+import Forbidden from '../components/common/403';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;

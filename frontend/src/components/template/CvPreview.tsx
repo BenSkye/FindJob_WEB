@@ -11,23 +11,16 @@ interface CvPreviewProps {
 const CvPreview: React.FC<CvPreviewProps> = ({ template, data, isPreviewMode = false }) => {
     const renderContent = () => {
         try {
-            // Compile template với Handlebars
             const compiledTemplate = Handlebars.compile(template.htmlStructure);
-
-            // Chuẩn bị dữ liệu để render
             const templateData = {
                 ...data,
-                // Thêm các helper data nếu cần
                 isPreviewMode
             };
-
-            // Render template với dữ liệu
             const renderedHtml = compiledTemplate(templateData);
-
             return { __html: renderedHtml };
         } catch (error) {
             console.error('Template rendering error:', error);
-            return { __html: 'Error rendering template' };
+            return { __html: '<div style="color: red;">Error rendering template. Please try again later.</div>' };
         }
     };
 

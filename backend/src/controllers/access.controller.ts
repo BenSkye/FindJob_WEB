@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import AccessService from '../services/access.service';
 import { CREATED, SuccessResponse } from '../core/success.response';
 import { asyncHandler } from '../helpers/asyncHandler';
+import { OAuth2Client } from 'google-auth-library';
+import { BadRequestError } from '../core/error.response';
 
 class AccessController {
 
@@ -75,6 +77,17 @@ class AccessController {
     new SuccessResponse({
       message: 'Get user successfully',
       metadata: await AccessService.getUser(req.query),
+    }).send(res);
+  });
+  googleSignUp = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { credential } = req.body;
+    if (!credential) {
+      throw new BadRequestError('Google credential is required');
+    }
+
+    new SuccessResponse({
+      message: 'Google sign up successfully',
+      metadata: await AccessService.googleSignup(credential),
     }).send(res);
   });
 

@@ -53,7 +53,15 @@ const AddModal: React.FC<AddModalProps> = ({
                 <Form.Item
                     name="name"
                     label={mainFieldLabel}
-                    rules={[{ required: true, message: `Vui lòng nhập ${mainFieldLabel.toLowerCase()}` }]}
+                    rules={[
+                        { required: true, message: `Vui lòng nhập ${mainFieldLabel.toLowerCase()}` },
+                        {
+                            validator: (_, value) =>
+                                value && value.trim() !== ''
+                                    ? Promise.resolve()
+                                    : Promise.reject(new Error('Không được chỉ nhập khoảng trắng')),
+                        },
+                    ]}
                 >
                     <Input placeholder={mainFieldPlaceholder} />
                 </Form.Item>
@@ -76,6 +84,12 @@ const AddModal: React.FC<AddModalProps> = ({
                                                     required: true,
                                                     whitespace: true,
                                                     message: `Vui lòng nhập ${subFieldsLabel.toLowerCase()}`,
+                                                },
+                                                {
+                                                    validator: (_, value) =>
+                                                        value && value.trim() !== ''
+                                                            ? Promise.resolve()
+                                                            : Promise.reject(new Error('Không được chỉ nhập khoảng trắng')),
                                                 },
                                             ]}
                                             noStyle

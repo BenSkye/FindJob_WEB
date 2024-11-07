@@ -7,6 +7,7 @@ const accessRouter = Router();
 
 //signup
 accessRouter.post('/signup', accessController.signUp);
+accessRouter.post('/google-signup', accessController.googleSignUp);
 accessRouter.post('/signup-employer', accessController.signUpEmployer);
 accessRouter.post('/login', accessController.login);
 accessRouter.get('/verify-email', accessController.verifyEmail);
