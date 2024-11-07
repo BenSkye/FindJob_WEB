@@ -5,7 +5,7 @@ import { createTokenPair, verifyJWT } from '../auth/authUtils';
 import { getInfoData } from '../utils';
 import { AuthFailureError, BadRequestError, ForbiddenError, NotFoundError } from '../core/error.response';
 import nodemailer from 'nodemailer';
-
+import { OAuth2Client } from 'google-auth-library';
 //import service
 import KeyTokenService from './keyToken.service';
 import { findByEmail } from './user.service';
@@ -50,43 +50,84 @@ class AccessService {
     return delKey;
   }
 
-
   static login = async (email: string, password: string, refreshToken = null) => {
-    //1 check email in dbs
-    const foundUser = await findByEmail(email);
-    if (!foundUser) {
-      throw new BadRequestError('User not Registered');
-    }
-    //2- match password
-    const match = await bcrypt.compare(password, foundUser.password);
-    if (!match) {
-      throw new AuthFailureError('Password not match');
-    }
-    //3- create AT vs RT and save
-    const privateKey = crypto.randomBytes(64).toString('hex');
-    const publicKey = crypto.randomBytes(64).toString('hex');
-    //4 generate tokens
-    const tokens = await createTokenPair({ userId: foundUser._id, email, name: foundUser.name }, publicKey.toString(), privateKey.toString());
+    try {
+      //1 check email in dbs
+      const foundUser = await findByEmail(email);
+      console.log('foundUser', foundUser);
+      if (!foundUser) {
+        throw new BadRequestError('User not Registered');
+      }
 
-    if (!tokens) {
-      throw new BadRequestError('Create Token Fail');
-    }
+      //2- check if password exists
+      if (!password) {
+        throw new BadRequestError('Password is required');
+      }
 
-    await KeyTokenService.createKeyToken(foundUser._id, publicKey.toString(), privateKey.toString(), (tokens as { refreshToken: string }).refreshToken);
-    const apiKey = await findByUserId(foundUser._id);
-    if (!apiKey) {
-      throw new NotFoundError('API Key not found');
-    }
-    return {
-      user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: foundUser }),
-      tokens,
-      apiKey: apiKey.key
+      if (!foundUser.password) {
+        throw new BadRequestError('User password not found');
+      }
+
+      console.log('Input password:', password);
+      console.log('Stored hash:', foundUser.password);
+
+      //3- match password
+      const match = await bcrypt.compare(String(password), String(foundUser.password));
+      console.log('match', match);
+      if (!match) {
+        throw new AuthFailureError('Password not match');
+      }
+
+      //4- create AT vs RT and save
+      const privateKey = crypto.randomBytes(64).toString('hex');
+      const publicKey = crypto.randomBytes(64).toString('hex');
+
+      //5 generate tokens
+      const tokens = await createTokenPair(
+        {
+          userId: foundUser._id,
+          email,
+          name: foundUser.name
+        },
+        publicKey,
+        privateKey
+      );
+
+      if (!tokens) {
+        throw new BadRequestError('Create Token Fail');
+      }
+
+      await KeyTokenService.createKeyToken(
+        foundUser._id,
+        publicKey,
+        privateKey,
+        (tokens as { refreshToken: string }).refreshToken
+      );
+
+      const apiKey = await findByUserId(foundUser._id);
+      if (!apiKey) {
+        throw new NotFoundError('API Key not found');
+      }
+
+      return {
+        user: getInfoData({
+          fields: ['_id', 'name', 'email', 'roles'],
+          object: foundUser
+        }),
+        tokens,
+        apiKey: apiKey.key
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      throw error;
     }
   }
+
 
   static signup = async ({ name, email, password, role, phone, address }: { name: string, email: string, password: string, role: string, phone: string, address: string }) => {
     //step1: check email exist
     const holderUser = await userModel.findOne({ email }).lean();
+
     console.log('exist', holderUser)
     if (holderUser) {
       throw new BadRequestError('Email already exists');
@@ -106,6 +147,8 @@ class AccessService {
       address,
     });
 
+    console.log("newuser", newUser)
+
     if (newUser) {
       const privateKey = crypto.randomBytes(64).toString('hex');
       const publicKey = crypto.randomBytes(64).toString('hex');
@@ -119,6 +162,7 @@ class AccessService {
       console.log('Create Token Success', tokens);
       console.log('role', newUser.roles);
       const apiKey = await createKey(newUser.roles, newUser._id);
+      console.log("apikey", apiKey)
       if (!apiKey) {
         throw new BadRequestError('Create API Key Fail');
       }
@@ -164,6 +208,101 @@ class AccessService {
     }
 
   };
+
+  static googleSignup = async (credential: string) => {
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    try {
+      // Verify Google token
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID
+      });
+
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        throw new BadRequestError('Invalid Google token payload');
+      }
+
+      const { email, name, picture, sub: googleId } = payload;
+
+      // Check if user already exists
+      let user = await userModel.findOne({ email }).lean();
+
+      if (user) {
+        // If user exists, create new tokens
+        const privateKey = crypto.randomBytes(64).toString('hex');
+        const publicKey = crypto.randomBytes(64).toString('hex');
+
+        const tokens = await createTokenPair(
+          { userId: user._id, email },
+          publicKey,
+          privateKey
+        );
+
+        await KeyTokenService.createKeyToken(
+          user._id,
+          publicKey,
+          privateKey,
+          (tokens as { refreshToken: string }).refreshToken
+        );
+
+        return {
+          user: getInfoData({
+            fields: ['_id', 'name', 'email', 'roles', 'avatar'],
+            object: user
+          }),
+          tokens
+        };
+      }
+
+      // Create new user if not exists
+      const newUser = await userModel.create({
+        name: name || email.split('@')[0],
+        email,
+        password: crypto.randomBytes(20).toString('hex'),
+        roles: ['candidate'],
+        verify: true,
+        avatar: picture || '',
+        authType: 'google',
+        googleId,
+        status: 'active'
+      });
+
+      // Create tokens for new user
+      const privateKey = crypto.randomBytes(64).toString('hex');
+      const publicKey = crypto.randomBytes(64).toString('hex');
+
+      const tokens = await createTokenPair(
+        { userId: newUser._id, email },
+        publicKey,
+        privateKey
+      );
+
+      await KeyTokenService.createKeyToken(
+        newUser._id,
+        publicKey,
+        privateKey,
+        (tokens as { refreshToken: string }).refreshToken
+      );
+
+      // Create API key for new user
+      const apiKey = await createKey(newUser.roles, newUser._id);
+
+      return {
+        user: getInfoData({
+          fields: ['_id', 'name', 'email', 'roles', 'avatar'],
+          object: newUser
+        }),
+        tokens,
+        apiKey: apiKey.key
+      };
+
+    } catch (error) {
+      console.error('Google Sign Up Error:', error);
+      throw new BadRequestError('Failed to authenticate with Google');
+    }
+  }
 
   static signupEmployer = async ({ name, email, password, companyName, phone, address }: { name: string, email: string, password: string, companyName: string, phone: string, address: string }) => {
     //step1: check email exist
