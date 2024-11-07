@@ -14,6 +14,7 @@ interface AddModalProps {
     addSubFieldButtonText?: string;
     submitButtonText?: string;
     cancelButtonText?: string;
+    showSubCategories?: boolean;
 }
 
 const AddModal: React.FC<AddModalProps> = ({
@@ -27,7 +28,8 @@ const AddModal: React.FC<AddModalProps> = ({
     subFieldsPlaceholder = "Nhập tên danh mục con",
     addSubFieldButtonText = "Thêm danh mục con",
     submitButtonText = "Tạo mới",
-    cancelButtonText = "Hủy"
+    cancelButtonText = "Hủy",
+    showSubCategories = true,
 }) => {
     const [form] = Form.useForm();
 
@@ -56,51 +58,53 @@ const AddModal: React.FC<AddModalProps> = ({
                     <Input placeholder={mainFieldPlaceholder} />
                 </Form.Item>
 
-                <Form.List name="subCategories">
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map((field, index) => (
-                                <Form.Item
-                                    required={false}
-                                    key={field.key}
-                                    label={index === 0 ? subFieldsLabel : ""}
-                                >
+                {showSubCategories && (
+                    <Form.List name="subCategories">
+                        {(fields, { add, remove }) => (
+                            <>
+                                {fields.map((field, index) => (
                                     <Form.Item
-                                        {...field}
-                                        validateTrigger={['onChange', 'onBlur']}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                whitespace: true,
-                                                message: `Vui lòng nhập ${subFieldsLabel.toLowerCase()}`,
-                                            },
-                                        ]}
-                                        noStyle
+                                        required={false}
+                                        key={field.key}
+                                        label={index === 0 ? subFieldsLabel : ""}
                                     >
-                                        <Input 
-                                            placeholder={subFieldsPlaceholder} 
-                                            style={{ width: '90%' }} 
+                                        <Form.Item
+                                            {...field}
+                                            validateTrigger={['onChange', 'onBlur']}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    whitespace: true,
+                                                    message: `Vui lòng nhập ${subFieldsLabel.toLowerCase()}`,
+                                                },
+                                            ]}
+                                            noStyle
+                                        >
+                                            <Input 
+                                                placeholder={subFieldsPlaceholder} 
+                                                style={{ width: '90%' }} 
+                                            />
+                                        </Form.Item>
+                                        <MinusCircleOutlined
+                                            onClick={() => remove(field.name)}
+                                            style={{ marginLeft: 8 }}
                                         />
                                     </Form.Item>
-                                    <MinusCircleOutlined
-                                        onClick={() => remove(field.name)}
-                                        style={{ marginLeft: 8 }}
-                                    />
+                                ))}
+                                <Form.Item>
+                                    <Button
+                                        type="dashed"
+                                        onClick={() => add()}
+                                        icon={<PlusOutlined />}
+                                        block
+                                    >
+                                        {addSubFieldButtonText}
+                                    </Button>
                                 </Form.Item>
-                            ))}
-                            <Form.Item>
-                                <Button
-                                    type="dashed"
-                                    onClick={() => add()}
-                                    icon={<PlusOutlined />}
-                                    block
-                                >
-                                    {addSubFieldButtonText}
-                                </Button>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
+                            </>
+                        )}
+                    </Form.List>
+                )}
 
                 <Form.Item>
                     <Space>

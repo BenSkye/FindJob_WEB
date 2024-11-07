@@ -2,11 +2,12 @@ import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import apiClient from '../services/api/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 
 interface User {
     userId: string;
-    username: string;
+    name: string;
     email: string;
 }
 
@@ -16,6 +17,7 @@ interface AuthContextType {
     logout: () => void;
     isAuthenticated: boolean;
     isLoading: boolean;
+    checkPermission: () => boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -28,6 +30,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -64,21 +67,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const logout = async () => {
-        const respone = await apiClient.post('/user/logout');
-        console.log(respone);
-        if (respone.status === 200) {
-            Cookies.remove('x-api-key');
-            Cookies.remove('x-client-id');
-            Cookies.remove('authorization');
-            Cookies.remove('x-refresh-token');
+        try {
+            const response = await apiClient.post('/user/logout');
+            console.log(response);
+            if (response.status === 200) {
+                Cookies.remove('x-api-key');
+                Cookies.remove('x-client-id');
+                Cookies.remove('authorization');
+                Cookies.remove('x-refresh-token');
+                setUser(null);
+                navigate('/admin/login');
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
         }
-        setUser(null);
     };
 
     const isAuthenticated = user !== null;
 
+    const checkPermission = () => {
+        return !!user;
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading }}>
+        <AuthContext.Provider value={{ 
+            user, 
+            login, 
+            logout, 
+            isAuthenticated, 
+            isLoading,
+            checkPermission 
+        }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,33 +1,28 @@
 export const SAMPLE_CV_CONTENT = {
-    personalInfo: {
-        name: "John Doe",
-        title: "Software Engineer",
-        email: "john.doe@example.com",
-        phone: "+1 234 567 890",
-        location: "New York, USA"
-    },
-    experience: [
-        {
-            title: "Senior Software Engineer",
-            company: "Tech Corp",
-            period: "2020 - Present",
-            description: "Led development team of 5 engineers. Implemented key features resulting in 30% performance improvement."
-        },
-        {
-            title: "Software Developer",
-            company: "StartUp Inc",
-            period: "2018 - 2020",
-            description: "Developed and maintained multiple web applications using React and Node.js."
-        }
+    templateId: "template_default",
+    fullName: "John Doe",
+    email: "john.doe@example.com",
+    phone: "+1 234 567 890",
+    address: "New York, USA",
+    avatar: "https://example.com/default-avatar.jpg", // URL ảnh mẫu
+    level: "Senior",
+    jobTitle: "Software Engineer",
+    jobType: "Full-time",
+    jobDescription: "Experienced software engineer with expertise in web development and team leadership. Strong problem-solving skills and passion for creating efficient, scalable solutions.",
+    skills: [
+        "JavaScript",
+        "React",
+        "Node.js",
+        "Python",
+        "SQL",
+        "AWS"
     ],
-    education: [
-        {
-            degree: "Master of Computer Science",
-            school: "Tech University",
-            year: "2018"
-        }
+    experiences: [
+        "Senior Software Engineer at Tech Corp (2020 - Present) - Led development team of 5 engineers. Implemented key features resulting in 30% performance improvement.",
+        "Software Developer at StartUp Inc (2018 - 2020) - Developed and maintained multiple web applications using React and Node.js."
     ],
-    skills: ["JavaScript", "React", "Node.js", "Python", "SQL", "AWS"],
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    
+    education: "Master of Computer Science from Tech University (2018)",
+    salaryExpectation: 5000,
+    status: "active",
+    isPaid: false
 };
