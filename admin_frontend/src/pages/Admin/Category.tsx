@@ -16,7 +16,8 @@ const CategoryPage: React.FC = () => {
         try {
             setLoading(true);
             const response = await adminGetCategory();
-            setCategories(response);
+            console.log('response:', response);
+            setCategories(response.metadata);
         } catch (error) {
             console.error('Error fetching categories:', error);
             message.error('Không thể tải danh sách danh mục');
@@ -36,6 +37,7 @@ const CategoryPage: React.FC = () => {
     const handleCreate = async (values: any) => {
         try {
             setLoading(true);
+            console.log('values:', values);
             await adminCreateCategory({
                 name: values.name,
                 subCategories: values.subCategories || []
@@ -89,7 +91,7 @@ const CategoryPage: React.FC = () => {
                     Thêm danh mục mới
                 </Button>
             </div>
-            
+
             <CustomTable<Category>
                 data={categories}
                 loading={loading}

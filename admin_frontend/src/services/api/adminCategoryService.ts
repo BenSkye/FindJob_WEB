@@ -1,13 +1,19 @@
 import { Category, SubCategory } from "../types/category.types";
 import axios from "axios";
+import apiClient from "./apiClient";
 const BASE_URL = import.meta.env.VITE_BE_APP_API_URL;
 
 export const adminGetCategory = async (): Promise<Category[]> => {
-    const response = await axios.get(`${BASE_URL}/v1/api/category/list`);
-    if (response.data && response.data.metadata) {
-        return response.data.metadata;
+    try {
+        const response = await apiClient.get('/category/list');
+        console.log('response:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error get category:', error);
+        return error.response.data;
+        throw error;
     }
-    return [];
+
 };
 
 interface CreateCategoryDto {
@@ -16,10 +22,14 @@ interface CreateCategoryDto {
 }
 
 export const adminCreateCategory = async (categoryData: CreateCategoryDto): Promise<Category> => {
-    const response = await axios.post(`${BASE_URL}/v1/api/category/create`, categoryData);
-    if (response.data && response.data.metadata) {
-        return response.data.metadata;
+    try {
+        const response = await apiClient.post('/category/create', categoryData);
+        console.log('response:', response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error create category:', error);
+        return error.response.data;
+        throw error;
     }
-    throw new Error('Failed to create category');
 };
 
