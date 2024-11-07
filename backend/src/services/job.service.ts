@@ -1,5 +1,6 @@
 import { subscriptionModel } from "../models/subscription.model";
 import { userModel } from "../models/user.model";
+import applicationRepo from "../repositories/application.repo";
 import companyRepo from "../repositories/company.repo";
 import jobRepo from "../repositories/job.repo";
 import { convertObjectId } from "../utils";
@@ -72,6 +73,23 @@ class JobService {
         }
 
         return await jobRepo.updateJob(jobId, jobData);
+    }
+
+
+    static getListApplicationsByJobId = async (jobId: string) => {
+        const job = await jobRepo.getJobById(jobId);
+        if (!job) {
+            throw new Error('Job not found');
+        }
+
+        let applications = []
+
+        for (let applicationId of job.applications) {
+            const application = await applicationRepo.getApplicationById(applicationId.toString());
+            applications.push(application);
+        }
+
+        return applications;
     }
 
 

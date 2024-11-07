@@ -22,5 +22,6 @@ class ApplicationRepo {
         return await applicationModel.find({ jobId: jobId });
     }
 
+
 }
 export default new ApplicationRepo();

@@ -32,5 +32,12 @@ class JobController {
             metadata: await JobService.publishJobWhenActiveSubscription(req.params.jobId, req.user.userId),
         }).send(res);
     });
+
+    getListApplicationsByJobId = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get list applications by job id successfully',
+            metadata: await JobService.getListApplicationsByJobId(req.params.jobId),
+        }).send(res);
+    });
 }
 export default new JobController();

@@ -37,10 +37,11 @@ const applicationSchema = new Schema(
         coverLetter: {
             type: String,
             trim: true,
+            default: null,
         },
         isReadByCandidate: {
             type: Boolean,
-            default: true,
+            default: false,
         },
     },
     {

@@ -15,4 +15,5 @@ jobRouter.use(authentication);
 jobRouter.use(apiKey)
 jobRouter.post('/create', permission('employer'), jobController.createJob);
 jobRouter.put('/publish-job-when-active-subscription/:jobId', permission('employer'), jobController.publishJobWhenActiveSubscription);
+jobRouter.get('/list-applications-by-job-id/:jobId', permission('employer'), jobController.getListApplicationsByJobId);
 export default jobRouter;

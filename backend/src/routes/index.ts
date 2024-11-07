@@ -8,6 +8,7 @@ import levelRouter from './level';
 import jobRouter from './job';
 import templateRouter from './template';
 import cvRouter from './cv';
+import applicationRouter from './application';
 
 
 const router = Router();
@@ -25,5 +26,6 @@ router.use('/v1/api/level', levelRouter);
 router.use('/v1/api/job', jobRouter);
 router.use('/v1/api/template', templateRouter);
 router.use('/v1/api/cv', cvRouter);
+router.use('/v1/api/application', applicationRouter);
 
 export default router;
