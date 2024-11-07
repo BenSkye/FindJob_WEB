@@ -2,29 +2,63 @@ import { BadRequestError } from "../core/error.response";
 import VnpayService from "./vnpay.service";
 import { generateOrderCode } from "../utils";
 import { createPaymentLink } from "./payOs.service";
+import subscriptionRepo from "../repositories/subscription.repo";
+import paymentRepo from "../repositories/payment.repo";
+import SubscriptionService from "./subscription.service";
 class CheckoutService {
-    // static checkoutReview = async (userId: String, product_list: any) => {
-    //     const cart = await cartRepo.findCart({ user_id: userId });
-    //     if (!cart) {
-    //         throw new BadRequestError('Cart not found');
-    //     }
-    //     const checkout_oder = {
-    //         total_price: 0,
-    //     }
 
-    //     // calculate total price
-    //     for (const product of product_list) {
-    //         const product_detail = await productRepo.getProductById(product.product_id, ['price']);
-    //         if (!product_detail) {
-    //             throw new BadRequestError('Product not found');
-    //         }
-    //         checkout_oder.total_price += product_detail.price * product.quantity;
-    //     }
-    //     return {
-    //         product_list,
-    //         checkout_oder
-    //     };
-    // }
+    static checkoutSubscription = async (userId: string) => {
+        const subscription = await subscriptionRepo.getSubscriptionByUserId(userId);
+        if (!subscription) {
+            throw new BadRequestError('Subscription not found');
+        }
+        // tạo payment
+        const paymentCode = generateOrderCode();
+        const paymentData = {
+            userId,
+            amount: 50000,
+            paymentCode,
+            paymentDate: new Date()
+        }
+        const paymentNew = await paymentRepo.createPayment(paymentData);
+        const cancelUrl = '/cancel-subscription-payment';
+        const returnUrl = '/return-subscription-payment';
+        const paymentLink = await createPaymentLink(paymentCode, paymentNew.amount, 'thanh toan goi 30 ngay', cancelUrl, returnUrl);
+        console.log('paymentLink:::', paymentLink);
+        const paymentUrl = paymentLink.checkoutUrl;
+        console.log('paymentUrl:::', paymentUrl);
+        return {
+            paymentUrl
+        };
+    }
+
+    static getPayOsSubscriptionReturn = async (reqQuery: any) => {
+        console.log('reqQueryPayos:::', reqQuery);
+        let updateSubscription = null;
+        if (reqQuery.code === '00') {
+            //gia hạn subscription
+            const paymentCode = reqQuery.orderCode;
+            const payment = await paymentRepo.getPaymentByPaymentCode(paymentCode);
+            if (!payment) {
+                throw new BadRequestError('Payment not found');
+            }
+            updateSubscription = await SubscriptionService.extendSubscription(payment.userId.toString(), payment._id.toString());
+            if (!updateSubscription) {
+                throw new BadRequestError('Update subscription failed');
+            }
+        } else {
+            //delete payment
+            await paymentRepo.deletePayment(reqQuery.orderCode);
+        }
+        return {
+            updateSubscription
+        };
+    }
+
+    static getPayOsSubscriptionCancel = async (reqQuery: any) => {
+        console.log('reqQueryPayosCancel:::', reqQuery);
+        await paymentRepo.deletePayment(reqQuery.orderCode);
+    }
 
     // static oderByUser = async (userId: string, product_list: Object, user_address: Object, payment_method: string, req: any) => {
     //     const checkout_info = await this.checkoutReview(userId, product_list);

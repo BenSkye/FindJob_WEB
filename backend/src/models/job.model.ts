@@ -10,8 +10,9 @@ const jobSchema = new Schema(
             ref: 'User',
             required: true,
         },
-        companyName: {
-            type: String,
+        companyId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Company',
             required: true,
         },
         title: {
@@ -19,13 +20,6 @@ const jobSchema = new Schema(
             required: true,
             trim: true,
         },
-        thumbnail: {
-            type: String,
-            required: true,
-        },
-        images: [{
-            type: Array, // URL của hình ảnh
-        }],
         requirements: {
             type: String,
             required: true,
