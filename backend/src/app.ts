@@ -12,6 +12,7 @@ import path from 'path';
 // Import routes
 import indexRouter from './routes/index';
 import userRouter from './routes/user';
+import SubscriptionService from './services/subscription.service';
 // import { ordersModel } from './models/order.model';
 
 const app = express();
@@ -49,13 +50,10 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// cron.schedule('* * * * *', async () => {
-//   const now = new Date();
-//   await userModel.deleteMany({
-//     verify: false,
-//     verificationTokenExpire: { $lt: now },
-//   });
-//   console.log('Deleted unverified accounts that expired');
-// });
+cron.schedule('0 0 * * *', async () => {
+  //check subscription expired every day at midnight (00:00)
+  await SubscriptionService.checkSubscriptionExpired();
+  console.log('Checked subscription expired');
+});
 
 export default app;

@@ -11,6 +11,7 @@ import KeyTokenService from './keyToken.service';
 import { findByEmail } from './user.service';
 import { createKey, findByUserId } from './apiKey.service';
 import { companyModel } from '../models/company.model';
+import SubscriptionService from './subscription.service';
 const RoleUser = {
   ADMIN: 'admin',
   EMPLOYER: 'employer',
@@ -217,6 +218,9 @@ class AccessService {
       if (!apiKey) {
         throw new BadRequestError('Create API Key Fail');
       }
+
+      //create subscription
+      await SubscriptionService.createSubscription(newUser._id.toString());
       // const verificationToken = crypto.randomBytes(32).toString('hex');
       // const verificationTokenHash = crypto.createHash('sha256').update(verificationToken).digest('hex');
       // const verificationTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // Token expires in 10 minutes
