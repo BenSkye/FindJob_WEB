@@ -19,5 +19,12 @@ class ApplicationController {
         }).send(res);
     });
 
+    getPersonalJobHasApplied = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get personal job has applied successfully',
+            metadata: await ApplicationService.getPersonalJobHasApplied(req.keyStore.user),
+        }).send(res);
+    });
+
 }
 export default new ApplicationController();

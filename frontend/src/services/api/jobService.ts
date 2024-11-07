@@ -1,8 +1,8 @@
 import apiClient from "./apiClient";
 
-const getListJobByCandidate = async () => {
+const getListJobByCandidate = async (query: any) => {
     try {
-        const response = await apiClient.get('/job/list-job-by-candidate');
+        const response = await apiClient.get('/job/list-job-by-candidate', { params: query });
         console.log('response:', response);
         return response.data;
     } catch (error: any) {
@@ -10,6 +10,18 @@ const getListJobByCandidate = async () => {
         return error.response.data;
     }
 }
+
+const getHotListJobByCandidate = async (query: any) => {
+    try {
+        const response = await apiClient.get('/job/list-job-by-candidate?isHot=true', { params: query });
+        console.log('response:', response);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getListJobByCandidate:', error);
+        return error.response.data;
+    }
+}
+
 
 const getJobById = async (jobId: string) => {
     try {
@@ -22,4 +34,4 @@ const getJobById = async (jobId: string) => {
     }
 }
 
-export { getListJobByCandidate, getJobById };
+export { getListJobByCandidate, getJobById, getHotListJobByCandidate };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     Card,
     Typography,
@@ -29,7 +29,9 @@ import { colors } from '../../config/theme';
 import { getJobById } from '../../services/api/jobService';
 import { formatCurrency, formatDateTime } from '../../utils/formatters';
 import ApplyJobModal from './ApplyJobModal';
-import { sendApplication } from '../../services/api/applicationService';
+import { getPersonalJobHasApplied, sendApplication } from '../../services/api/applicationService';
+import { useAuth } from '../../hooks/useAuth';
+import { useJobHasApply } from '../../hooks/useJobHasApply';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -58,6 +60,9 @@ const JobsDetail: React.FC = () => {
     const [isSaved, setIsSaved] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const { appliedJobs, addAppliedJob } = useJobHasApply();
 
     const fetchJobById = async () => {
         const response = await getJobById(id as string);
@@ -70,7 +75,12 @@ const JobsDetail: React.FC = () => {
     }, [id]);
 
     const handleApply = () => {
-        setIsModalVisible(true);
+        if (user) {
+            setIsModalVisible(true);
+        } else {
+            navigate('/login');
+            message.error('Vui lòng đăng nhập để ứng tuyển!');
+        }
     };
 
     const handleModalCancel = () => {
@@ -84,9 +94,10 @@ const JobsDetail: React.FC = () => {
             console.log('values:', values);
             const response = await sendApplication(id as string, values);
             console.log('response:', response);
-            if (response.status === 200) {
+            if (response.status === 201) {
                 message.success('Nộp đơn ứng tuyển thành công!');
                 setIsModalVisible(false);
+                addAppliedJob(id as string);
             } else {
                 message.error('Có lỗi xảy ra khi nộp đơn!');
             }
@@ -201,9 +212,14 @@ const JobsDetail: React.FC = () => {
 
                 <Col xs={24} lg={8}>
                     <Card className="job-action-card" style={{ borderRadius: '12px', boxShadow: colors.boxShadow }}>
-                        <Button type="primary" block size="large" onClick={handleApply}>
-                            Ứng tuyển ngay
-                        </Button>
+                        {appliedJobs.includes(id as string) ? (
+                            <Text type="secondary">Bạn đã ứng tuyển công việc này</Text>
+
+                        ) : (
+                            <Button type="primary" block size="large" onClick={handleApply}>
+                                Ứng tuyển ngay
+                            </Button>
+                        )}
                         <div className="action-buttons">
                             <Button
                                 icon={isSaved ? <HeartFilled /> : <HeartOutlined />}

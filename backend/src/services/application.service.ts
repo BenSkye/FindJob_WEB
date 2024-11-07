@@ -27,5 +27,14 @@ class ApplicationService {
         return await applicationRepo.getApplications({ candidateId: userId });
     }
 
+    static getPersonalJobHasApplied = async (userId: string) => {
+        const applications = await applicationRepo.getApplications({ candidateId: userId });
+        let jobIds: string[] = [];
+        applications.forEach((application) => {
+            jobIds.push(application.jobId.toString());
+        });
+        return jobIds;
+    }
+
 }
 export default ApplicationService;

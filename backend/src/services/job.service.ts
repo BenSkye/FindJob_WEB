@@ -34,7 +34,9 @@ class JobService {
     static getListJobByCandidate = async (query: any) => {
         const select = ['_id', 'title', 'companyId', 'mainCategory', 'subCategory', 'location', 'salary', 'jobType', 'status', 'isHot', 'level', 'expiryDate', 'createdAt', 'updatedAt'];
         query = { ...query, status: 'published' }
-        return await jobRepo.getListJob(query, select);
+        const jobs = await jobRepo.getListJobByCandidate(query, select);
+        console.log('jobs', jobs);
+        return jobs;
     }
 
     static getJobById = async (jobId: string) => {

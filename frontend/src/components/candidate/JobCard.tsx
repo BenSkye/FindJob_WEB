@@ -4,6 +4,7 @@ import { EnvironmentOutlined, DollarOutlined } from '@ant-design/icons';
 import { Job } from '../../services/types/job.types';
 import defaultCompanyLogo from '../../assets/images/logo.png';
 import { formatCurrency } from '../../utils/formatters';
+import { useJobHasApply } from '../../hooks/useJobHasApply';
 
 const { Title, Paragraph } = Typography;
 
@@ -57,6 +58,8 @@ const styles = {
 };
 
 const JobCard: React.FC<JobCardProps> = ({ job, type = 'featured' }) => {
+    const { appliedJobs } = useJobHasApply();
+
     if (type === 'recent') {
         console.log('job', job);
         return (
@@ -88,7 +91,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, type = 'featured' }) => {
                         ))}
                     </div> */}
                 </div>
-                <Button type="primary" ghost className='button-hover'>Ứng tuyển</Button>
+                {appliedJobs.includes(job._id) ? <span >Đã ứng tuyển</span> : <Button type="primary" ghost className='button-hover'>Ứng tuyển</Button>}
             </div>
         );
     }

@@ -2,9 +2,9 @@ import React from 'react';
 import { Form, Input, Button, Card, Typography, Divider, Checkbox, Row, Col, message } from 'antd';
 import { UserOutlined, LockOutlined, GoogleOutlined, LinkedinOutlined } from '@ant-design/icons';
 import './Login.css';
-import logoImage from '../../../assets/images/logo.png';
-import { useAuth } from '../../../hooks/useAuth';
+import logoImage from '../../assets/images/logo.png';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const { Title, Text } = Typography;
 
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
                 type: 'success',
                 content: 'Đăng nhập thành công!',
             });
-            navigate('/admin/dashboard'); // Navigate to home page
+            navigate('/'); // Navigate to home page
         } else {
             messageApi.open({
                 type: 'error',
