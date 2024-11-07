@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Input, Button, Card, Row, Col, Statistic, Select, Tag } from 'antd';
-import { Link } from 'react-router-dom';
 import {
     SearchOutlined,
     EnvironmentOutlined,
@@ -18,6 +17,8 @@ import MultiSelect from '../../components/candidate/MultiSelect';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 
+
+import { Link } from 'react-router-dom';
 const { Title, Paragraph } = Typography;
 
 const featuredJobs: Job[] = [
@@ -390,8 +391,9 @@ const HomePage: React.FC = () => {
                         color="#00b14f"
                     />
                 </div>
-
-                <JobList jobs={recentJobs} type="recent" />
+                <Link to='/jobsdetail'>
+                    <JobList jobs={recentJobs} type="recent" />
+                </Link>
 
                 <div style={styles.buttonContainer}>
                     <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
@@ -402,37 +404,8 @@ const HomePage: React.FC = () => {
             <div>
 
                 <Title level={2} style={styles.sectionTitle}>Việc làm nổi bật</Title>
-                <Link to="/jobsdetail">
-                    <Row gutter={[16, 16]}>
-                        {featuredJobs.map(job => (
-                            <Col key={job.id} xs={24} sm={12} lg={8}>
-                                <Card className='card-hover'>
-                                    {job.urgent && (
-                                        <Tag color="red" style={{ marginBottom: '0.5rem' }}>
-                                            Tuyển gấp
-                                        </Tag>
-                                    )}
-                                    <Title level={4}>{job.title}</Title>
-                                    <Paragraph>{job.company}</Paragraph>
-                                    <div style={styles.jobMeta}>
-                                        <span>
-                                            <EnvironmentOutlined /> {job.location}
-                                        </span>
-                                        <span>
-                                            <DollarOutlined /> {job.salary}
-                                        </span>
-                                    </div>
-                                    <div style={styles.tagContainer}>
-                                        {job.tags.map(tag => (
-                                            <Tag key={tag} color="blue">
-                                                {tag}
-                                            </Tag>
-                                        ))}
-                                    </div>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
+                <Link to='jobsdetail'>
+                    <JobList jobs={featuredJobs} type="featured" />
                 </Link>
                 <div style={styles.buttonContainer}>
                     <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
@@ -442,11 +415,11 @@ const HomePage: React.FC = () => {
             {/* Categories Section */}
             < div >
                 <Title level={2} style={styles.sectionTitle}>Ngành nghề phổ biến</Title>
-                <Link to="/jobslist">
+                <Link to='/jobslist' >
                     <Row gutter={[16, 16]}>
                         {categories.map(category => (
                             <Col key={category.title} xs={24} sm={12} lg={6}>
-                                <Card className='card-hover'>
+                                <Card className='card-hover' hoverable>
                                     <div style={styles.categoryIcon}>
                                         {category.icon}
                                     </div>

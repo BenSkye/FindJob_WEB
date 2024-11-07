@@ -24,6 +24,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './JobsList.css';
+import { colors } from '../../config/theme';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -66,11 +67,11 @@ const DanhSachCongViec: React.FC = () => {
     };
 
     return (
-        <div className="jobs-page">
+        <div className="jobs-page" style={{ backgroundColor: colors.background.default }}>
             {/* Phần Tìm Kiếm */}
-            <div className="search-section">
+            <div className="search-section" style={{ background: colors.gradients.primary.main }}>
                 <div className="search-container">
-                    <Title level={2} className="search-title">
+                    <Title level={2} className="search-title" style={{ color: colors.text.inverse }}>
                         Việc làm IT & Phần mềm
                     </Title>
                     <Row gutter={[16, 16]} className="search-row">
@@ -81,12 +82,13 @@ const DanhSachCongViec: React.FC = () => {
                                 prefix={<SearchOutlined />}
                                 value={tuKhoaTimKiem}
                                 onChange={(e) => setTuKhoaTimKiem(e.target.value)}
+                                style={{ borderRadius: colors.borderRadius }}
                             />
                         </Col>
                         <Col xs={24} md={10}>
                             <Select
                                 size="large"
-                                style={{ width: '100%' }}
+                                style={{ width: '100%', borderRadius: colors.borderRadius }}
                                 placeholder="Chọn địa điểm"
                                 value={viTriChon}
                                 onChange={setViTriChon}
@@ -97,7 +99,7 @@ const DanhSachCongViec: React.FC = () => {
                             </Select>
                         </Col>
                         <Col xs={24} md={4}>
-                            <Button type="primary" size="large" block>
+                            <Button type="primary" size="large" block style={{ borderRadius: colors.borderRadius }}>
                                 Tìm Kiếm
                             </Button>
                         </Col>
@@ -110,7 +112,7 @@ const DanhSachCongViec: React.FC = () => {
                 <Row gutter={24}>
                     {/* Bộ Lọc */}
                     <Col xs={24} lg={6}>
-                        <Card className="filters-card">
+                        <Card className="filters-card" style={{ borderRadius: colors.borderRadius, boxShadow: colors.boxShadow }}>
                             <div className="filters-header">
                                 <Title level={4}>Bộ Lọc</Title>
                                 <Button type="link" icon={<FilterOutlined />}>Đặt lại</Button>
@@ -133,7 +135,6 @@ const DanhSachCongViec: React.FC = () => {
                                     <Checkbox value="fresher">Fresher</Checkbox>
                                     <Checkbox value="junior">Junior</Checkbox>
                                     <Checkbox value="senior">Senior</Checkbox>
-
                                 </Checkbox.Group>
                             </div>
                             <Divider />
@@ -152,10 +153,10 @@ const DanhSachCongViec: React.FC = () => {
 
                     {/* Danh Sách Công Việc */}
                     <Col xs={24} lg={18}>
-                        <Card className="jobs-card">
+                        <Card className="jobs-card" style={{ borderRadius: colors.borderRadius, boxShadow: colors.boxShadow }}>
                             <div className="jobs-header">
                                 <Title level={4}>{danhSachCongViec.length} Công Việc Đã Tìm Thấy</Title>
-                                <Select defaultValue="newest" style={{ width: 200 }}>
+                                <Select defaultValue="newest" style={{ width: 200, borderRadius: colors.borderRadius }}>
                                     <Option value="newest">Mới nhất</Option>
                                     <Option value="salary">Lương: Cao đến Thấp</Option>
                                     <Option value="relevant">Phù hợp nhất</Option>
@@ -167,6 +168,7 @@ const DanhSachCongViec: React.FC = () => {
                                     key={job.id}
                                     className="job-item"
                                     onClick={() => handleJobClick(job.id)}
+                                    style={{ borderRadius: colors.borderRadius, boxShadow: colors.boxShadow }}
                                 >
                                     <Row gutter={[16, 16]} align="middle">
                                         <Col xs={24} md={16}>
@@ -200,7 +202,7 @@ const DanhSachCongViec: React.FC = () => {
                                         </Col>
                                         <Col xs={24} md={8} className="job-actions">
                                             <Text type="secondary">{job.posted}</Text>
-                                            <Button type="primary">Ứng Tuyển Ngay</Button>
+                                            <Button type="primary" style={{ borderRadius: colors.borderRadius }}>Ứng Tuyển Ngay</Button>
                                         </Col>
                                     </Row>
                                 </Card>
