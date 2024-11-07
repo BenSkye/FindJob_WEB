@@ -143,24 +143,20 @@ const styles = {
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
-    const [selectedLevels, setSelectedLevels] = useState<string>();
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
     const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined);
     const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
     const [recentJobs, setRecentJobs] = useState<Job[]>([]);
     const [categories, setCategories] = useState([]);
-    const [levels, setLevels] = useState([]);
     const [provinces, setProvinces] = useState<Province[]>([]);
 
     useEffect(() => {
         const fetchCategoriesAndLevels = async () => {
             try {
-                const [categoriesResponse, levelsResponse] = await Promise.all([
+                const [categoriesResponse] = await Promise.all([
                     getListCategory(),
-                    getListLevel()
                 ]);
                 setCategories(categoriesResponse.metadata);
-                setLevels(levelsResponse.metadata);
             } catch (error) {
                 console.error('Error fetching categories and levels:', error);
             }
@@ -190,7 +186,6 @@ const HomePage: React.FC = () => {
         const params = new URLSearchParams();
         if (title) params.set('title', title);
         if (selectedCategory) params.set('category', selectedCategory);
-        if (selectedLevels) params.set('level', selectedLevels);
         if (selectedLocation) params.set('location', selectedLocation);
 
         navigate({
@@ -232,7 +227,7 @@ const HomePage: React.FC = () => {
                                     </Button>
                                 </Input.Group>
                             </Col>
-                            <Col xs={24} md={8}>
+                            <Col xs={24} md={12}>
                                 <Select
                                     placeholder="Chọn ngành nghề"
                                     style={{ width: '100%', height: '50px' }}
@@ -249,22 +244,8 @@ const HomePage: React.FC = () => {
                                     ))}
                                 </Select>
                             </Col>
-                            <Col xs={24} md={8}>
-                                <Select
-                                    placeholder="Chọn cấp bậc"
-                                    style={{ width: '100%', height: '50px' }}
-                                    value={selectedLevels?.name}
-                                    onChange={setSelectedLevels}
-                                    maxTagCount={2}
-                                >
-                                    {levels.map((level: any) => (
-                                        <Select.Option key={level._id} value={level._id}>
-                                            {level.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Col>
-                            <Col xs={24} md={8}>
+
+                            <Col xs={24} md={12}>
                                 <Select
                                     placeholder="Chọn địa điểm"
                                     style={{ width: '100%', height: '50px' }}

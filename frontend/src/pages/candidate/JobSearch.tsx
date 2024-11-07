@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Row, Col, Input, Select, Button, Spin } from 'antd';
+import { Typography, Row, Col, Input, Select, Button, Spin, Checkbox } from 'antd';
 import { SearchOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons';
 import JobList from '../../components/candidate/JobList';
 import { Job } from '../../services/types/job.types';
@@ -9,6 +9,7 @@ import { getListLevel } from '../../services/api/levelService';
 import { getListCategory } from '../../services/api/categoryService';
 import { Province } from '../../services/types/province.type';
 import { fetchProvinces } from '../../services/api/districtWardService';
+import { JOB_TYPE_OPTIONS } from '../../config/jobTypes';
 
 const { Title } = Typography;
 
@@ -25,13 +26,68 @@ const styles = {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         marginBottom: '2rem',
     },
-    resultsHeader: {
+    contentContainer: {
+        display: 'flex',
+        gap: '2rem',
+    },
+    filterSidebar: {
+        width: '280px',
+        flexShrink: 0,
+    },
+    mainContent: {
+        flex: 1,
+    },
+    filterContainer: {
+        background: 'white',
+        padding: '1.5rem',
+        borderRadius: '1rem',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    },
+    filterHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '1.5rem',
+    },
+    filterTitle: {
+        fontSize: '16px',
+        fontWeight: 600,
+        color: '#262626',
+        margin: 0,
+    },
+    resetButton: {
+        color: '#1890ff',
+        cursor: 'pointer',
+        fontSize: '14px',
+    },
+    filterButtons: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '0.8rem',
+    },
+    filterButton: {
+        border: '1px solid #d9d9d9',
+        borderRadius: '8px',
+        padding: '8px 12px',
+        cursor: 'pointer',
+        transition: 'all 0.3s',
+        fontSize: '14px',
+        backgroundColor: 'white',
+        '&:hover': {
+            borderColor: '#1890ff',
+            color: '#1890ff',
+        },
+    },
+    activeFilterButton: {
+        backgroundColor: '#1890ff',
+        color: 'white',
+        border: '1px solid #1890ff',
+    }, resultsHeader: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: '1rem',
-    },
-    loadingContainer: {
+    }, loadingContainer: {
         textAlign: 'center' as const,
         padding: '2rem',
     },
@@ -56,6 +112,30 @@ const styles = {
         height: '50px',
         borderRadius: '8px',
     },
+    filterSection: {
+        marginBottom: '1.5rem',
+    },
+    filterSectionTitle: {
+        fontSize: '14px',
+        fontWeight: 500,
+        marginBottom: '1rem',
+        color: '#595959',
+    },
+    filterOptions: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '0.8rem',
+    },
+    checkboxGroup: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '12px',
+    },
+    checkboxLabel: {
+        fontSize: '14px',
+        color: '#262626',
+    },
+
 };
 
 const JobSearch: React.FC = () => {
@@ -66,9 +146,10 @@ const JobSearch: React.FC = () => {
     // States
     const [title, setTitle] = useState<string>();
     const [selectedCategory, setSelectedCategory] = useState();
-    const [selectedLevels, setSelectedLevels] = useState<string>();
     const [selectedLocation, setSelectedLocation] = useState<any>();
     const [searchResults, setSearchResults] = useState<Job[]>([]);
+    const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+    const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
     const [levels, setLevels] = useState([]);
@@ -97,7 +178,6 @@ const JobSearch: React.FC = () => {
 
     useEffect(() => {
         const queryCategory = queryParams.get('category');
-        const queryLevel = queryParams.get('level');
         const queryLocation = queryParams.get('location');
         const queryTitle = queryParams.get('title');
         if (queryTitle) {
@@ -108,14 +188,6 @@ const JobSearch: React.FC = () => {
                 if (category._id === queryCategory) {
                     console.log('category', category);
                     setSelectedCategory(category);
-                    break;
-                }
-            }
-        }
-        if (queryLevel) {
-            for (const level of levels) {
-                if (level._id === queryLevel) {
-                    setSelectedLevels(level);
                     break;
                 }
             }
@@ -131,6 +203,15 @@ const JobSearch: React.FC = () => {
 
     }, [categories, levels, provinces]);
 
+    const handleJobTypeChange = (checkedValues: string[]) => {
+        setSelectedJobTypes(checkedValues);
+    };
+
+    const handleLevelChange = (checkedValues: string[]) => {
+        setSelectedLevels(checkedValues);
+    };
+
+
     useEffect(() => {
         const fetchSearchResults = async () => {
             setLoading(true);
@@ -140,6 +221,7 @@ const JobSearch: React.FC = () => {
                     mainCategory: selectedCategory,
                     level: selectedLevels,
                     location: selectedLocation,
+                    jobType: selectedJobTypes,
                 });
                 setSearchResults(response.metadata);
             } catch (error) {
@@ -150,13 +232,12 @@ const JobSearch: React.FC = () => {
         };
 
         fetchSearchResults();
-    }, [title, selectedCategory, selectedLevels, selectedLocation]);
+    }, [title, selectedCategory, selectedLevels, selectedLocation, selectedJobTypes]);
 
     const handleSearch = () => {
         const params = new URLSearchParams();
         if (title) params.set('title', title);
         if (selectedCategory) params.set('category', selectedCategory);
-        if (selectedLevels) params.set('level', selectedLevels);
         if (selectedLocation) params.set('location', selectedLocation);
 
         navigate({
@@ -178,7 +259,7 @@ const JobSearch: React.FC = () => {
                     <Col xs={24} md={24}>
                         <Input.Group compact>
                             <Input
-                                style={{ width: 'calc(100% - 120px)', height: '50px' }}
+                                style={styles.searchInput}
                                 placeholder="Nhập vị trí công việc, công ty, kỹ năng..."
                                 prefix={<SearchOutlined />}
                                 value={title}
@@ -188,17 +269,17 @@ const JobSearch: React.FC = () => {
                             <Button
                                 className='button-hover'
                                 type="primary"
-                                style={{ width: '120px', height: '50px' }}
+                                style={styles.searchButton}
                                 onClick={handleSearch}
                             >
                                 Tìm kiếm
                             </Button>
                         </Input.Group>
                     </Col>
-                    <Col xs={24} md={8}>
+                    <Col xs={24} md={12}>
                         <Select
                             placeholder="Chọn ngành nghề"
-                            style={{ width: '100%', height: '50px' }}
+                            style={styles.select}
                             showSearch
                             suffixIcon={<TeamOutlined />}
                             value={selectedCategory?.name}
@@ -212,25 +293,10 @@ const JobSearch: React.FC = () => {
                             ))}
                         </Select>
                     </Col>
-                    <Col xs={24} md={8}>
-                        <Select
-                            placeholder="Chọn cấp bậc"
-                            style={{ width: '100%', height: '50px' }}
-                            value={selectedLevels?.name}
-                            onChange={setSelectedLevels}
-                            maxTagCount={2}
-                        >
-                            {levels.map((level: any) => (
-                                <Select.Option key={level._id} value={level._id}>
-                                    {level.name}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Col>
-                    <Col xs={24} md={8}>
+                    <Col xs={24} md={12}>
                         <Select
                             placeholder="Chọn địa điểm"
-                            style={{ width: '100%', height: '50px' }}
+                            style={styles.select}
                             suffixIcon={<EnvironmentOutlined />}
                             value={selectedLocation}
                             onChange={setSelectedLocation}
@@ -245,23 +311,79 @@ const JobSearch: React.FC = () => {
                 </Row>
             </div>
 
-            <div style={styles.resultsHeader}>
-                <Title level={4}>
-                    {loading ? (
-                        'Đang tìm kiếm...'
-                    ) : (
-                        `Tìm thấy ${searchResults.length} việc làm phù hợp`
-                    )}
-                </Title>
-            </div>
 
-            {loading ? (
-                <div style={styles.loadingContainer}>
-                    <Spin size="large" />
+
+            <div style={styles.contentContainer}>
+                <div style={styles.filterSidebar}>
+                    <div style={styles.filterContainer}>
+                        <div style={styles.filterHeader}>
+                            <h3 style={styles.filterTitle}>Bộ Lọc</h3>
+                            <span
+                                style={styles.resetButton}
+                                onClick={() => {
+                                    setSelectedJobTypes([]);
+                                    setSelectedLevels([]);
+                                }}
+                            >
+                                Đặt lại
+                            </span>
+                        </div>
+
+                        <div style={styles.filterSection}>
+                            <div style={styles.filterSectionTitle}>Loại công việc</div>
+                            <Checkbox.Group
+                                style={styles.checkboxGroup}
+                                value={selectedJobTypes}
+                                onChange={handleJobTypeChange}
+                            >
+                                {JOB_TYPE_OPTIONS.map(({ value, label }) => (
+                                    <Checkbox
+                                        key={value}
+                                        value={value}
+                                        style={styles.checkboxLabel}
+                                    >
+                                        {label}
+                                    </Checkbox>
+                                ))}
+                            </Checkbox.Group>
+                        </div>
+
+                        <div style={styles.filterSection}>
+                            <div style={styles.filterSectionTitle}>Cấp bậc</div>
+                            <Checkbox.Group
+                                style={styles.checkboxGroup}
+                                value={selectedLevels}
+                                onChange={handleLevelChange}
+                            >
+                                {levels.map((level: any) => (
+                                    <Checkbox
+                                        key={level._id}
+                                        value={level._id}
+                                        style={styles.checkboxLabel}
+                                    >
+                                        {level.name}
+                                    </Checkbox>
+                                ))}
+                            </Checkbox.Group>
+                        </div>
+                    </div>
                 </div>
-            ) : (
-                <JobList jobs={searchResults} type="recent" />
-            )}
+                <div style={styles.mainContent}>
+                    <div style={styles.resultsHeader}>
+                        <Title level={4}>
+                            {loading ? 'Đang tìm kiếm...' : `Tìm thấy ${searchResults.length} việc làm phù hợp`}
+                        </Title>
+                    </div>
+
+                    {loading ? (
+                        <div style={styles.loadingContainer}>
+                            <Spin size="large" />
+                        </div>
+                    ) : (
+                        <JobList jobs={searchResults} type="recent" />
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

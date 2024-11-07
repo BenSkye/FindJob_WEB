@@ -15,17 +15,19 @@ const Router = () => {
 
 const App: React.FC = () => {
   return (
-    <ConfigProvider theme={theme}>
-      <BrowserRouter>
-        <Suspense fallback={<Loading.FullPage />}>
-          <AuthProvider>
-            <JobHasApplyProvider>
-              <Router />
-            </JobHasApplyProvider>
-          </AuthProvider>
-        </Suspense>
-      </BrowserRouter>
-    </ConfigProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ConfigProvider theme={theme}>
+        <BrowserRouter>
+          <Suspense fallback={<Loading.FullPage />}>
+            <AuthProvider>
+              <JobHasApplyProvider>
+                <Router />
+              </JobHasApplyProvider>
+            </AuthProvider>
+          </Suspense>
+        </BrowserRouter>
+      </ConfigProvider>
+    </GoogleOAuthProvider>
   );
 };
 

@@ -30,7 +30,7 @@ class JobRepo {
 
     async getListJobByCandidate(query: any, select: string[] = []) {
         console.log('query', query);
-        const { skip, limit, title, level, location, mainCategory, subCategory, ...otherQuery } = query;
+        const { skip, limit, title, level, jobType, location, mainCategory, subCategory, ...otherQuery } = query;
 
         // Build the search query
         const searchQuery: any = { ...otherQuery };
@@ -43,8 +43,13 @@ class JobRepo {
             searchQuery.location = { $regex: location, $options: 'i' }; // Case-insensitive regex for similar strings
         }
 
+        //nếu level và jobType là mảng
         if (level) {
-            searchQuery.level = level;
+            searchQuery.level = { $in: level };
+        }
+
+        if (jobType) {
+            searchQuery.jobType = { $in: jobType };
         }
 
         if (mainCategory) {
