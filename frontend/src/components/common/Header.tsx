@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
-import { UserOutlined, BellOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
@@ -113,6 +113,12 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     label: 'Thông tin cá nhân',
                     icon: <UserOutlined />,
                     onClick: () => navigate('/profile')
+                },
+                {
+                    key: 'change-password',
+                    label: 'Đổi mật khẩu',
+                    icon: <LockFilled />,
+                    onClick: () => navigate('/change-password')
                 },
                 {
                     key: 'logout',

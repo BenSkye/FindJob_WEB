@@ -4,7 +4,12 @@ import EmployerRoute from './EmployerRoute';
 import Login from '../pages/login/Login';
 import Register from '../pages/login/Register';
 import JobSearch from '../pages/candidate/JobSearch';
-import Template from '../pages/candidate/Teamplate';
+
+import Dashboard from '../pages/employer/Dashboard';
+import PostJob from '../pages/employer/PostJob';
+import Applications from '../pages/employer/Applications';
+import ManageJobs from '../pages/employer/ManageJobs';
+import Template from '../pages/candidate/teamplate';
 import CVBuilder from '../pages/candidate/CVBuilder';
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
 
@@ -55,6 +60,9 @@ const JobsList = lazy(() => import('../pages/jobs/JobsList').then(module => ({
   default: module.default
 })));
 
+const ProfilePage = lazy(() => import('../pages/profile/ProfilePage').then(module => ({
+  default: module.default
+})));
 
 export const routes: RouteObject[] = [
   {
@@ -66,6 +74,7 @@ export const routes: RouteObject[] = [
       { path: '/jobslist', element: <JobsList /> },
       { path: '/job-search', element: <JobSearch /> },
       { path: '/template', element: <Template /> },
+      { path: '/profile', element: <ProfilePage /> },
       { path: '/create-template/:templateId', element: <CVBuilder /> },
     ]
   },
@@ -73,7 +82,7 @@ export const routes: RouteObject[] = [
     path: '/candidate',
     element: <CandidateLayout />,
     children: [
-      // Thêm routes cho candidate sau
+
 
     ]
   },
@@ -85,8 +94,22 @@ export const routes: RouteObject[] = [
       </EmployerRoute>
     ),
     children: [
-      // Thêm routes cho employer sau
-
+      {
+        path: '/employer/dashboard',
+        element: <Dashboard />
+      },
+      {
+        path: '/employer/post-job',
+        element: <PostJob />
+      },
+      {
+        path: '/employer/applications',
+        element: <Applications />
+      },
+      {
+        path: '/employer/managejobs',
+        element: <ManageJobs />
+      }
     ]
   },
   {

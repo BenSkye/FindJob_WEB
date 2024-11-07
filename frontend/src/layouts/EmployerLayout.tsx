@@ -8,15 +8,11 @@ import {
 } from '@ant-design/icons';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
-import Notification from '../components/common/Notification';
+import { Outlet } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 
-interface EmployerLayoutProps {
-    children: React.ReactNode;
-}
-
-const EmployerLayout: React.FC<EmployerLayoutProps> = ({ children }) => {
+const EmployerLayout: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
 
     const menuItems = [
@@ -29,20 +25,20 @@ const EmployerLayout: React.FC<EmployerLayoutProps> = ({ children }) => {
         {
             key: 'post-job',
             icon: <FileAddOutlined />,
-            label: 'Đăng tin tuyển dụng',
+            label: 'Post Job',
             path: '/employer/post-job',
         },
         {
             key: 'applications',
             icon: <TeamOutlined />,
-            label: 'Quản lý ứng viên',
+            label: 'Manage Applications',
             path: '/employer/applications',
         },
         {
-            key: 'settings',
+            key: 'managejobs',
             icon: <SettingOutlined />,
-            label: 'Cài đặt',
-            path: '/employer/settings',
+            label: 'ManageJobs',
+            path: '/employer/managejobs',
         },
     ];
 
@@ -60,12 +56,8 @@ const EmployerLayout: React.FC<EmployerLayoutProps> = ({ children }) => {
                     <Sidebar menuItems={menuItems} />
                 </Sider>
                 <Layout className="p-6">
-                    <div className="flex-between mb-4">
-                        <h2>Dashboard</h2>
-                        <Notification />
-                    </div>
                     <Content className="bg-white p-6 rounded-lg">
-                        {children}
+                        <Outlet />
                     </Content>
                 </Layout>
             </Layout>

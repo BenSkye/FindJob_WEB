@@ -8,18 +8,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { googleSignUp } from '../../services/api/authenService';
+import { User } from '../../services/types/user.types';
+
 const { Title, Text } = Typography;
 const { Option } = Select;
-
-// Cập nhật interface cho đúng với backend
-interface RegisterData {
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    role: string;
-    address?: string;
-}
 
 const Register: React.FC = () => {
     const navigate = useNavigate();
@@ -47,7 +39,7 @@ const Register: React.FC = () => {
     const onFinish = async (values: any) => {
         setLoading(true);
         try {
-            const registerData = {
+            const registerData: User = {
                 name: `${values.firstName} ${values.lastName}`,
                 email: values.email,
                 password: values.password,
