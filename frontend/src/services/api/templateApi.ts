@@ -5,3 +5,8 @@ export const getAllTemplates = async () => {
     return response.data;
 };
 
+export const getTemplateById = async (templateId: string) => {
+    const response = await axios.get(`http://localhost:2024/v1/api/template/${templateId}`);
+    return response.data;
+};
+

@@ -4,7 +4,9 @@ import EmployerRoute from './EmployerRoute';
 import Login from '../pages/login/Login';
 import Register from '../pages/login/Register';
 import JobSearch from '../pages/candidate/JobSearch';
-import Template from '../pages/candidate/teamplate';
+import Template from '../pages/candidate/Teamplate';
+import CVBuilder from '../pages/candidate/CVBuilder';
+// import CreateTemplate from '../pages/candidate/CreateTemplate';
 
 // Lazy load các layouts với dynamic import
 const MainLayout = lazy(() => import('../layouts/MainLayout').then(module => ({
@@ -64,6 +66,7 @@ export const routes: RouteObject[] = [
       { path: '/jobslist', element: <JobsList /> },
       { path: '/job-search', element: <JobSearch /> },
       { path: '/template', element: <Template /> },
+      { path: '/create-template/:templateId', element: <CVBuilder /> },
     ]
   },
   {
