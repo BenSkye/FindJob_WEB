@@ -20,7 +20,7 @@ const RoleUser = {
 
 class AccessService {
   static handlerRefreshToken = async (user: any, keyStore: any, refreshToken: string) => {
-    const { userId, email } = user;
+    const { userId, email, roles } = user;
     if (keyStore.refreshTokensUsed.includes(refreshToken)) {
       await KeyTokenService.deleteKeyByUserId(userId)
       throw new ForbiddenError(' Something wrong happend !! Pls relogin')
@@ -32,7 +32,7 @@ class AccessService {
 
     if (!foundShop) throw new AuthFailureError(' User not registeted')
     // create 1 cap moi
-    const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey) as any
+    const tokens = await createTokenPair({ userId, email, roles }, keyStore.publicKey, keyStore.privateKey) as any
     //update token
     await KeyTokenService.updateRefreshTokensUsed(tokens.refreshToken, refreshToken)
 
@@ -66,7 +66,7 @@ class AccessService {
     const privateKey = crypto.randomBytes(64).toString('hex');
     const publicKey = crypto.randomBytes(64).toString('hex');
     //4 generate tokens
-    const tokens = await createTokenPair({ userId: foundUser._id, email, name: foundUser.name }, publicKey.toString(), privateKey.toString());
+    const tokens = await createTokenPair({ userId: foundUser._id, email, name: foundUser.name, roles: foundUser.roles }, publicKey.toString(), privateKey.toString());
 
     if (!tokens) {
       throw new BadRequestError('Create Token Fail');
@@ -114,7 +114,7 @@ class AccessService {
       if (!keyStore) {
         throw new BadRequestError('keyStore not found');
       }
-      const tokens = await createTokenPair({ userId: newUser._id, email }, publicKey.toString(), privateKey.toString());
+      const tokens = await createTokenPair({ userId: newUser._id, email, roles: newUser.roles }, publicKey.toString(), privateKey.toString());
 
       console.log('Create Token Success', tokens);
       console.log('role', newUser.roles);
@@ -210,7 +210,7 @@ class AccessService {
       if (!keyStore) {
         throw new BadRequestError('keyStore not found');
       }
-      const tokens = await createTokenPair({ userId: newUser._id, email }, publicKey.toString(), privateKey.toString());
+      const tokens = await createTokenPair({ userId: newUser._id, email, roles: newUser.roles }, publicKey.toString(), privateKey.toString());
 
       console.log('Create Token Success', tokens);
       console.log('role', newUser.roles);

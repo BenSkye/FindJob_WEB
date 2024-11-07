@@ -60,7 +60,7 @@ export const routes: RouteObject[] = [
     element: <MainLayout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: '/jobsdetail', element: <JobsDetail /> },
+      { path: '/jobsdetail/:id', element: <JobsDetail /> },
       { path: '/jobslist', element: <JobsList /> },
       { path: '/job-search', element: <JobSearch /> },
       { path: '/template', element: <Template /> },

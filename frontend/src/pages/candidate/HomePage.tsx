@@ -19,41 +19,9 @@ import { colors } from '../../config/theme';
 
 
 import { Link } from 'react-router-dom';
+import { getListJobByCandidate } from '../../services/api/jobService';
 const { Title, Paragraph } = Typography;
 
-const featuredJobs: Job[] = [
-    {
-        id: '1',
-        title: 'Senior React Developer',
-        company: 'Tech Corp',
-        location: 'TP.HCM',
-        salary: '$1500-$3000',
-        tags: ['React', 'TypeScript', 'Remote'],
-        isHot: true,
-        level: 'Senior',
-        category: 'IT & Phần mềm',
-    },
-    {
-        id: '2',
-        title: 'Product Manager',
-        company: 'Innovation Inc',
-        location: 'Hà Nội',
-        salary: '$2000-$4000',
-        tags: ['Management', 'Agile', 'Product'],
-        level: 'Senior',
-        category: 'IT & Phần mềm',
-    },
-    {
-        id: '3',
-        title: 'UI/UX Designer',
-        company: 'Creative Studio',
-        location: 'Đà Nẵng',
-        salary: '$1000-$2000',
-        tags: ['Figma', 'Adobe XD', 'UI/UX'],
-        level: 'Senior',
-        category: 'Thiết kế',
-    },
-];
 
 const recentJobs: Job[] = [
     {
@@ -228,6 +196,19 @@ const HomePage: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
     const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined);
     const [activeFilter, setActiveFilter] = useState<string>('Dưới 10 triệu');
+    const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+    const [recentJobs, setRecentJobs] = useState<Job[]>([]);
+
+    const fetchListJobByCandidate = async () => {
+        const response = await getListJobByCandidate();
+        console.log('response:', response);
+        setFeaturedJobs(response.metadata);
+        setRecentJobs(response.metadata);
+    }
+
+    useEffect(() => {
+        fetchListJobByCandidate();
+    }, []);
 
     const handleSearch = () => {
         const params = new URLSearchParams();
@@ -391,9 +372,7 @@ const HomePage: React.FC = () => {
                         color="#00b14f"
                     />
                 </div>
-                <Link to='/jobsdetail'>
-                    <JobList jobs={recentJobs} type="recent" />
-                </Link>
+                <JobList jobs={recentJobs} type="recent" />
 
                 <div style={styles.buttonContainer}>
                     <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
