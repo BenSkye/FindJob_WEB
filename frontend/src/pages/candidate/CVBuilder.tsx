@@ -24,6 +24,7 @@ import {
 } from '@ant-design/icons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useAuth } from '../../hooks/useAuth';
 
 
 
@@ -40,8 +41,10 @@ const CVBuilder = () => {
     const [paymentModalVisible, setPaymentModalVisible] = useState(false);
     const [processing, setProcessing] = useState(false);
 
+    const { user } = useAuth();
+
     const [cvData, setCvData] = useState<ICV>({
-        userId: '672ba877a50ef137eea79610', // Will be set from auth context
+        userId: user?.userId || '', // Will be set from auth context
         templateId: templateId || '',
         content: new Map<string, any>(),
         selectedFields: [],
@@ -99,7 +102,16 @@ const CVBuilder = () => {
     const handleContentChange = (fieldName: string, value: any) => {
         setCvData(prev => {
             const newContent = new Map(prev.content);
-            newContent.set(fieldName, value);
+
+            // Nếu là trường ảnh và value là UploadedImage
+            if (fieldName === 'avatar' || fieldName === 'photo') {
+                // Lưu cả object UploadedImage
+                newContent.set(fieldName, value);
+            } else {
+                // Các trường khác giữ nguyên logic cũ
+                newContent.set(fieldName, value);
+            }
+
             return {
                 ...prev,
                 content: newContent
