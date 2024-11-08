@@ -10,6 +10,7 @@ import Login from '../pages/Admin/login/Login';
 import NotFound from '../components/common/404';
 import Forbidden from '../components/common/403';
 import ProtectedRoute from './ProtectedRoute';
+import ProfilePage from '../pages/Admin/profile/ProfilePage';
 
 const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => ({
   default: () => {
@@ -56,6 +57,10 @@ export const routes: RouteObject[] = [
       {
         path: '/admin/settings',
         element: <Setting />,
+      },
+      {
+        path: '/admin/profile',
+        element: <ProfilePage />,
       },
     ]
   },

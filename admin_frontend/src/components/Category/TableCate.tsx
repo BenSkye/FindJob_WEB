@@ -15,7 +15,7 @@ interface CustomTableProps<T extends DataType> {
     pageSize?: number;
 }
 
-const CustomTable = <T extends DataType>({
+const CustomTableCategory = <T extends DataType>({
     data,
     loading,
     columns,
@@ -59,4 +59,4 @@ const CustomTable = <T extends DataType>({
     );
 };
 
-export default CustomTable;
+export default CustomTableCategory;
