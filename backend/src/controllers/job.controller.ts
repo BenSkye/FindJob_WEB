@@ -29,7 +29,7 @@ class JobController {
     publishJobWhenActiveSubscription = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
         new SuccessResponse({
             message: 'Publish job when active subscription successfully',
-            metadata: await JobService.publishJobWhenActiveSubscription(req.params.jobId, req.user.userId),
+            metadata: await JobService.publishJobWhenActiveSubscription(req.params.jobId, req.keyStore.user),
         }).send(res);
     });
 
@@ -39,5 +39,28 @@ class JobController {
             metadata: await JobService.getListApplicationsByJobId(req.params.jobId),
         }).send(res);
     });
+
+    getPersonalJob = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get personal job successfully',
+            metadata: await JobService.getPersonalJob(req.keyStore.user),
+        }).send(res);
+    });
+
+    getCompanyJob = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get company job successfully',
+            metadata: await JobService.getCompanyJob(req.keyStore.user),
+        }).send(res);
+    });
+
+
+    updateJob = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Update job successfully',
+            metadata: await JobService.updateJob(req.params.jobId, req.body),
+        }).send(res);
+    });
+
 }
 export default new JobController();

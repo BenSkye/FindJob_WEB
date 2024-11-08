@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import theme from './config/theme';
 import { AuthProvider } from './contexts/AuthContext';
 import { JobHasApplyProvider } from './contexts/JobHasApply';
+import { SubcriptionProvider } from './contexts/Subscription';
 
 const Router = () => {
   const element = useRoutes(routes);
@@ -21,7 +22,9 @@ const App: React.FC = () => {
           <Suspense fallback={<Loading.FullPage />}>
             <AuthProvider>
               <JobHasApplyProvider>
-                <Router />
+                <SubcriptionProvider>
+                  <Router />
+                </SubcriptionProvider>
               </JobHasApplyProvider>
             </AuthProvider>
           </Suspense>

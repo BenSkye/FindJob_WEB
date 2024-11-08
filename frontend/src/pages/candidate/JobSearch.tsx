@@ -9,7 +9,7 @@ import { getListLevel } from '../../services/api/levelService';
 import { getListCategory } from '../../services/api/categoryService';
 import { Province } from '../../services/types/province.type';
 import { fetchProvinces } from '../../services/api/districtWardService';
-import { JOB_TYPE_OPTIONS } from '../../config/jobTypes';
+import { JOB_TYPE_OPTIONS } from '../../config';
 
 const { Title } = Typography;
 

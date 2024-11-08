@@ -60,5 +60,10 @@ class SubscriptionService {
     }
 
 
+    static getPersonalSubcriptions = async (userId: string) => {
+        return await subscriptionRepo.getSubscriptionByUserId(userId);
+    }
+
+
 }
 export default SubscriptionService;
