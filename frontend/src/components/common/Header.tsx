@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
-import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled } from '@ant-design/icons';
+import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled, FileTextOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
+import { useAuth } from '../../hooks/useAuth';
 
 const { Header: AntHeader } = Layout;
 
@@ -21,26 +22,27 @@ interface User {
 
 const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
-    const [user, setUser] = useState<User | null>(null);
     const [activeMenuItem, setActiveMenuItem] = useState<string>('');
+    const { user, logout } = useAuth();
 
     useEffect(() => {
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-            setUser(JSON.parse(userStr));
+
+    }, [user]);
+
+    const handleLogout = async () => {
+        if (user?.roles.includes('employer')) {
+            await logout();
+            console.log('navigate to login');
+            navigate('/login');
+        } else {
+            await logout();
+            navigate('/');
         }
-    }, []);
+    };
 
     const handleMenuClick = (key: string) => {
         setActiveMenuItem(key);
         navigate(`/${key}`);
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        setUser(null);
-        navigate('/login');
     };
 
     const userMenu = (
@@ -51,6 +53,12 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     label: 'Thông tin cá nhân',
                     icon: <UserOutlined />,
                     onClick: () => navigate('/profile')
+                },
+                {
+                    key: 'personal-applications',
+                    label: 'Ứng tuyển của tôi',
+                    icon: <FileTextOutlined />,
+                    onClick: () => navigate('/personal-applications')
                 },
                 {
                     key: 'change-password',
@@ -80,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     <Menu.Item
                         key="jobs"
                         style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('jobslist')}
+                        onClick={() => handleMenuClick('job-search')}
                     >
                         Việc Làm
                     </Menu.Item>
@@ -124,7 +132,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                             <div style={styles.userInfo}>
                                 <Avatar
                                     src={user.avatar}
-                                    icon={!user.avatar && <UserOutlined />}
+                                    icon={<UserOutlined />}
                                     style={styles.avatar}
                                 />
                                 <span>{user.name}</span>
@@ -226,6 +234,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         backgroundColor: 'transparent',
         // borderBottom: 'none',  // Thêm dòng này để loại bỏ border mặc định của Menu
     },
-};
+}
 
 export default Header;

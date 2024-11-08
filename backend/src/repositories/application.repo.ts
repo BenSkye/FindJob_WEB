@@ -10,6 +10,18 @@ class ApplicationRepo {
         return await applicationModel.find(query);
     }
 
+    async getApplicationsWithPopulate(query: any) {
+        return await applicationModel.find(query)
+            .populate({
+                path: 'jobId',
+                select: '_id title location salary companyId',
+                populate: {
+                    path: 'companyId',
+                    select: '_id name'
+                }
+            }).sort({ createdAt: -1 });
+    }
+
     async getApplication(query: any) {
         return await applicationModel.findOne(query);
     }

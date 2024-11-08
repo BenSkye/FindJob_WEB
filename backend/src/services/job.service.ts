@@ -53,7 +53,9 @@ class JobService {
             throw new Error('Job not found');
         }
         if (job.employerId.toString() !== subscription.userId.toString()) {
-            throw new Error('Job not found');
+            console.log('job.employerId', job.employerId.toString());
+            console.log('subscription.userId', subscription.userId.toString());
+            throw new Error('Job not found56');
         }
         job.status = 'published';
         return await jobRepo.updateJob(jobId, job);
