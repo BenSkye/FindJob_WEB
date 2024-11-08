@@ -22,25 +22,25 @@ class CheckoutController {
 
     getPayOsSubscriptionReturn = asyncHandler(async (req: any, res: any, next: NextFunction) => {
         await CheckoutService.getPayOsSubscriptionReturn(req.query)
-        const redirectUrl = new URL(process.env.FRONTEND_URL + '/subscription');
+        const redirectUrl = new URL(process.env.FRONTEND_URL + '/employer/personal-job');
         res.redirect(redirectUrl.toString());
     });
 
     getPayOsSubscriptionCancel = asyncHandler(async (req: any, res: any, next: NextFunction) => {
         await CheckoutService.getPayOsSubscriptionCancel(req.query)
-        const redirectUrl = new URL(process.env.FRONTEND_URL + '/subscription');
+        const redirectUrl = new URL(process.env.FRONTEND_URL + '/employer/personal-job');
         res.redirect(redirectUrl.toString());
     });
 
     getPayOsPublishJobReturn = asyncHandler(async (req: any, res: any, next: NextFunction) => {
         await CheckoutService.getPayOsPublishJobReturn(req.query)
-        const redirectUrl = new URL(process.env.FRONTEND_URL + '/job');
+        const redirectUrl = new URL(process.env.FRONTEND_URL + '/employer/personal-job');
         res.redirect(redirectUrl.toString());
     });
 
     getPayOsPublishJobCancel = asyncHandler(async (req: any, res: any, next: NextFunction) => {
         await CheckoutService.getPayOsPublishJobCancel(req.query)
-        const redirectUrl = new URL(process.env.FRONTEND_URL + '/job');
+        const redirectUrl = new URL(process.env.FRONTEND_URL + '/employer/personal-job');
         res.redirect(redirectUrl.toString());
     });
 

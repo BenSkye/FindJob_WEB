@@ -4,7 +4,6 @@ import { UserOutlined, LockOutlined, LinkedinOutlined } from '@ant-design/icons'
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';
-import { googleSignUp } from '../../services/api/authenService';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -15,7 +14,7 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const { login, user } = useAuth();
+    const { login, user, googleSignUp } = useAuth();
 
     const showNotification = (type: 'success' | 'error', message: string, description: string) => {
         api[type]({
@@ -44,15 +43,6 @@ const Login: React.FC = () => {
             console.log('API Response:', response);
 
             if (response.status === 200) {
-                const userData = response.data.metadata.user;
-                localStorage.setItem('accessToken', response.data.metadata.tokens.accessToken);
-                localStorage.setItem('user', JSON.stringify({
-                    name: userData.name,
-                    email: userData.email,
-                    avatar: userData.avatar,
-                    role: userData.roles[0]
-                }));
-
                 showNotification(
                     'success',
                     'Đăng nhập Google thành công!',
@@ -100,14 +90,6 @@ const Login: React.FC = () => {
             console.log('Login Response:', response);
 
             if (response.status === 200) {
-                // const userData = response.metadata.user;
-                // localStorage.setItem('accessToken', response.metadata.tokens.accessToken);
-                // localStorage.setItem('user', JSON.stringify({
-                //     name: userData.name,
-                //     email: userData.email,
-                //     avatar: userData.avatar,
-                //     role: userData.roles[0]
-                // }));
                 showNotification(
                     'success',
                     'Đăng nhập thành công!',

@@ -82,7 +82,8 @@ export const googleSignUp = async (data: GoogleSignUpData) => {
     try {
         const response = await apiClient.post(`user/google-signup`, data);
         return response;
-    } catch (error) {
+    } catch (error: any) {
+        console.error('Error googleSignUp:', error);
         throw error;
     }
 };
