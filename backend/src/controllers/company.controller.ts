@@ -13,6 +13,13 @@ class CompanyController {
         }).send(res);
     });
 
+    getListCompany = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get list company successfully',
+            metadata: await CompanyService.getListCompany(req.query),
+        }).send(res);
+    });
+
     updateCompany = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
         new CREATED({
             message: 'Update company successfully',
