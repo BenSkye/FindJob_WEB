@@ -5,9 +5,10 @@ import { asyncHandler } from "../helpers/asyncHandler";
 
 class TemplateController {
     static findAllTemplates = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const activeOnly = req.query.activeOnly !== 'false';
         new SuccessResponse({
             message: 'Get all templates successfully',
-            metadata: await TemplateService.findAllTemplates(),
+            metadata: await TemplateService.findAllTemplates(activeOnly),
         }).send(res);
     });
 
@@ -38,6 +39,13 @@ class TemplateController {
             metadata: await TemplateService.deleteTemplate(req.params.templateId),
         }).send(res);
     }); 
+
+    static getTemplateFields = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get template fields successfully',
+            metadata: await TemplateService.getTemplateFields(req.params.templateId),
+        }).send(res);
+    });
 }
 
 export default TemplateController;
