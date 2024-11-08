@@ -12,6 +12,7 @@ import ManageJobs from '../pages/employer/ManageJobs';
 import Template from '../pages/candidate/teamplate';
 import CVBuilder from '../pages/candidate/CVBuilder';
 import PersonalApplication from '../pages/candidate/PersonalApplication';
+
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
 
 // Lazy load các layouts với dynamic import
@@ -65,6 +66,10 @@ const ProfilePage = lazy(() => import('../pages/profile/ProfilePage').then(modul
   default: module.default
 })));
 
+const AboutPage = lazy(() => import('../pages/about/AboutPage').then(module => ({
+  default: module.default
+})));
+
 export const routes: RouteObject[] = [
   {
     path: '/',
@@ -78,6 +83,7 @@ export const routes: RouteObject[] = [
       { path: '/profile', element: <ProfilePage /> },
       { path: '/create-template/:templateId', element: <CVBuilder /> },
       { path: '/personal-applications', element: <PersonalApplication /> },
+      { path: '/about', element: <AboutPage /> },
     ]
   },
   {
