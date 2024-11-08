@@ -13,7 +13,7 @@ const HEADER = {
 const createTokenPair = async (payload: Object, publicKey: string, privateKey: string) => {
     try {
         const accessToken = await jwt.sign(payload, publicKey,
-            { expiresIn: '2 minutes' });//2 minutes
+            { expiresIn: '2 days' });//2 days
         const refreshToken = await jwt.sign(payload, privateKey,
             { expiresIn: '7 days' });//7 days
 

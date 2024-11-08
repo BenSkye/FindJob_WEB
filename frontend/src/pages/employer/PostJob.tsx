@@ -6,6 +6,7 @@ import { getListCategory } from '../../services/api/categoryService';
 import { getListLevel } from '../../services/api/levelService';
 import { createJob } from '../../services/api/jobService';
 import './PostJob.css';
+import { JOB_TYPE_OPTIONS } from '../../config/jobTypes';
 
 const { Option } = Select;
 
@@ -58,10 +59,18 @@ const PostJob = () => {
             };
             delete jobData.salaryMin;
             delete jobData.salaryMax;
+            delete jobData.negotiable;
 
-            await createJob(jobData);
-            message.success('Tạo tin tuyển dụng thành công');
-            form.resetFields();
+            console.log('jobData::', jobData);
+
+            const response = await createJob(jobData);
+            console.log('response::', response);
+            if (response.status === 201) {
+                message.success('Tạo tin tuyển dụng thành công');
+                form.resetFields();
+            } else {
+                message.error('Lỗi khi tạo tin tuyển dụng');
+            }
         } catch (error) {
             message.error('Lỗi khi tạo tin tuyển dụng');
         } finally {
@@ -189,9 +198,14 @@ const PostJob = () => {
                         label="Phúc lợi"
                         rules={[{ required: true, message: 'Vui lòng nhập phúc lợi' }]}
                     >
-                        <Input.TextArea rows={4} placeholder="Nhập phúc lợi" />
+                        <CKEditor
+                            editor={ClassicEditor}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                form.setFieldsValue({ benefits: data });
+                            }}
+                        />
                     </Form.Item>
-
                     <Form.Item
                         name="location"
                         label="Địa điểm làm việc"
@@ -205,13 +219,10 @@ const PostJob = () => {
                         label="Loại công việc"
                         rules={[{ required: true, message: 'Vui lòng chọn loại công việc' }]}
                     >
-                        <Select placeholder="Chọn loại công việc">
-                            <Option value="full-time">Toàn thời gian</Option>
-                            <Option value="part-time">Bán thời gian</Option>
-                            <Option value="contract">Hợp đồng</Option>
-                            <Option value="internship">Thực tập</Option>
-                            <Option value="remote">Từ xa</Option>
-                        </Select>
+                        <Select
+                            placeholder="Chọn loại công việc"
+                            options={JOB_TYPE_OPTIONS}
+                        />
                     </Form.Item>
 
                     <Form.Item

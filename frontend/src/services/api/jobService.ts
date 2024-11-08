@@ -36,7 +36,7 @@ const getJobById = async (jobId: string) => {
 
 const createJob = async (data: any) => {
     try {
-        const response = await apiClient.post('/job/create-job', data);
+        const response = await apiClient.post('/job/create', data);
         return response.data;
     } catch (error: any) {
         console.error('Error createJob:', error);
