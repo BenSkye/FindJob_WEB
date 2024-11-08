@@ -33,6 +33,12 @@ class AuthFailureError extends ErrorResponse {
     }
 }
 
+class InvalidSignatureError extends ErrorResponse {
+    constructor(message = ReasonPhrases.NOT_ACCEPTABLE, statusCode = StatusCodes.NOT_ACCEPTABLE) {
+        super(message, statusCode);
+    }
+}
+
 class NotFoundError extends ErrorResponse {
     constructor(message = ReasonPhrases.NOT_FOUND, statusCode = StatusCodes.NOT_FOUND) {
         super(message, statusCode);
@@ -45,4 +51,4 @@ class ForbiddenError extends ErrorResponse {
     }
 }
 
-export { BadRequestError, ConflictRequestError, AuthFailureError, NotFoundError, ForbiddenError };
+export { BadRequestError, ConflictRequestError, AuthFailureError, NotFoundError, ForbiddenError, InvalidSignatureError };

@@ -12,5 +12,6 @@ companyRouter.use(authentication);
 ////////////////////////////
 companyRouter.use(apiKey)
 companyRouter.use(permission('employer'));
+companyRouter.get('/personal-company', companyController.getPersonalCompany);
 companyRouter.put('/update/:id', companyController.updateCompany);
 export default companyRouter;
