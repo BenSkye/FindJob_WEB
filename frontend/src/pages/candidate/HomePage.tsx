@@ -172,10 +172,10 @@ const HomePage: React.FC = () => {
     const fetchListJobByCandidate = async () => {
         const response = await getListJobByCandidate({ skip: 0, limit: 5 });
         console.log('response:', response);
-        setRecentJobs(response.metadata);
+        setRecentJobs(response.metadata.results);
         const hotResponse = await getHotListJobByCandidate({ skip: 0, limit: 5 });
         console.log('hotResponse:', hotResponse);
-        setFeaturedJobs(hotResponse.metadata);
+        setFeaturedJobs(hotResponse.metadata.results);
     };
 
     useEffect(() => {
@@ -309,11 +309,11 @@ const HomePage: React.FC = () => {
             {/* Featured Jobs Section */}
             <div>
                 <Title level={2} style={styles.sectionTitle}>Việc làm nổi bật</Title>
-                <Link to='jobsdetail'>
-                    <JobList jobs={featuredJobs} type="featured" />
-                </Link>
+                <JobList jobs={featuredJobs} type="featured" />
                 <div style={styles.buttonContainer}>
-                    <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
+                    <Link to='/job-search'>
+                        <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
+                    </Link>
                 </div>
             </div >
 

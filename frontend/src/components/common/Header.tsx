@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
-import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled } from '@ant-design/icons';
+import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled, FileTextOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
+import { useAuth } from '../../hooks/useAuth';
 
 const { Header: AntHeader } = Layout;
 
@@ -88,7 +89,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
-    const [user, setUser] = useState<User | null>(null);
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         // Kiểm tra user trong localStorage khi component mount
@@ -96,13 +97,17 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
         if (userStr) {
             setUser(JSON.parse(userStr));
         }
-    }, []);
+    }, [user]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        setUser(null);
-        navigate('/login');
+    const handleLogout = async () => {
+        if (user?.roles.includes('employer')) {
+            await logout();
+            console.log('navigate to login');
+            navigate('/login');
+        } else {
+            await logout();
+            navigate('/');
+        }
     };
 
     const userMenu = (
@@ -113,6 +118,12 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     label: 'Thông tin cá nhân',
                     icon: <UserOutlined />,
                     onClick: () => navigate('/profile')
+                },
+                {
+                    key: 'personal-applications',
+                    label: 'Ứng tuyển của tôi',
+                    icon: <FileTextOutlined />,
+                    onClick: () => navigate('/personal-applications')
                 },
                 {
                     key: 'change-password',
@@ -161,7 +172,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                             <div style={styles.userInfo}>
                                 <Avatar
                                     src={user.avatar}
-                                    icon={!user.avatar && <UserOutlined />}
+                                    icon={<UserOutlined />}
                                     style={styles.avatar}
                                 />
                                 <span>{user.name}</span>

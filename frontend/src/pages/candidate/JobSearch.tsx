@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Row, Col, Input, Select, Button, Spin, Checkbox } from 'antd';
+import { Typography, Row, Col, Input, Select, Button, Spin, Checkbox, Pagination } from 'antd';
 import { SearchOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons';
 import JobList from '../../components/candidate/JobList';
 import { Job } from '../../services/types/job.types';
@@ -154,6 +154,10 @@ const JobSearch: React.FC = () => {
     const [categories, setCategories] = useState([]);
     const [levels, setLevels] = useState([]);
     const [provinces, setProvinces] = useState<Province[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [total, setTotal] = useState(0);
+
 
     useEffect(() => {
         const fetchCategoriesAndLevels = async () => {
@@ -211,6 +215,11 @@ const JobSearch: React.FC = () => {
         setSelectedLevels(checkedValues);
     };
 
+    const handlePageChange = (page: number, pageSize?: number) => {
+        setCurrentPage(page);
+        if (pageSize) setPageSize(pageSize);
+        window.scrollTo(0, 0);
+    };
 
     useEffect(() => {
         const fetchSearchResults = async () => {
@@ -222,8 +231,11 @@ const JobSearch: React.FC = () => {
                     level: selectedLevels,
                     location: selectedLocation,
                     jobType: selectedJobTypes,
+                    skip: (currentPage - 1) * pageSize,
+                    limit: pageSize,
                 });
-                setSearchResults(response.metadata);
+                setSearchResults(response.metadata.results);
+                setTotal(response.metadata.totalCount);
             } catch (error) {
                 console.error('Error fetching search results:', error);
             } finally {
@@ -232,7 +244,7 @@ const JobSearch: React.FC = () => {
         };
 
         fetchSearchResults();
-    }, [title, selectedCategory, selectedLevels, selectedLocation, selectedJobTypes]);
+    }, [title, selectedCategory, selectedLevels, selectedLocation, selectedJobTypes, currentPage, pageSize]);
 
     const handleSearch = () => {
         const params = new URLSearchParams();
@@ -371,7 +383,7 @@ const JobSearch: React.FC = () => {
                 <div style={styles.mainContent}>
                     <div style={styles.resultsHeader}>
                         <Title level={4}>
-                            {loading ? 'Đang tìm kiếm...' : `Tìm thấy ${searchResults.length} việc làm phù hợp`}
+                            {loading ? 'Đang tìm kiếm...' : `Tìm thấy ${total} việc làm phù hợp`}
                         </Title>
                     </div>
 
@@ -380,7 +392,19 @@ const JobSearch: React.FC = () => {
                             <Spin size="large" />
                         </div>
                     ) : (
-                        <JobList jobs={searchResults} type="recent" />
+                        <>
+                            <JobList jobs={searchResults} type="recent" />
+                            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                                <Pagination
+                                    current={currentPage}
+                                    total={total}
+                                    pageSize={pageSize}
+                                    onChange={handlePageChange}
+                                    showSizeChanger
+                                    showTotal={(total) => `Tổng ${total} việc làm`}
+                                />
+                            </div>
+                        </>
                     )}
                 </div>
             </div>

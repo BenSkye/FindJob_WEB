@@ -35,7 +35,9 @@ const JobList: React.FC<JobListProps> = ({ jobs, type }) => {
         <Row gutter={[16, 16]}>
             {jobs.map(job => (
                 <Col key={job._id} xs={24} sm={12} lg={8}>
-                    <JobCard job={job} type="featured" />
+                    <Link to={`/jobsdetail/${job._id}`}>
+                        <JobCard job={job} type="featured" />
+                    </Link>
                 </Col>
             ))}
         </Row>

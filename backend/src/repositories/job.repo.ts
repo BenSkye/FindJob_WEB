@@ -60,6 +60,8 @@ class JobRepo {
             searchQuery.subCategory = subCategory;
         }
 
+        const totalCount = await jobModel.countDocuments(searchQuery);
+
         const queryBuilder = jobModel.find(searchQuery)
             .populate('companyId')
             .populate('mainCategory', 'name')
@@ -70,8 +72,8 @@ class JobRepo {
         if (skip !== undefined && limit !== undefined) {
             queryBuilder.skip(skip).limit(limit);
         }
-
-        return await queryBuilder;
+        const results = await queryBuilder;
+        return { results, totalCount };
     }
 
     async getJob(query: any) {

@@ -25,14 +25,18 @@ export function JobHasApplyProvider({ children }: { children: ReactNode }) {
 
     const fetchAppliedJobs = async () => {
         console.log('user', user);
-        if (user) {
+        if (user && user.roles.includes('candidate')) {
             const response = await getPersonalJobHasApplied();
             setAppliedJobs(response.metadata);
         }
     }
 
     useEffect(() => {
-        fetchAppliedJobs();
+        if (user) {
+            fetchAppliedJobs();
+        } else {
+            setAppliedJobs([]);
+        }
     }, [user]);
 
     const getAppliedJobs = async () => {
