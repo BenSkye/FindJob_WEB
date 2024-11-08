@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Input, Button, Card, Row, Col, Statistic, Select, Tag } from 'antd';
-import {
-    SearchOutlined,
-    EnvironmentOutlined,
-    TeamOutlined,
-    DownOutlined,
-    LeftOutlined,
-    RightOutlined
-} from '@ant-design/icons';
+import { Typography, Input, Button, Card, Row, Col, Statistic, Select } from 'antd';
 import JobList from '../../components/candidate/JobList';
 import { Job } from '../../services/types/job.types';
 import FilterTags from '../../components/candidate/FilterTags';
@@ -16,86 +8,13 @@ import { Province } from '../../services/types/province.type';
 import MultiSelect from '../../components/candidate/MultiSelect';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
-
-
 import { Link } from 'react-router-dom';
+import { getHotListJobByCandidate, getListJobByCandidate } from '../../services/api/jobService';
+import { getListCategory } from '../../services/api/categoryService';
+import { getListLevel } from '../../services/api/levelService';
+import { SearchOutlined, EnvironmentOutlined, TeamOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+
 const { Title, Paragraph } = Typography;
-
-const featuredJobs: Job[] = [
-    {
-        id: '1',
-        title: 'Senior React Developer',
-        company: 'Tech Corp',
-        location: 'TP.HCM',
-        salary: '$1500-$3000',
-        tags: ['React', 'TypeScript', 'Remote'],
-        isHot: true,
-        level: 'Senior',
-        category: 'IT & Phần mềm',
-    },
-    {
-        id: '2',
-        title: 'Product Manager',
-        company: 'Innovation Inc',
-        location: 'Hà Nội',
-        salary: '$2000-$4000',
-        tags: ['Management', 'Agile', 'Product'],
-        level: 'Senior',
-        category: 'IT & Phần mềm',
-    },
-    {
-        id: '3',
-        title: 'UI/UX Designer',
-        company: 'Creative Studio',
-        location: 'Đà Nẵng',
-        salary: '$1000-$2000',
-        tags: ['Figma', 'Adobe XD', 'UI/UX'],
-        level: 'Senior',
-        category: 'Thiết kế',
-    },
-];
-
-const recentJobs: Job[] = [
-    {
-        id: '1',
-        title: 'Nhân Viên Kinh Doanh/Sales Vật Liệu Xây Dựng',
-        company: 'CÔNG TY CỔ PHẦN PHÂN PHỐI THALLO',
-        location: 'Hồ Chí Minh',
-        salary: 'Thoả thuận',
-        logo: 'https://example.com/logo1.png',
-        isHot: true,
-        level: 'Entry Level',
-        category: 'IT & Phần mềm',
-        tags: ['Sales', 'Marketing', 'Business Development'],
-    },
-    {
-        id: '2',
-        title: 'Unreal Engine Artist',
-        company: 'CÔNG TY TNHH VLAST VIỆT NAM',
-        location: 'Hồ Chí Minh',
-        salary: '10 - 30 triệu',
-        logo: 'https://example.com/logo2.png',
-        level: 'Entry Level',
-        category: 'Thiết kế',
-        tags: ['Unreal Engine', 'Art', '3D'],
-    },
-];
-
-const categories = [
-    { title: 'IT & Phần mềm', count: 1200, icon: <TeamOutlined /> },
-    { title: 'Marketing', count: 800, icon: <TeamOutlined /> },
-    { title: 'Tài chính - Kế toán', count: 600, icon: <TeamOutlined /> },
-    { title: 'Thiết kế', count: 450, icon: <TeamOutlined /> },
-];
-
-const jobCategories = [
-    'IT & Phần mềm',
-    'Marketing',
-    'Tài chính - Kế toán',
-    'Thiết kế',
-];
-
-
 
 const styles = {
     container: {
@@ -217,23 +136,56 @@ const styles = {
         borderRadius: '0.5rem',
         textAlign: 'center' as const,
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        color: colors.text.primary, // Sử dụng màu text từ theme
+        color: colors.text.primary,
     },
 };
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-    const [keyword, setKeyword] = useState('')
-    const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+    const [title, setTitle] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
     const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined);
-    const [activeFilter, setActiveFilter] = useState<string>('Dưới 10 triệu');
+    const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+    const [recentJobs, setRecentJobs] = useState<Job[]>([]);
+    const [categories, setCategories] = useState([]);
+    const [provinces, setProvinces] = useState<Province[]>([]);
+
+    useEffect(() => {
+        const fetchCategoriesAndLevels = async () => {
+            try {
+                const [categoriesResponse] = await Promise.all([
+                    getListCategory(),
+                ]);
+                setCategories(categoriesResponse.metadata);
+            } catch (error) {
+                console.error('Error fetching categories and levels:', error);
+            }
+        };
+
+        fetchCategoriesAndLevels();
+    }, []);
+
+    useEffect(() => {
+        fetchProvinces().then(setProvinces);
+    }, []);
+
+    const fetchListJobByCandidate = async () => {
+        const response = await getListJobByCandidate({ skip: 0, limit: 5 });
+        console.log('response:', response);
+        setRecentJobs(response.metadata);
+        const hotResponse = await getHotListJobByCandidate({ skip: 0, limit: 5 });
+        console.log('hotResponse:', hotResponse);
+        setFeaturedJobs(hotResponse.metadata);
+    };
+
+    useEffect(() => {
+        fetchListJobByCandidate();
+    }, []);
 
     const handleSearch = () => {
         const params = new URLSearchParams();
-        if (keyword) params.set('keyword', keyword);
+        if (title) params.set('title', title);
         if (selectedCategory) params.set('category', selectedCategory);
-        selectedLevels.forEach(level => params.append('level', level));
         if (selectedLocation) params.set('location', selectedLocation);
 
         navigate({
@@ -241,29 +193,6 @@ const HomePage: React.FC = () => {
             search: params.toString(),
         });
     };
-
-    const levelOptions = [
-        { value: 'intern', label: 'Thực tập sinh' },
-        { value: 'fresher', label: 'Mới tốt nghiệp' },
-        { value: 'junior', label: 'Nhân viên' },
-        { value: 'senior', label: 'Trưởng nhóm' },
-        { value: 'manager', label: 'Quản lý' },
-    ];
-
-    const salaryFilters = [
-        'Tất cả',
-        'Dưới 10 triệu',
-        'Từ 10-15 triệu',
-        'Từ 15-20 triệu',
-        'Từ 20-25 triệu',
-        'Từ 25-30 triệu',
-    ];
-
-    const [provinces, setProvinces] = useState<Province[]>([]);
-
-    useEffect(() => {
-        fetchProvinces().then(setProvinces);
-    }, []);
 
     return (
         <div style={styles.container}>
@@ -284,8 +213,8 @@ const HomePage: React.FC = () => {
                                         style={{ width: 'calc(100% - 120px)', height: '50px' }}
                                         placeholder="Nhập vị trí công việc, công ty, kỹ năng..."
                                         prefix={<SearchOutlined />}
-                                        value={keyword}
-                                        onChange={(e) => setKeyword(e.target.value)}
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
                                         onPressEnter={handleSearch}
                                     />
                                     <Button
@@ -298,40 +227,36 @@ const HomePage: React.FC = () => {
                                     </Button>
                                 </Input.Group>
                             </Col>
-                            <Col xs={24} md={8}>
+                            <Col xs={24} md={12}>
                                 <Select
                                     placeholder="Chọn ngành nghề"
                                     style={{ width: '100%', height: '50px' }}
                                     showSearch
                                     suffixIcon={<TeamOutlined />}
-                                    value={selectedCategory}
+                                    value={selectedCategory?.name}
                                     onChange={setSelectedCategory}
                                     size="large"
                                 >
-                                    {jobCategories.map(cat => (
-                                        <Select.Option key={cat} value={cat}>{cat}</Select.Option>
+                                    {categories.map((category: any) => (
+                                        <Select.Option key={category._id} value={category._id}>
+                                            {category.name}
+                                        </Select.Option>
                                     ))}
                                 </Select>
                             </Col>
-                            <Col xs={24} md={8}>
-                                <MultiSelect
-                                    placeholder="Chọn cấp bậc"
-                                    options={levelOptions}
-                                    value={selectedLevels}
-                                    onChange={setSelectedLevels}
-                                    maxTagCount={2}
-                                />
-                            </Col>
-                            <Col xs={24} md={8}>
+
+                            <Col xs={24} md={12}>
                                 <Select
                                     placeholder="Chọn địa điểm"
-                                    style={{ width: '100%', height: '50px', }}
+                                    style={{ width: '100%', height: '50px' }}
                                     suffixIcon={<EnvironmentOutlined />}
                                     value={selectedLocation}
                                     onChange={setSelectedLocation}
                                 >
                                     {provinces.map(province => (
-                                        <Select.Option key={province.id} value={province.id}>{province.name}</Select.Option>
+                                        <Select.Option key={province.id} value={province.id}>
+                                            {province.name}
+                                        </Select.Option>
                                     ))}
                                 </Select>
                             </Col>
@@ -369,40 +294,20 @@ const HomePage: React.FC = () => {
                 <Title level={2} style={styles.sectionTitle}>Việc làm mới nhất</Title>
 
                 <div style={styles.filterSection}>
-                    <div style={styles.filterHeader}>
-                        <div style={styles.filterDropdown}>
-                            <span>Lọc theo:</span>
-                            <span>Mức lương</span>
-                            <DownOutlined />
-                        </div>
-                        <div style={styles.navigationButtons}>
-                            <div style={styles.navButton}>
-                                <LeftOutlined />
-                            </div>
-                            <div style={styles.navButton}>
-                                <RightOutlined />
-                            </div>
-                        </div>
-                    </div>
-                    <FilterTags
-                        filters={salaryFilters}
-                        activeFilter={activeFilter}
-                        onFilterChange={setActiveFilter}
-                        color="#00b14f"
-                    />
+
+
                 </div>
-                <Link to='/jobsdetail'>
-                    <JobList jobs={recentJobs} type="recent" />
-                </Link>
+                <JobList jobs={recentJobs} type="recent" />
 
                 <div style={styles.buttonContainer}>
-                    <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
+                    <Link to='/job-search'>
+                        <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
+                    </Link>
                 </div>
             </div>
 
             {/* Featured Jobs Section */}
             <div>
-
                 <Title level={2} style={styles.sectionTitle}>Việc làm nổi bật</Title>
                 <Link to='jobsdetail'>
                     <JobList jobs={featuredJobs} type="featured" />
@@ -413,17 +318,17 @@ const HomePage: React.FC = () => {
             </div >
 
             {/* Categories Section */}
-            < div >
+            <div>
                 <Title level={2} style={styles.sectionTitle}>Ngành nghề phổ biến</Title>
-                <Link to='/jobslist' >
+                <Link to='/jobslist'>
                     <Row gutter={[16, 16]}>
                         {categories.map(category => (
-                            <Col key={category.title} xs={24} sm={12} lg={6}>
+                            <Col key={category.id} xs={24} sm={12} lg={6}>
                                 <Card className='card-hover' hoverable>
                                     <div style={styles.categoryIcon}>
-                                        {category.icon}
+                                        <TeamOutlined />
                                     </div>
-                                    <Title level={4}>{category.title}</Title>
+                                    <Title level={4}>{category.name}</Title>
                                     <Paragraph>{category.count} việc làm</Paragraph>
                                 </Card>
                             </Col>
@@ -433,7 +338,7 @@ const HomePage: React.FC = () => {
             </div >
 
             {/* CTA Section */}
-            < div style={styles.ctaSection} className='card-hover' >
+            <div style={styles.ctaSection} className='card-hover'>
                 <div style={styles.ctaContent}>
                     <Title level={2}>Bạn là nhà tuyển dụng?</Title>
                     <Paragraph style={{ marginBottom: '2rem' }}>

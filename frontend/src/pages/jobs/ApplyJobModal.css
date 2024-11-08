@@ -1,0 +1,49 @@
+.apply-job-modal {
+    .ant-modal-content {
+        border-radius: 8px;
+    }
+
+    .ant-form-item-label {
+        font-weight: 500;
+    }
+
+    .cover-letter-editor {
+        margin-bottom: 16px;
+
+        .ck-editor__editable {
+            min-height: 200px;
+            max-height: 400px;
+        }
+
+        .ck.ck-editor {
+            width: 100%;
+        }
+
+        .ck.ck-editor__editable {
+            background-color: #fff !important;
+            border-radius: 0 0 4px 4px !important;
+        }
+
+        .ck.ck-toolbar {
+            border-radius: 4px 4px 0 0 !important;
+        }
+    }
+
+    .error-message {
+        color: #ff4d4f;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+
+    .ant-upload-list {
+        margin-bottom: 1rem;
+    }
+
+    /* Dark mode support */
+    &.dark-theme {
+        .ck.ck-editor__editable {
+            background-color: #1f1f1f !important;
+            color: #fff !important;
+        }
+    }
+}

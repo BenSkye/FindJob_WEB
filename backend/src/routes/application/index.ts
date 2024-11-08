@@ -13,4 +13,5 @@ applicationRouter.use(apiKey)
 applicationRouter.use(permission('candidate'));
 applicationRouter.post('/send-application/:jobId', applicationController.sendApplication);
 applicationRouter.get('/personal-applications', applicationController.getPersonalApplications);
+applicationRouter.get('/personal-job-has-applied', applicationController.getPersonalJobHasApplied);
 export default applicationRouter;

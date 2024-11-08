@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, Card, Typography, Divider, Checkbox, Row, Col, notification } from 'antd';
-import { UserOutlined, LockOutlined, GoogleOutlined, LinkedinOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, LinkedinOutlined } from '@ant-design/icons';
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';

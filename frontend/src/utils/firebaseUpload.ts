@@ -7,3 +7,10 @@ export const uploadImageToFirebase = async (file: File, path: string): Promise<s
   const downloadURL = await getDownloadURL(storageRef);
   return downloadURL;
 };
+
+export const uploadFileToFirebase = async (file: File, path: string): Promise<string> => {
+  const storageRef = ref(storage, `${path}/${file.name}`);
+  await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(storageRef);
+  return downloadURL;
+};

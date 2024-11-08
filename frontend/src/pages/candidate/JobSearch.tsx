@@ -1,34 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Row, Col, Input, Select, Button, Spin } from 'antd';
+import { Typography, Row, Col, Input, Select, Button, Spin, Checkbox } from 'antd';
 import { SearchOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons';
 import JobList from '../../components/candidate/JobList';
-import FilterTags from '../../components/candidate/FilterTags';
-import MultiSelect from '../../components/candidate/MultiSelect';
 import { Job } from '../../services/types/job.types';
+import { getListJobByCandidate } from '../../services/api/jobService';
+import { getListLevel } from '../../services/api/levelService';
+import { getListCategory } from '../../services/api/categoryService';
+import { Province } from '../../services/types/province.type';
+import { fetchProvinces } from '../../services/api/districtWardService';
+import { JOB_TYPE_OPTIONS } from '../../config/jobTypes';
 
 const { Title } = Typography;
-
-const jobCategories = [
-    'IT & Phần mềm',
-    'Marketing',
-    'Tài chính - Kế toán',
-    'Thiết kế',
-    'Kinh doanh',
-    'Nhân sự',
-    'Hành chính - Văn phòng',
-    'Khác'
-];
-
-const locations = [
-    'TP.HCM',
-    'Hà Nội',
-    'Đà Nẵng',
-    'Cần Thơ',
-    'Bình Dương',
-    'Đồng Nai',
-    'Tất cả tỉnh/thành'
-];
 
 const styles = {
     container: {
@@ -36,74 +19,124 @@ const styles = {
         margin: '0 auto',
         padding: '2rem 1rem',
     },
-    searchBar: {
+    searchWrapper: {
+        background: 'white',
+        padding: '2rem',
+        borderRadius: '1rem',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        marginBottom: '2rem',
+    },
+    contentContainer: {
+        display: 'flex',
+        gap: '2rem',
+    },
+    filterSidebar: {
+        width: '280px',
+        flexShrink: 0,
+    },
+    mainContent: {
+        flex: 1,
+    },
+    filterContainer: {
         background: 'white',
         padding: '1.5rem',
+        borderRadius: '1rem',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    },
+    filterHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '1.5rem',
+    },
+    filterTitle: {
+        fontSize: '16px',
+        fontWeight: 600,
+        color: '#262626',
+        margin: 0,
+    },
+    resetButton: {
+        color: '#1890ff',
+        cursor: 'pointer',
+        fontSize: '14px',
+    },
+    filterButtons: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '0.8rem',
+    },
+    filterButton: {
+        border: '1px solid #d9d9d9',
         borderRadius: '8px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        marginBottom: '2rem',
+        padding: '8px 12px',
+        cursor: 'pointer',
+        transition: 'all 0.3s',
+        fontSize: '14px',
+        backgroundColor: 'white',
+        '&:hover': {
+            borderColor: '#1890ff',
+            color: '#1890ff',
+        },
     },
-    filterSection: {
-        marginBottom: '2rem',
-    },
-    resultsHeader: {
+    activeFilterButton: {
+        backgroundColor: '#1890ff',
+        color: 'white',
+        border: '1px solid #1890ff',
+    }, resultsHeader: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: '1rem',
-    },
-    loadingContainer: {
+    }, loadingContainer: {
         textAlign: 'center' as const,
         padding: '2rem',
     },
     searchInput: {
         width: 'calc(100% - 120px)',
-        height: '40px',
+        height: '50px',
+        borderRadius: '8px',
+        border: '1px solid #d9d9d9',
+        transition: 'border-color 0.3s',
     },
     searchButton: {
         width: '120px',
-        height: '40px',
+        height: '50px',
+        borderRadius: '8px',
+        backgroundColor: '#1890ff',
+        color: 'white',
+        border: 'none',
+        transition: 'background-color 0.3s',
     },
     select: {
         width: '100%',
-        height: '40px',
+        height: '50px',
+        borderRadius: '8px',
     },
-};
+    filterSection: {
+        marginBottom: '1.5rem',
+    },
+    filterSectionTitle: {
+        fontSize: '14px',
+        fontWeight: 500,
+        marginBottom: '1rem',
+        color: '#595959',
+    },
+    filterOptions: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '0.8rem',
+    },
+    checkboxGroup: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '12px',
+    },
+    checkboxLabel: {
+        fontSize: '14px',
+        color: '#262626',
+    },
 
-// Mock data for testing
-const mockSearchResults: Job[] = [
-    {
-        id: '1',
-        title: 'Senior React Developer',
-        company: 'Tech Corp',
-        location: 'TP.HCM',
-        salary: '$1500-$3000',
-        tags: ['React', 'TypeScript', 'Remote'],
-        isHot: true,
-        level: 'Senior',
-        category: 'IT & Phần mềm',
-    },
-    {
-        id: '2',
-        title: 'Product Manager',
-        company: 'Innovation Inc',
-        location: 'Hà Nội',
-        salary: '$2000-$4000',
-        tags: ['Management', 'Agile', 'Product'],
-        level: 'Senior',
-        category: 'IT & Phần mềm',
-    },
-    {
-        id: '3',
-        title: 'UI/UX Designer',
-        company: 'Creative Studio',
-        location: 'Đà Nẵng',
-        salary: '$1000-$2000',
-        tags: ['Figma', 'Adobe XD', 'UI/UX'],
-        level: 'Senior',
-        category: 'Thiết kế',
-    },
-];
+};
 
 const JobSearch: React.FC = () => {
     const location = useLocation();
@@ -111,48 +144,86 @@ const JobSearch: React.FC = () => {
     const queryParams = new URLSearchParams(location.search);
 
     // States
-    const [keyword, setKeyword] = useState(queryParams.get('keyword') || '');
-    const [selectedCategory, setSelectedCategory] = useState(queryParams.get('category') || '');
-    const [selectedLevels, setSelectedLevels] = useState<string[]>(queryParams.getAll('level') || []);
-    const [selectedLocation, setSelectedLocation] = useState(queryParams.get('location') || '');
-    const [activeFilter, setActiveFilter] = useState('Tất cả');
+    const [title, setTitle] = useState<string>();
+    const [selectedCategory, setSelectedCategory] = useState();
+    const [selectedLocation, setSelectedLocation] = useState<any>();
     const [searchResults, setSearchResults] = useState<Job[]>([]);
+    const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+    const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [levels, setLevels] = useState([]);
+    const [provinces, setProvinces] = useState<Province[]>([]);
 
-    const levelOptions = [
-        { value: 'intern', label: 'Thực tập sinh' },
-        { value: 'fresher', label: 'Mới tốt nghiệp' },
-        { value: 'junior', label: 'Nhân viên' },
-        { value: 'senior', label: 'Trưởng nhóm' },
-        { value: 'manager', label: 'Quản lý' },
-    ];
+    useEffect(() => {
+        const fetchCategoriesAndLevels = async () => {
+            try {
+                const [categoriesResponse, levelsResponse] = await Promise.all([
+                    getListCategory(),
+                    getListLevel()
+                ]);
+                setCategories(categoriesResponse.metadata);
+                setLevels(levelsResponse.metadata);
+            } catch (error) {
+                console.error('Error fetching categories and levels:', error);
+            }
+        };
 
-    const salaryFilters = [
-        'Tất cả',
-        'Dưới 10 triệu',
-        'Từ 10-15 triệu',
-        'Từ 15-20 triệu',
-        'Từ 20-25 triệu',
-        'Từ 25-30 triệu',
-    ];
+        fetchCategoriesAndLevels();
+    }, []);
+
+    useEffect(() => {
+        fetchProvinces().then(setProvinces);
+    }, []);
+
+    useEffect(() => {
+        const queryCategory = queryParams.get('category');
+        const queryLocation = queryParams.get('location');
+        const queryTitle = queryParams.get('title');
+        if (queryTitle) {
+            setTitle(queryTitle);
+        }
+        if (queryCategory) {
+            for (const category of categories) {
+                if (category._id === queryCategory) {
+                    console.log('category', category);
+                    setSelectedCategory(category);
+                    break;
+                }
+            }
+        }
+        if (queryLocation) {
+            for (const province of provinces) {
+                if (province.id === queryLocation) {
+                    setSelectedLocation(province.name);
+                    break;
+                }
+            }
+        }
+
+    }, [categories, levels, provinces]);
+
+    const handleJobTypeChange = (checkedValues: string[]) => {
+        setSelectedJobTypes(checkedValues);
+    };
+
+    const handleLevelChange = (checkedValues: string[]) => {
+        setSelectedLevels(checkedValues);
+    };
+
 
     useEffect(() => {
         const fetchSearchResults = async () => {
             setLoading(true);
             try {
-                // TODO: Replace with actual API call
-                // const response = await searchJobsAPI({
-                //     keyword,
-                //     category: selectedCategory,
-                //     levels: selectedLevels,
-                //     location: selectedLocation,
-                //     salaryFilter: activeFilter
-                // });
-                // setSearchResults(response.data);
-
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                setSearchResults(mockSearchResults);
+                const response = await getListJobByCandidate({
+                    title,
+                    mainCategory: selectedCategory,
+                    level: selectedLevels,
+                    location: selectedLocation,
+                    jobType: selectedJobTypes,
+                });
+                setSearchResults(response.metadata);
             } catch (error) {
                 console.error('Error fetching search results:', error);
             } finally {
@@ -161,13 +232,12 @@ const JobSearch: React.FC = () => {
         };
 
         fetchSearchResults();
-    }, [keyword, selectedCategory, selectedLevels, selectedLocation, activeFilter]);
+    }, [title, selectedCategory, selectedLevels, selectedLocation, selectedJobTypes]);
 
     const handleSearch = () => {
         const params = new URLSearchParams();
-        if (keyword) params.set('keyword', keyword);
+        if (title) params.set('title', title);
         if (selectedCategory) params.set('category', selectedCategory);
-        selectedLevels.forEach(level => params.append('level', level));
         if (selectedLocation) params.set('location', selectedLocation);
 
         navigate({
@@ -184,7 +254,7 @@ const JobSearch: React.FC = () => {
 
     return (
         <div style={styles.container}>
-            <div style={styles.searchBar}>
+            <div style={styles.searchWrapper}>
                 <Row gutter={[16, 16]}>
                     <Col xs={24} md={24}>
                         <Input.Group compact>
@@ -192,55 +262,48 @@ const JobSearch: React.FC = () => {
                                 style={styles.searchInput}
                                 placeholder="Nhập vị trí công việc, công ty, kỹ năng..."
                                 prefix={<SearchOutlined />}
-                                value={keyword}
-                                onChange={(e) => setKeyword(e.target.value)}
-                                onKeyPress={handleKeyPress}
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                onPressEnter={handleSearch}
                             />
                             <Button
+                                className='button-hover'
                                 type="primary"
                                 style={styles.searchButton}
                                 onClick={handleSearch}
-                                loading={loading}
                             >
                                 Tìm kiếm
                             </Button>
                         </Input.Group>
                     </Col>
-                    <Col xs={24} md={8}>
+                    <Col xs={24} md={12}>
                         <Select
                             placeholder="Chọn ngành nghề"
                             style={styles.select}
-                            value={selectedCategory}
-                            onChange={setSelectedCategory}
+                            showSearch
                             suffixIcon={<TeamOutlined />}
+                            value={selectedCategory?.name}
+                            onChange={setSelectedCategory}
+                            size="large"
                         >
-                            {jobCategories.map(category => (
-                                <Select.Option key={category} value={category}>
-                                    {category}
+                            {categories.map((category: any) => (
+                                <Select.Option key={category._id} value={category._id}>
+                                    {category.name}
                                 </Select.Option>
                             ))}
                         </Select>
                     </Col>
-                    <Col xs={24} md={8}>
-                        <MultiSelect
-                            placeholder="Chọn cấp bậc"
-                            options={levelOptions}
-                            value={selectedLevels}
-                            onChange={setSelectedLevels}
-                            maxTagCount={2}
-                        />
-                    </Col>
-                    <Col xs={24} md={8}>
+                    <Col xs={24} md={12}>
                         <Select
                             placeholder="Chọn địa điểm"
                             style={styles.select}
+                            suffixIcon={<EnvironmentOutlined />}
                             value={selectedLocation}
                             onChange={setSelectedLocation}
-                            suffixIcon={<EnvironmentOutlined />}
                         >
-                            {locations.map(location => (
-                                <Select.Option key={location} value={location}>
-                                    {location}
+                            {provinces.map(province => (
+                                <Select.Option key={province.id} value={province.name}>
+                                    {province.name}
                                 </Select.Option>
                             ))}
                         </Select>
@@ -248,32 +311,79 @@ const JobSearch: React.FC = () => {
                 </Row>
             </div>
 
-            <div style={styles.filterSection}>
-                <FilterTags
-                    filters={salaryFilters}
-                    activeFilter={activeFilter}
-                    onFilterChange={setActiveFilter}
-                    color="#00b14f"
-                />
-            </div>
 
-            <div style={styles.resultsHeader}>
-                <Title level={4}>
-                    {loading ? (
-                        'Đang tìm kiếm...'
-                    ) : (
-                        `Tìm thấy ${searchResults.length} việc làm phù hợp`
-                    )}
-                </Title>
-            </div>
 
-            {loading ? (
-                <div style={styles.loadingContainer}>
-                    <Spin size="large" />
+            <div style={styles.contentContainer}>
+                <div style={styles.filterSidebar}>
+                    <div style={styles.filterContainer}>
+                        <div style={styles.filterHeader}>
+                            <h3 style={styles.filterTitle}>Bộ Lọc</h3>
+                            <span
+                                style={styles.resetButton}
+                                onClick={() => {
+                                    setSelectedJobTypes([]);
+                                    setSelectedLevels([]);
+                                }}
+                            >
+                                Đặt lại
+                            </span>
+                        </div>
+
+                        <div style={styles.filterSection}>
+                            <div style={styles.filterSectionTitle}>Loại công việc</div>
+                            <Checkbox.Group
+                                style={styles.checkboxGroup}
+                                value={selectedJobTypes}
+                                onChange={handleJobTypeChange}
+                            >
+                                {JOB_TYPE_OPTIONS.map(({ value, label }) => (
+                                    <Checkbox
+                                        key={value}
+                                        value={value}
+                                        style={styles.checkboxLabel}
+                                    >
+                                        {label}
+                                    </Checkbox>
+                                ))}
+                            </Checkbox.Group>
+                        </div>
+
+                        <div style={styles.filterSection}>
+                            <div style={styles.filterSectionTitle}>Cấp bậc</div>
+                            <Checkbox.Group
+                                style={styles.checkboxGroup}
+                                value={selectedLevels}
+                                onChange={handleLevelChange}
+                            >
+                                {levels.map((level: any) => (
+                                    <Checkbox
+                                        key={level._id}
+                                        value={level._id}
+                                        style={styles.checkboxLabel}
+                                    >
+                                        {level.name}
+                                    </Checkbox>
+                                ))}
+                            </Checkbox.Group>
+                        </div>
+                    </div>
                 </div>
-            ) : (
-                <JobList jobs={searchResults} type="recent" />
-            )}
+                <div style={styles.mainContent}>
+                    <div style={styles.resultsHeader}>
+                        <Title level={4}>
+                            {loading ? 'Đang tìm kiếm...' : `Tìm thấy ${searchResults.length} việc làm phù hợp`}
+                        </Title>
+                    </div>
+
+                    {loading ? (
+                        <div style={styles.loadingContainer}>
+                            <Spin size="large" />
+                        </div>
+                    ) : (
+                        <JobList jobs={searchResults} type="recent" />
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

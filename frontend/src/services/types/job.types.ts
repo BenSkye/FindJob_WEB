@@ -1,12 +1,13 @@
 export interface Job {
-    id: string;
+    _id: string;
     title: string;
-    company: string;
+    companyId: object;
     location: string;
-    salary: string;
-    logo?: string;
-    tags?: string[];
+    jobType: string;
+    expiryDate: Date;
+    salary: object;
+    mainCategory: object;
+    subCategory: string;
     isHot?: boolean;
     level?: string;
-    category?: string;
 }

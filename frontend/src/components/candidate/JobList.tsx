@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import JobCard from './JobCard';
 import { Job } from '../../services/types/job.types';
+import { Link } from 'react-router-dom';
 
 interface JobListProps {
     jobs: Job[];
@@ -22,7 +23,9 @@ const JobList: React.FC<JobListProps> = ({ jobs, type }) => {
         return (
             <div style={styles.jobList}>
                 {jobs.map(job => (
-                    <JobCard key={job.id} job={job} type="recent" />
+                    <Link to={`/jobsdetail/${job._id}`}>
+                        <JobCard key={job._id} job={job} type="recent" />
+                    </Link>
                 ))}
             </div>
         );
@@ -31,7 +34,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, type }) => {
     return (
         <Row gutter={[16, 16]}>
             {jobs.map(job => (
-                <Col key={job.id} xs={24} sm={12} lg={8}>
+                <Col key={job._id} xs={24} sm={12} lg={8}>
                     <JobCard job={job} type="featured" />
                 </Col>
             ))}

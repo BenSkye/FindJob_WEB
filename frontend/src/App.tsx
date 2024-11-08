@@ -6,6 +6,7 @@ import Loading from './components/common/Loading';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import theme from './config/theme';
 import { AuthProvider } from './contexts/AuthContext';
+import { JobHasApplyProvider } from './contexts/JobHasApply';
 
 const Router = () => {
   const element = useRoutes(routes);
@@ -18,7 +19,11 @@ const App: React.FC = () => {
       <ConfigProvider theme={theme}>
         <BrowserRouter>
           <Suspense fallback={<Loading.FullPage />}>
-            <Router />
+            <AuthProvider>
+              <JobHasApplyProvider>
+                <Router />
+              </JobHasApplyProvider>
+            </AuthProvider>
           </Suspense>
         </BrowserRouter>
       </ConfigProvider>

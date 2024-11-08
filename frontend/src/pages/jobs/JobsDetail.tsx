@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     Card,
     Typography,
@@ -26,24 +26,32 @@ import {
 } from '@ant-design/icons';
 import './JobsDetail.css';
 import { colors } from '../../config/theme';
+import { getJobById } from '../../services/api/jobService';
+import { formatCurrency, formatDateTime } from '../../utils/formatters';
+import ApplyJobModal from './ApplyJobModal';
+import { getPersonalJobHasApplied, sendApplication } from '../../services/api/applicationService';
+import { useAuth } from '../../hooks/useAuth';
+import { useJobHasApply } from '../../hooks/useJobHasApply';
 
 const { Title, Paragraph, Text } = Typography;
 
 interface JobDetail {
-    id: string;
+    _id: string;
     title: string;
-    company: string;
+    company: object;
     location: string;
     salary: string;
     experience: string;
-    employmentType: string;
-    deadline: string;
-    positions: number;
+    requirements: string;
     description: string;
-    requirements: string[];
-    benefits: string[];
-    skills: string[];
-    companyLogo: string;
+    benefits: string;
+    jobType: string;
+    status: string;
+    expiryDate: string;
+    mainCategory: object;
+    subCategory: object;
+    isHot: boolean;
+    level: object;
 }
 
 const JobsDetail: React.FC = () => {
@@ -51,40 +59,52 @@ const JobsDetail: React.FC = () => {
     const [job, setJob] = useState<JobDetail | null>(null);
     const [isSaved, setIsSaved] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const { appliedJobs, addAppliedJob } = useJobHasApply();
+
+    const fetchJobById = async () => {
+        const response = await getJobById(id as string);
+        setJob(response.metadata);
+    }
 
     useEffect(() => {
-        // Simulate API call
-        setTimeout(() => {
-            setJob({
-                id: '1',
-                title: 'Senior Frontend Developer',
-                company: 'Tech Solutions Inc.',
-                location: 'TP.HCM',
-                salary: '$1500 - $3000',
-                experience: '3-5 years',
-                employmentType: 'Full-time',
-                deadline: '31/12/2023',
-                positions: 2,
-                description: 'Detailed job description goes here...',
-                requirements: [
-                    '5+ years of experience with React',
-                    'Strong knowledge of TypeScript',
-                    'Experience with state management',
-                ],
-                benefits: [
-                    'Competitive salary',
-                    'Health insurance',
-                    'Flexible working hours',
-                ],
-                skills: ['React', 'TypeScript', 'Redux'],
-                companyLogo: 'https://example.com/logo.png',
-            });
-            setLoading(false);
-        }, 1000);
+        fetchJobById();
+        setLoading(false);
     }, [id]);
 
     const handleApply = () => {
-        message.success('Applied successfully!');
+        if (user) {
+            setIsModalVisible(true);
+        } else {
+            navigate('/login');
+            message.error('Vui lòng đăng nhập để ứng tuyển!');
+        }
+    };
+
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleModalSubmit = async (values: any) => {
+        try {
+            // Gọi API để tạo application
+            // await createApplication(values);
+            console.log('values:', values);
+            const response = await sendApplication(id as string, values);
+            console.log('response:', response);
+            if (response.status === 201) {
+                message.success('Nộp đơn ứng tuyển thành công!');
+                setIsModalVisible(false);
+                addAppliedJob(id as string);
+            } else {
+                message.error('Có lỗi xảy ra khi nộp đơn!');
+            }
+
+        } catch (error: any) {
+            message.error('Có lỗi xảy ra khi nộp đơn!');
+        }
     };
 
     const handleSave = () => {
@@ -112,18 +132,18 @@ const JobsDetail: React.FC = () => {
                         <div className="job-header">
                             <Space size={16} align="start">
                                 <Avatar
-                                    src={job.companyLogo}
+                                    src={job.companyId?.logo}
                                     size={80}
                                     icon={<UserOutlined />}
                                     className="company-logo"
                                 />
                                 <div className="job-title-section">
                                     <Title level={3}>{job.title}</Title>
-                                    <Title level={5} className="company-name">{job.company}</Title>
+                                    <Title level={5} className="company-name">{job.companyId?.name}</Title>
                                     <Space wrap className="job-tags">
                                         <Tag icon={<EnvironmentOutlined />}>{job.location}</Tag>
-                                        <Tag icon={<DollarOutlined />}>{job.salary}</Tag>
-                                        <Tag icon={<CalendarOutlined />}>{job.employmentType}</Tag>
+                                        {!job.salary.negotiable ? <span><DollarOutlined /> {formatCurrency(job.salary.min)} - {formatCurrency(job.salary.max)}</span> : <span><DollarOutlined /> Giá thỏa thuận</span>}
+                                        <Tag icon={<CalendarOutlined />}>{job.jobType}</Tag>
                                     </Space>
                                 </div>
                             </Space>
@@ -135,15 +155,15 @@ const JobsDetail: React.FC = () => {
                             <Row gutter={[16, 16]}>
                                 <Col span={8}>
                                     <Text type="secondary"><ClockCircleOutlined /> Kinh nghiệm</Text>
-                                    <div>{job.experience}</div>
+                                    <div>{job.level.name}</div>
                                 </Col>
-                                <Col span={8}>
+                                {/* <Col span={8}>
                                     <Text type="secondary"><TeamOutlined /> Vị trí</Text>
                                     <div>{job.positions} vị trí trống</div>
-                                </Col>
+                                </Col> */}
                                 <Col span={8}>
                                     <Text type="secondary"><CalendarOutlined /> Hạn chót</Text>
-                                    <div>{job.deadline}</div>
+                                    <div>{formatDateTime.dateOnly(job.expiryDate)}</div>
                                 </Col>
                             </Row>
                         </div>
@@ -158,7 +178,7 @@ const JobsDetail: React.FC = () => {
                         <div className="job-requirements">
                             <Title level={4}>Yêu cầu</Title>
                             <List
-                                dataSource={job.requirements}
+                                dataSource={job.requirements.split('\n')}
                                 renderItem={item => (
                                     <List.Item>
                                         <Text>• {item}</Text>
@@ -170,7 +190,7 @@ const JobsDetail: React.FC = () => {
                         <div className="job-benefits">
                             <Title level={4}>Phúc lợi</Title>
                             <List
-                                dataSource={job.benefits}
+                                dataSource={job.benefits.split('\n')}
                                 renderItem={item => (
                                     <List.Item>
                                         <Text>• {item}</Text>
@@ -179,22 +199,27 @@ const JobsDetail: React.FC = () => {
                             />
                         </div>
 
-                        <div className="required-skills">
+                        {/* <div className="required-skills">
                             <Title level={4}>Kỹ năng yêu cầu</Title>
                             <Space wrap>
                                 {job.skills.map(skill => (
                                     <Tag key={skill} color="blue">{skill}</Tag>
                                 ))}
                             </Space>
-                        </div>
+                        </div> */}
                     </Card>
                 </Col>
 
                 <Col xs={24} lg={8}>
                     <Card className="job-action-card" style={{ borderRadius: '12px', boxShadow: colors.boxShadow }}>
-                        <Button type="primary" block size="large" onClick={handleApply}>
-                            Ứng tuyển ngay
-                        </Button>
+                        {appliedJobs.includes(id as string) ? (
+                            <Text type="secondary">Bạn đã ứng tuyển công việc này</Text>
+
+                        ) : (
+                            <Button type="primary" block size="large" onClick={handleApply}>
+                                Ứng tuyển ngay
+                            </Button>
+                        )}
                         <div className="action-buttons">
                             <Button
                                 icon={isSaved ? <HeartFilled /> : <HeartOutlined />}
@@ -220,6 +245,12 @@ const JobsDetail: React.FC = () => {
                     </Card>
                 </Col>
             </Row>
+            <ApplyJobModal
+                isVisible={isModalVisible}
+                jobId={id as string}
+                onCancel={handleModalCancel}
+                onSubmit={handleModalSubmit}
+            />
         </div>
     );
 };

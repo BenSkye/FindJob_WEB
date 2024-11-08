@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, ReactNode, useEffect } from
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import apiClient from '../services/api/apiClient';
+import { useJobHasApply } from '../hooks/useJobHasApply';
 
 
 interface User {
@@ -28,19 +29,18 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            const accessToken = Cookies.get('authorization');
-            if (accessToken) {
-                const decodedUser = jwtDecode(accessToken) as User;
-                if (decodedUser) {
-                    setUser(decodedUser);
-                }
+    const checkToken = async () => {
+        const accessToken = Cookies.get('authorization');
+        if (accessToken) {
+            const decodedUser = jwtDecode(accessToken) as User;
+            if (decodedUser) {
+                console.log('decodedUser', decodedUser);
+                setUser(decodedUser);
             }
-            setIsLoading(false);
         }
-        checkAuth();
+    }
+    useEffect(() => {
+        checkToken();
     }, []);
 
     const login = async (data: unknown) => {

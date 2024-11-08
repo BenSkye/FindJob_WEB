@@ -20,7 +20,7 @@ const RoleUser = {
 
 class AccessService {
   static handlerRefreshToken = async (user: any, keyStore: any, refreshToken: string) => {
-    const { userId, email } = user;
+    const { userId, email, roles } = user;
     if (keyStore.refreshTokensUsed.includes(refreshToken)) {
       await KeyTokenService.deleteKeyByUserId(userId)
       throw new ForbiddenError(' Something wrong happend !! Pls relogin')
@@ -32,7 +32,7 @@ class AccessService {
 
     if (!foundShop) throw new AuthFailureError(' User not registeted')
     // create 1 cap moi
-    const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey) as any
+    const tokens = await createTokenPair({ userId, email, roles }, keyStore.publicKey, keyStore.privateKey) as any
     //update token
     await KeyTokenService.updateRefreshTokensUsed(tokens.refreshToken, refreshToken)
 
@@ -51,77 +51,38 @@ class AccessService {
   }
 
   static login = async (email: string, password: string, refreshToken = null) => {
-    try {
-      //1 check email in dbs
-      const foundUser = await findByEmail(email);
-      console.log('foundUser', foundUser);
-      if (!foundUser) {
-        throw new BadRequestError('User not Registered');
-      }
+    //1 check email in dbs
+    const foundUser = await findByEmail(email);
+    if (!foundUser) {
+      throw new BadRequestError('User not Registered');
+    }
+    //2- match password
+    const match = await bcrypt.compare(password, foundUser.password);
+    if (!match) {
+      throw new AuthFailureError('Password not match');
+    }
+    //3- create AT vs RT and save
+    const privateKey = crypto.randomBytes(64).toString('hex');
+    const publicKey = crypto.randomBytes(64).toString('hex');
+    //4 generate tokens
+    const tokens = await createTokenPair({ userId: foundUser._id, email, name: foundUser.name }, publicKey.toString(), privateKey.toString());
 
-      //2- check if password exists
-      if (!password) {
-        throw new BadRequestError('Password is required');
-      }
+    if (!tokens) {
+      throw new BadRequestError('Create Token Fail');
+    }
 
-      if (!foundUser.password) {
-        throw new BadRequestError('User password not found');
-      }
-
-      console.log('Input password:', password);
-      console.log('Stored hash:', foundUser.password);
-
-      //3- match password
-      const match = await bcrypt.compare(String(password), String(foundUser.password));
-      console.log('match', match);
-      if (!match) {
-        throw new AuthFailureError('Password not match');
-      }
-
-      //4- create AT vs RT and save
-      const privateKey = crypto.randomBytes(64).toString('hex');
-      const publicKey = crypto.randomBytes(64).toString('hex');
-
-      //5 generate tokens
-      const tokens = await createTokenPair(
-        {
-          userId: foundUser._id,
-          email,
-          name: foundUser.name
-        },
-        publicKey,
-        privateKey
-      );
-
-      if (!tokens) {
-        throw new BadRequestError('Create Token Fail');
-      }
-
-      await KeyTokenService.createKeyToken(
-        foundUser._id,
-        publicKey,
-        privateKey,
-        (tokens as { refreshToken: string }).refreshToken
-      );
-
-      const apiKey = await findByUserId(foundUser._id);
-      if (!apiKey) {
-        throw new NotFoundError('API Key not found');
-      }
-
-      return {
-        user: getInfoData({
-          fields: ['_id', 'name', 'email', 'roles'],
-          object: foundUser
-        }),
-        tokens,
-        apiKey: apiKey.key
-      }
-    } catch (error) {
-      console.error('Login Error:', error);
-      throw error;
+    await KeyTokenService.createKeyToken(foundUser._id, publicKey.toString(), privateKey.toString(), (tokens as { refreshToken: string }).refreshToken);
+    const apiKey = await findByUserId(foundUser._id);
+    if (!apiKey) {
+      throw new NotFoundError('API Key not found');
+    }
+    return {
+      user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: foundUser }),
+      tokens,
+      apiKey: apiKey.key
     }
   }
+
 
 
   static signup = async ({ name, email, password, role, phone, address }: { name: string, email: string, password: string, role: string, phone: string, address: string }) => {
@@ -157,7 +118,7 @@ class AccessService {
       if (!keyStore) {
         throw new BadRequestError('keyStore not found');
       }
-      const tokens = await createTokenPair({ userId: newUser._id, email }, publicKey.toString(), privateKey.toString());
+      const tokens = await createTokenPair({ userId: newUser._id, email, roles: newUser.roles }, publicKey.toString(), privateKey.toString());
 
       console.log('Create Token Success', tokens);
       console.log('role', newUser.roles);
@@ -349,7 +310,7 @@ class AccessService {
       if (!keyStore) {
         throw new BadRequestError('keyStore not found');
       }
-      const tokens = await createTokenPair({ userId: newUser._id, email }, publicKey.toString(), privateKey.toString());
+      const tokens = await createTokenPair({ userId: newUser._id, email, roles: newUser.roles }, publicKey.toString(), privateKey.toString());
 
       console.log('Create Token Success', tokens);
       console.log('role', newUser.roles);
