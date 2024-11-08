@@ -9,6 +9,7 @@ import jobRouter from './job';
 import templateRouter from './template';
 import cvRouter from './cv';
 import applicationRouter from './application';
+import companyRouter from './company';
 
 
 const router = Router();
@@ -23,6 +24,7 @@ router.use('/v1/api/checkout', checkoutRouter);
 router.use('/v1/api/user', accessRouter);
 router.use('/v1/api/payos', payosRouter);
 router.use('/v1/api/category', categoryRouter);
+router.use('/v1/api/company', companyRouter);
 router.use('/v1/api/level', levelRouter);
 router.use('/v1/api/job', jobRouter);
 router.use('/v1/api/template', templateRouter);
