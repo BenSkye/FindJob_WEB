@@ -9,81 +9,47 @@ const cvSchema = new Schema({
         ref: 'User',
         required: true,
     },
-     templateId: {
+    templateId: {
         type: Schema.Types.ObjectId,
         ref: 'Template',
         required: true,
     },
-    fullName: {
-        type: String,
-        required: true,
+    // Lưu trữ dữ liệu động theo fields được chọn
+    content: {
+        type: Map,
+        of: Schema.Types.Mixed,
+        required: true
+        // Ví dụ: {
+        //   fullName: "John Doe",
+        //   email: "john@example.com",
+        //   skills: ["JavaScript", "React"],
+        //   experience: [{
+        //     title: "Developer",
+        //     company: "Tech Corp",
+        //     duration: "2020-2023"
+        //   }]
+        // }
     },
-    email: {
-        type: String,
-        required: true,
-    },
-    phone: {
-        type: String,
-        required: true,
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    avatar: {
-        type: String,
-        required: true,
-    },
-    level: {
-        type: Schema.Types.ObjectId,
-        ref: 'Level',
-        required: true,
-    },
-    jobTitle: {
-        type: String,
-        required: true,
-    },
-    jobType: {
-        type: Schema.Types.ObjectId,
-        ref: 'JobType',
-        required: true,
-    },
-    jobDescription: {
-        type: String,
-        required: true,
-    },
-    skills: {
+    // Lưu trữ danh sách các field được chọn hiển thị
+    selectedFields: {
         type: [String],
-        required: true,
-    },
-    experiences: {
-        type: [String],
-        required: true,
-    },
-    education: {
-        type: String,
-        required: true,
-    },
-    salaryExpectation: {
-        type: Number,
-        required: true,
+        required: true
     },
     status: {
         type: String,
-        enum: ['active', 'inactive'],
-        default: 'active',
+        enum: ['draft', 'active', 'inactive'],
+        default: 'draft',
     },
     isPaid: {
         type: Boolean,
         default: false,
-    },
+    }
 }, {
     timestamps: true,
     collection: COLLECTION_NAME,
 });
 
-// Tạo index để tối ưu truy vấn
-cvSchema.index({ userId: 1 });
+cvSchema.index({ userId: 1, templateId: 1 });
 
 const cvModel = model(DOCUMENT_NAME, cvSchema);
 
