@@ -22,4 +22,5 @@ const EmployerRoute: React.FC<EmployerRouteProps> = ({ children }) => {
     return <>{children}</>;
 };
 
+
 export default EmployerRoute;

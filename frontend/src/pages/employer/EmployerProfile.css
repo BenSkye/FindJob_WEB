@@ -1,0 +1,92 @@
+.employer-profile-container {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 24px;
+}
+
+.profile-card {
+    margin-bottom: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card .ant-card-head-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.logo-section {
+    text-align: center;
+    padding: 24px 0;
+}
+
+.company-logo {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.company-logo-placeholder {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 8px;
+    font-size: 48px;
+    color: #bfbfbf;
+}
+
+.contact-item,
+.social-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.contact-item .anticon,
+.social-item .anticon {
+    font-size: 16px;
+    color: #1890ff;
+}
+
+.company-size-tag {
+    margin: 16px 0;
+    padding: 4px 12px;
+    font-size: 14px;
+}
+
+.tax-info {
+    margin-top: 16px;
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+}
+
+.error-container {
+    text-align: center;
+    padding: 40px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .employer-profile-container {
+        padding: 0 16px;
+    }
+
+    .company-logo,
+    .company-logo-placeholder {
+        width: 150px;
+        height: 150px;
+    }
+}
