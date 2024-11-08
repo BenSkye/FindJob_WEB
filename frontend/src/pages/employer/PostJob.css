@@ -1,7 +1,7 @@
 .post-job-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
     background-color: #f0f2f5;
     padding: 20px;
@@ -9,9 +9,26 @@
 
 .post-job-card {
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 24px;
     background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.ck-editor__editable {
+    min-height: 200px;
+}
+
+.ant-form-item-label {
+    font-weight: 500;
+}
+
+.ant-input-number {
+    width: 100% !important;
+}
+
+.ant-picker {
+    width: 100%;
 }

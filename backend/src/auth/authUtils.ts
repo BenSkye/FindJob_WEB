@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import crypto from 'crypto';
 import { asyncHandler } from '../helpers/asyncHandler';
 import KeyTokenService from '../services/keyToken.service';
-import { AuthFailureError, NotFoundError } from '../core/error.response';
+import { AuthFailureError, InvalidSignatureError, NotFoundError } from '../core/error.response';
 const HEADER = {
     API_KEY: 'x-api-key',
     CLIENT_ID: 'x-client-id',
@@ -66,11 +66,21 @@ const authentication = asyncHandler(async (req: any, res: any, next: any) => {
     if (!accessToken) throw new AuthFailureError('Invalid accessToken')
     try {
         console.log('accessToken::', accessToken)
+        //nếu invalid signature sẽ throw error AuthFailureError
+        //những trường hợp sẽ throw error InvalidSignatureError
+        //1. tài khoản đăng nhập ở nơi khác
+        //2. accessToken hết hạn
+        //3. accessToken bị tấn công
         const decodeUser: JwtPayload = jwt.verify(accessToken, keyStore.publicKey) as JwtPayload;
         if (userId !== decodeUser.userId) throw new AuthFailureError('Invalid Access Token')
         req.keyStore = keyStore;
         return next()
-    } catch (error) {
+    } catch (error: any) {
+        //nếu invalid signature sẽ throw error AuthFailureError
+        console.log('error::', error.message)
+        if (error.message === 'invalid signature') {
+            throw new InvalidSignatureError('Invalid Signature')
+        }
         throw error
     }
 })

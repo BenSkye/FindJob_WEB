@@ -8,7 +8,7 @@ class JobController {
     createJob = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
         new CREATED({
             message: 'Create job successfully',
-            metadata: await JobService.createJob(req.user.userId, req.body),
+            metadata: await JobService.createJob(req.keyStore.user, req.body),
         }).send(res);
     });
 
