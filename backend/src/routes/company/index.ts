@@ -3,6 +3,7 @@ import { authentication } from '../../auth/authUtils';
 import { apiKey, permission } from '../../auth/checkAuth';
 import companyController from '../../controllers/company.controller';
 
+
 const companyRouter = Router();
 
 companyRouter.get('/get-by-id/:id', companyController.getCompanyById);

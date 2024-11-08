@@ -1,0 +1,78 @@
+.edit-profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.edit-profile-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-profile-card .ant-card-head-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.edit-profile-form {
+    margin-top: 24px;
+}
+
+.upload-section {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.ant-upload-picture-card-wrapper {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto;
+}
+
+.ant-form-item-label>label {
+    font-weight: 500;
+}
+
+.ant-input-prefix {
+    color: rgba(0, 0, 0, 0.45);
+    margin-right: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .edit-profile-container {
+        padding: 16px;
+    }
+
+    .ant-form-item {
+        margin-bottom: 16px;
+    }
+}
+
+/* Hover effects */
+.ant-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ant-upload-picture-card-wrapper:hover {
+    opacity: 0.8;
+}
+
+/* Animation */
+.edit-profile-card {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
