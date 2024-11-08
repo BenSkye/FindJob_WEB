@@ -34,4 +34,14 @@ const getJobById = async (jobId: string) => {
     }
 }
 
-export { getListJobByCandidate, getJobById, getHotListJobByCandidate };
+const createJob = async (data: any) => {
+    try {
+        const response = await apiClient.post('/job/create-job', data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error createJob:', error);
+        return error.response.data;
+    }
+}
+
+export { getListJobByCandidate, getJobById, getHotListJobByCandidate, createJob };
