@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, Card, Typography, Divider, Checkbox, Row, Col, notification } from 'antd';
 import { UserOutlined, LockOutlined, LinkedinOutlined } from '@ant-design/icons';
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';
-import { login, googleSignUp } from '../../services/api/authenService';
+import { googleSignUp } from '../../services/api/authenService';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const { Title, Text } = Typography;
 
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [api, contextHolder] = notification.useNotification();
+    const { login, user } = useAuth();
 
     const showNotification = (type: 'success' | 'error', message: string, description: string) => {
         api[type]({
@@ -77,34 +79,40 @@ const Login: React.FC = () => {
         );
     };
 
+    useEffect(() => {
+        console.log('User:', user);
+        // Điều hướng dựa vào role
+        if (!user) {
+            return;
+        }
+        if (user?.roles.includes('employer')) {
+            navigate('/employer/dashboard');
+        } else {
+            //trở về trang trước đó
+            navigate(-1);
+        }
+    }, [user]);
+
     const onFinish = async (values: any) => {
         setLoading(true);
         try {
-            const response = await login(values.email, values.password);
+            const response = await login({ email: values.email, password: values.password });
             console.log('Login Response:', response);
 
             if (response.status === 200) {
-                const userData = response.metadata.user;
-                localStorage.setItem('accessToken', response.metadata.tokens.accessToken);
-                localStorage.setItem('user', JSON.stringify({
-                    name: userData.name,
-                    email: userData.email,
-                    avatar: userData.avatar,
-                    role: userData.roles[0]
-                }));
-
+                // const userData = response.metadata.user;
+                // localStorage.setItem('accessToken', response.metadata.tokens.accessToken);
+                // localStorage.setItem('user', JSON.stringify({
+                //     name: userData.name,
+                //     email: userData.email,
+                //     avatar: userData.avatar,
+                //     role: userData.roles[0]
+                // }));
                 showNotification(
                     'success',
                     'Đăng nhập thành công!',
                     'Chào mừng bạn đã quay trở lại!'
                 );
-
-                // Điều hướng dựa vào role
-                if (userData.roles.includes('admin')) {
-                    navigate('/admin/dashboard');
-                } else {
-                    navigate('/');
-                }
             }
         } catch (error: any) {
             console.error('Login Error:', error);

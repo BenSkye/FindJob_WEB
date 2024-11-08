@@ -9,6 +9,7 @@ interface User {
     userId: string;
     username: string;
     email: string;
+    roles: string[];
 }
 
 interface AuthContextType {
@@ -17,6 +18,7 @@ interface AuthContextType {
     logout: () => void;
     isAuthenticated: boolean;
     isLoading: boolean;
+    logoutInvalidSignature: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -54,6 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             Cookies.set('x-refresh-token', tokens.refreshToken);
 
             const decodedUser = jwtDecode(tokens.accessToken) as User;
+            console.log('decodedUser', decodedUser);
             setUser(decodedUser);
 
             return response.data;

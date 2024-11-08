@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { Category, SubCategory } from '../../services/types/category.types';
 import { adminGetCategory, adminCreateCategory, addSubCategory } from '../../services/api/adminCategoryService';
-import CustomTable from '../../components/Category/Table';
+import CustomTable from '../../components/Category/TableCate';
 import AddModal from '../../components/Category/AddModalCate';
 
 const CategoryPage: React.FC = () => {

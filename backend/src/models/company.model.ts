@@ -54,7 +54,6 @@ const companySchema = new Schema(
         },
         taxNumber: {
             type: String,
-            unique: true,
             default: null
         },
         mainCategory: {

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useAuth } from '../../hooks/useAuth';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:2024/v1/api',
@@ -18,41 +19,68 @@ apiClient.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
-apiClient.interceptors.response.use(function (response) {
-  return response;
-}, async function (error) {
-  const originalRequest = error.config;
-  console.log('error::', error)
-  if ((error.response.status === 401 || error.response.status === 403 || error.response.data.message === "jwt expired") && !originalRequest._retry) {
-    console.log('run error 401::')
 
-    originalRequest._retry = true;
-    const refreshToken = Cookies.get('x-refresh-token');
 
-    if (!refreshToken) {
-      return Promise.reject(error);
-    }
+const handleLogout = () => {
+  // Xóa tất cả cookies
+  Cookies.remove('authorization');
+  Cookies.remove('x-refresh-token');
+  Cookies.remove('x-client-id');
+  Cookies.remove('x-api-key');
 
-    try {
-      const response = await apiClient.post('/user/handleRefreshToken', {}, {
-        headers: {
-          'x-client-id': Cookies.get('x-client-id') || '',
-          'x-api-key': Cookies.get('x-api-key') || '',
-          'x-refresh-token': refreshToken
+  // Redirect về trang chủ
+  window.location.href = '/';
+};
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response) {
+      const { status, data } = error.response;
+
+      // Xử lý refresh token
+      if ((status === 401 || status === 403 || data.message === "jwt expired")
+        && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const refreshToken = Cookies.get('x-refresh-token');
+
+        if (!refreshToken) {
+          return Promise.reject(error);
         }
-      });
 
-      console.log('response::', response)
-      Cookies.set('authorization', response.data.metadata.tokens.accessToken);
-      Cookies.set('x-refresh-token', response.data.metadata.tokens.refreshToken);
-      originalRequest.headers['authorization'] = response.data.metadata.tokens.accessToken;
-      return apiClient(originalRequest);
+        try {
+          const response = await apiClient.post('/user/handleRefreshToken', {}, {
+            headers: {
+              'x-client-id': Cookies.get('x-client-id') || '',
+              'x-api-key': Cookies.get('x-api-key') || '',
+              'x-refresh-token': refreshToken
+            }
+          });
 
-    } catch (error) {
-      return Promise.reject(error);
+          const { accessToken, refreshToken: newRefreshToken } = response.data.metadata.tokens;
+          Cookies.set('authorization', accessToken);
+          Cookies.set('x-refresh-token', newRefreshToken);
+          originalRequest.headers['authorization'] = accessToken;
+          return apiClient(originalRequest);
+
+        } catch (refreshError) {
+          handleLogout();
+          return Promise.reject(refreshError);
+        }
+      }
+
+      // Xử lý Invalid Signature hoặc Not found keyStore
+      if (status === 406 ||
+        data.message === "Invalid Signature" ||
+        data.message === "Not found keyStore") {
+        handleLogout();
+        return Promise.reject(error);
+      }
     }
-  }
-  return Promise.reject(error);
-});
 
+    return Promise.reject(error);
+  }
+);
 export default apiClient;

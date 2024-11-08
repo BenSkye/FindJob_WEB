@@ -24,7 +24,7 @@ class ApplicationService {
     }
 
     static getPersonalApplications = async (userId: string) => {
-        return await applicationRepo.getApplications({ candidateId: userId });
+        return await applicationRepo.getApplicationsWithPopulate({ candidateId: userId });
     }
 
     static getPersonalJobHasApplied = async (userId: string) => {

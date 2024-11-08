@@ -20,5 +20,15 @@ const getPersonalJobHasApplied = async () => {
     }
 }
 
-export { sendApplication, getPersonalJobHasApplied };
+const getPersonalApplications = async () => {
+    try {
+        const response = await apiClient.get('/application/personal-applications');
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getPersonalApplications:', error);
+        return error.response.data;
+    }
+}
+
+export { sendApplication, getPersonalJobHasApplied, getPersonalApplications };
 
