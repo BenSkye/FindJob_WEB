@@ -38,7 +38,6 @@ class ApplicationService {
         return jobIds;
     }
 
-
     static getApplicationByUserCompany = async (userId: string) => {
         const user = await userModel.findById(userId);
         if (!user) {

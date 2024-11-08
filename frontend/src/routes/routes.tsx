@@ -14,6 +14,7 @@ import CVBuilder from '../pages/candidate/CVBuilder';
 import PersonalApplication from '../pages/candidate/PersonalApplication';
 import PersonalJob from '../pages/employer/PersonalJob';
 import EditJob from '../pages/employer/EditJob';
+import JobApplications from '../pages/employer/JobApplications';
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
 
 // Lazy load các layouts với dynamic import
@@ -121,6 +122,10 @@ export const routes: RouteObject[] = [
       {
         path: '/employer/edit-job/:id',
         element: <EditJob />
+      },
+      {
+        path: '/employer/job-applications/:jobId',
+        element: <JobApplications />
       }
 
     ]
