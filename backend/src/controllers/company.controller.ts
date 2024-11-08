@@ -20,5 +20,12 @@ class CompanyController {
         }).send(res);
     });
 
+    getPersonalCompany = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get personal company successfully',
+            metadata: await CompanyService.getPersonalCompany(req.user.userId),
+        }).send(res);
+    });
+
 }
 export default new CompanyController();

@@ -32,6 +32,7 @@ export const login = async (email: string, password: string) => {
     }
 }
 
+
 export const signupEmployer = async (data: unknown) => {
     try {
         const response = await apiClient.post('/user/signup-employer', data);

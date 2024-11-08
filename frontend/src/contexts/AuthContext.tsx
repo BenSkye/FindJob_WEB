@@ -18,6 +18,7 @@ interface AuthContextType {
     logout: () => void;
     isAuthenticated: boolean;
     isLoading: boolean;
+    logoutInvalidSignature: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
