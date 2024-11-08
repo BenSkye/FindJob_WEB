@@ -5,6 +5,8 @@ import {
     FileAddOutlined,
     TeamOutlined,
     SettingOutlined,
+    ProfileOutlined,
+    AntDesignOutlined
 } from '@ant-design/icons';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
@@ -28,11 +30,19 @@ const EmployerLayout: React.FC = () => {
             label: 'Post Job',
             path: '/employer/post-job',
         },
+
+
         {
-            key: 'applications',
-            icon: <TeamOutlined />,
-            label: 'Manage Applications',
-            path: '/employer/applications',
+            key: 'editprofile',
+            icon: <ProfileOutlined />,
+            label: 'Edit Profile',
+            path: '/employer/editprofile',
+        },
+        {
+            key: 'employerprofile',
+            icon: <AntDesignOutlined />,
+            label: 'Employer Profile',
+            path: '/employer/employerprofile',
         },
         {
             key: 'managejobs',

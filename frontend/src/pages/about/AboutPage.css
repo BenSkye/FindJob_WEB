@@ -1,0 +1,139 @@
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 500px;
+    margin-bottom: 60px;
+}
+
+.hero-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.hero-title {
+    color: white !important;
+    margin-bottom: 20px !important;
+}
+
+.hero-text {
+    color: white;
+    font-size: 18px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Statistics Section */
+.statistics-section {
+    margin: 60px 20px;
+}
+
+.statistic-card {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.statistic-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Mission & Team Sections */
+.mission-section,
+.team-section {
+    margin: 60px 20px;
+}
+
+.mission-content,
+.team-content {
+    padding: 20px;
+}
+
+.image-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.section-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Values Section */
+.section-title {
+    text-align: center;
+    margin: 60px 0 40px !important;
+    padding: 0 20px;
+}
+
+.value-card {
+    text-align: center;
+    height: 100%;
+    padding: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.value-icon {
+    font-size: 48px;
+    color: #1890ff;
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        height: 400px;
+    }
+
+    .image-container {
+        height: 300px;
+    }
+
+    .hero-title {
+        font-size: 24px !important;
+    }
+
+    .hero-text {
+        font-size: 16px;
+    }
+}
