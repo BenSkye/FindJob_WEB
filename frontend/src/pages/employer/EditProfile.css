@@ -76,3 +76,25 @@
         transform: translateY(0);
     }
 }
+
+.logo-section {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.current-logo {
+    margin-bottom: 16px;
+}
+
+.logo-preview {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ant-image {
+    display: inline-block;
+}
+
+.ant-image-mask {
+    border-radius: 8px;
+}

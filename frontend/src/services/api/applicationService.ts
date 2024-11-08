@@ -30,5 +30,42 @@ const getPersonalApplications = async () => {
     }
 }
 
-export { sendApplication, getPersonalJobHasApplied, getPersonalApplications };
+const getEmployerApplications = async () => {
+    try {
+        const response = await apiClient.get('/application/employer-applications');
+        return response.data.metadata;
+    } catch (error: any) {
+        console.error('Error getEmployerApplications:', error);
+        return error.response.data;
+    }
+}
+
+const updateApplicationStatus = async (applicationId: string, data: { status: string }) => {
+    try {
+        const response = await apiClient.patch(`/application/update-status/${applicationId}`, data);
+        return response.data.metadata;
+    } catch (error: any) {
+        console.error('Error updateApplicationStatus:', error);
+        return error.response.data;
+    }
+}
+
+const getApplicationsByJobId = async (jobId: string) => {
+    try {
+        const response = await apiClient.get(`/application/job/${jobId}`);
+        return response.data.metadata;
+    } catch (error: any) {
+        console.error('Error getApplicationsByJobId:', error);
+        return error.response.data;
+    }
+}
+
+export {
+    sendApplication,
+    getPersonalJobHasApplied,
+    getPersonalApplications,
+    getEmployerApplications,
+    updateApplicationStatus,
+    getApplicationsByJobId
+};
 

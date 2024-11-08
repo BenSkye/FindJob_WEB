@@ -4,17 +4,16 @@ import {
     Input,
     Button,
     Card,
-    Upload,
     Typography,
     Row,
     Col,
     message,
     Divider,
     Select,
-    Spin
+    Spin,
+    Image
 } from 'antd';
 import {
-    UploadOutlined,
     UserOutlined,
     MailOutlined,
     PhoneOutlined,
@@ -24,10 +23,8 @@ import {
     LinkedinOutlined,
     TwitterOutlined
 } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
 import { companyApi } from '../../services/api/company';
 import { Company, CompanyUpdateDto } from '../../services/types/company.types';
-import type { RcFile, UploadProps } from 'antd/es/upload';
 import './EditProfile.css';
 
 const { Title } = Typography;
@@ -38,8 +35,8 @@ const EditProfile: React.FC = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [initialLoading, setInitialLoading] = useState(true);
-    const [fileList, setFileList] = useState<any[]>([]);
-    const { id } = useParams<{ id: string }>();
+    const [logoUrl, setLogoUrl] = useState<string>('');
+    const [companyData, setCompanyData] = useState<Company | null>(null);
 
     useEffect(() => {
         fetchCompanyData();
@@ -47,8 +44,11 @@ const EditProfile: React.FC = () => {
 
     const fetchCompanyData = async () => {
         try {
-            if (!id) return;
-            const company = await companyApi.getCompanyById(id);
+            const company = await companyApi.getPersonalCompany();
+            setCompanyData(company);
+            setLogoUrl(company.logo || '');
+
+            // Set form values
             form.setFieldsValue({
                 name: company.name,
                 email: company.email,
@@ -60,21 +60,12 @@ const EditProfile: React.FC = () => {
                 facebook: company.facebook,
                 linkedin: company.linkedin,
                 twitter: company.twitter,
-                taxNumber: company.taxNumber
+                taxNumber: company.taxNumber,
+                logo: company.logo
             });
 
-            if (company.logo) {
-                setFileList([
-                    {
-                        uid: '-1',
-                        name: 'company-logo.png',
-                        status: 'done',
-                        url: company.logo,
-                    }
-                ]);
-            }
         } catch (error: any) {
-            message.error('Failed to fetch company data');
+            message.error('Không thể tải thông tin công ty');
         } finally {
             setInitialLoading(false);
         }
@@ -82,42 +73,22 @@ const EditProfile: React.FC = () => {
 
     const onFinish = async (values: CompanyUpdateDto) => {
         try {
-            if (!id) return;
+            if (!companyData?._id) return;
             setLoading(true);
-
-            let logoUrl = fileList[0]?.url;
-            if (fileList[0]?.originFileObj) {
-                logoUrl = await companyApi.uploadLogo(id, fileList[0].originFileObj);
-            }
 
             const updateData: CompanyUpdateDto = {
                 ...values,
-                logo: logoUrl
+                logo: values.logo || logoUrl
             };
 
-            await companyApi.updateCompany(id, updateData);
-            message.success('Company profile updated successfully');
+            await companyApi.updateCompany(companyData._id, updateData);
+            message.success('Cập nhật thông tin công ty thành công');
+            await fetchCompanyData();
         } catch (error: any) {
-            message.error('Failed to update company profile');
+            message.error('Cập nhật thông tin thất bại');
         } finally {
             setLoading(false);
         }
-    };
-
-    const beforeUpload = (file: RcFile) => {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
-        }
-        return isJpgOrPng && isLt2M;
-    };
-
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
     };
 
     if (initialLoading) {
@@ -139,24 +110,29 @@ const EditProfile: React.FC = () => {
                     layout="vertical"
                     onFinish={onFinish}
                     className="edit-profile-form"
+                    initialValues={companyData || {}}
                 >
                     <Row gutter={24}>
-                        <Col span={24} className="upload-section">
-                            <Form.Item label="Logo công ty">
-                                <Upload
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    beforeUpload={beforeUpload}
-                                    onChange={handleChange}
-                                    maxCount={1}
-                                >
-                                    {fileList.length === 0 && (
-                                        <div>
-                                            <UploadOutlined />
-                                            <div style={{ marginTop: 8 }}>Upload</div>
-                                        </div>
-                                    )}
-                                </Upload>
+                        <Col span={24} className="logo-section">
+                            {logoUrl && (
+                                <div className="current-logo">
+                                    <Image
+                                        src={logoUrl}
+                                        alt="Company Logo"
+                                        width={200}
+                                        className="logo-preview"
+                                    />
+                                </div>
+                            )}
+                            <Form.Item
+                                name="logo"
+                                label="Logo URL công ty"
+                                help="Nhập URL hình ảnh logo công ty"
+                            >
+                                <Input
+                                    placeholder="https://example.com/logo.png"
+                                    onChange={(e) => setLogoUrl(e.target.value)}
+                                />
                             </Form.Item>
                         </Col>
 
@@ -183,8 +159,6 @@ const EditProfile: React.FC = () => {
                             </Form.Item>
                         </Col>
 
-                        {/* Add more form fields based on the Company interface */}
-                        {/* Social Media Links */}
                         <Col xs={24} md={8}>
                             <Form.Item name="facebook" label="Facebook">
                                 <Input prefix={<FacebookOutlined />} />

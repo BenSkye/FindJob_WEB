@@ -1,60 +1,55 @@
-import React, { useState } from 'react';
-import { Table, Tag, Space, Button, Typography, Modal } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Table, Tag, Space, Button, Typography, Modal, message } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, EyeOutlined } from '@ant-design/icons';
+import * as applicationApi from '../../services/api/applicationService';
+import { Application } from '../../services/types/applications.types';
+import dayjs from 'dayjs';
+import './Applications.css';
 
-const { Title } = Typography;
-
-interface Application {
-    key: string;
-    name: string;
-    position: string;
-    status: string;
-    date: string;
-}
-
-const initialData: Application[] = [
-    {
-        key: '1',
-        name: 'John Doe',
-        position: 'Software Engineer',
-        status: 'Pending',
-        date: '2023-10-01',
-    },
-    {
-        key: '2',
-        name: 'Jane Smith',
-        position: 'Product Manager',
-        status: 'Approved',
-        date: '2023-09-15',
-    },
-    {
-        key: '3',
-        name: 'Alice Johnson',
-        position: 'UX Designer',
-        status: 'Rejected',
-        date: '2023-09-20',
-    },
-];
+const { Title, Text } = Typography;
 
 const Applications: React.FC = () => {
-    const [data, setData] = useState<Application[]>(initialData);
+    const [loading, setLoading] = useState(true);
+    const [updateLoading, setUpdateLoading] = useState<string>('');
+    const [data, setData] = useState<Application[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
 
-    const handleApprove = (record: Application) => {
-        setData(prevData =>
-            prevData.map(item =>
-                item.key === record.key ? { ...item, status: 'Approved' } : item
-            )
-        );
+    useEffect(() => {
+        fetchApplications();
+    }, []);
+
+    const fetchApplications = async () => {
+        try {
+            setLoading(true);
+            const response = await applicationApi.getEmployerApplications();
+            if (response.error) {
+                message.error(response.error);
+                return;
+            }
+            setData(response.metadata || []);
+        } catch (error) {
+            message.error('Failed to fetch applications');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleReject = (record: Application) => {
-        setData(prevData =>
-            prevData.map(item =>
-                item.key === record.key ? { ...item, status: 'Rejected' } : item
-            )
-        );
+    const handleStatusUpdate = async (record: Application, newStatus: 'approved' | 'rejected') => {
+        try {
+            setUpdateLoading(record._id);
+            const response = await applicationApi.updateApplicationStatus(record._id, { status: newStatus });
+            if (response.error) {
+                message.error(response.error);
+                return;
+            }
+            message.success(`Application ${newStatus} successfully`);
+            await fetchApplications();
+        } catch (error) {
+            message.error('Failed to update application status');
+        } finally {
+            setUpdateLoading('');
+        }
     };
 
     const showModal = (record: Application) => {
@@ -62,43 +57,64 @@ const Applications: React.FC = () => {
         setIsModalVisible(true);
     };
 
-    const handleOk = () => {
+    const handleCloseModal = () => {
         setIsModalVisible(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
+        setSelectedApplication(null);
     };
 
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Candidate',
+            dataIndex: ['candidateId'],
+            key: 'candidate',
+            render: (candidate: Application['candidateId']) => (
+                <div>
+                    <div>{`${candidate.firstName} ${candidate.lastName}`}</div>
+                    <Text type="secondary">{candidate.email}</Text>
+                </div>
+            ),
         },
         {
             title: 'Position',
-            dataIndex: 'position',
+            dataIndex: ['jobId'],
             key: 'position',
+            render: (job: Application['jobId']) => (
+                <div>
+                    <div>{job.title}</div>
+                    <Text type="secondary">{job.location}</Text>
+                </div>
+            ),
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            filters: [
+                { text: 'Pending', value: 'pending' },
+                { text: 'Approved', value: 'approved' },
+                { text: 'Rejected', value: 'rejected' },
+            ],
+            onFilter: (value: string, record: Application) => record.status === value,
             render: (status: string) => {
-                let color = 'geekblue';
-                if (status === 'Approved') {
-                    color = 'green';
-                } else if (status === 'Rejected') {
-                    color = 'volcano';
-                }
-                return <Tag color={color}>{status.toUpperCase()}</Tag>;
+                const colorMap = {
+                    pending: 'geekblue',
+                    approved: 'green',
+                    rejected: 'volcano',
+                };
+                return (
+                    <Tag color={colorMap[status as keyof typeof colorMap]}>
+                        {status.toUpperCase()}
+                    </Tag>
+                );
             },
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
+            title: 'Applied Date',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            sorter: (a: Application, b: Application) =>
+                dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
+            render: (date: string) => dayjs(date).format('DD/MM/YYYY'),
         },
         {
             title: 'Action',
@@ -108,42 +124,86 @@ const Applications: React.FC = () => {
                     <Button
                         type="primary"
                         icon={<CheckCircleOutlined />}
-                        onClick={() => handleApprove(record)}
-                        disabled={record.status === 'Approved'}
+                        onClick={() => handleStatusUpdate(record, 'approved')}
+                        disabled={record.status === 'approved' || updateLoading === record._id}
+                        loading={updateLoading === record._id}
                     >
                         Approve
                     </Button>
                     <Button
-                        type="danger"
+                        danger
                         icon={<CloseCircleOutlined />}
-                        onClick={() => handleReject(record)}
-                        disabled={record.status === 'Rejected'}
+                        onClick={() => handleStatusUpdate(record, 'rejected')}
+                        disabled={record.status === 'rejected' || updateLoading === record._id}
+                        loading={updateLoading === record._id}
                     >
                         Reject
                     </Button>
-                    <Button onClick={() => showModal(record)}>View</Button>
+                    <Button
+                        icon={<EyeOutlined />}
+                        onClick={() => showModal(record)}
+                    >
+                        View
+                    </Button>
                 </Space>
             ),
         },
     ];
 
     return (
-        <div>
+        <div className="applications-container">
             <Title level={2}>Manage Applications</Title>
-            <Table columns={columns} dataSource={data} />
+            <Table
+                columns={columns}
+                dataSource={data}
+                loading={loading}
+                rowKey="_id"
+                pagination={{
+                    pageSize: 10,
+                    showTotal: (total) => `Total ${total} applications`,
+                }}
+            />
 
             <Modal
                 title="Application Details"
-                visible={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
+                open={isModalVisible}
+                onOk={handleCloseModal}
+                onCancel={handleCloseModal}
+                width={700}
+                footer={[
+                    <Button key="close" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                ]}
             >
                 {selectedApplication && (
-                    <div>
-                        <p><strong>Name:</strong> {selectedApplication.name}</p>
-                        <p><strong>Position:</strong> {selectedApplication.position}</p>
-                        <p><strong>Status:</strong> {selectedApplication.status}</p>
-                        <p><strong>Date:</strong> {selectedApplication.date}</p>
+                    <div className="application-details">
+                        <div className="detail-section">
+                            <Title level={4}>Candidate Information</Title>
+                            <p><strong>Name:</strong> {`${selectedApplication.candidateId.firstName} ${selectedApplication.candidateId.lastName}`}</p>
+                            <p><strong>Email:</strong> {selectedApplication.candidateId.email}</p>
+                            <p><strong>Phone:</strong> {selectedApplication.candidateId.phone}</p>
+                        </div>
+
+                        <div className="detail-section">
+                            <Title level={4}>Job Information</Title>
+                            <p><strong>Position:</strong> {selectedApplication.jobId.title}</p>
+                            <p><strong>Location:</strong> {selectedApplication.jobId.location}</p>
+                            <p><strong>Salary:</strong> {selectedApplication.jobId.salary}</p>
+                        </div>
+
+                        <div className="detail-section">
+                            <Title level={4}>Application Details</Title>
+                            <p><strong>Status:</strong> {selectedApplication.status.toUpperCase()}</p>
+                            <p><strong>Applied Date:</strong> {dayjs(selectedApplication.createdAt).format('DD/MM/YYYY HH:mm')}</p>
+                            <p><strong>Cover Letter:</strong></p>
+                            <div className="cover-letter">{selectedApplication.coverLetter}</div>
+                            {selectedApplication.resume && (
+                                <Button type="link" href={selectedApplication.resume} target="_blank">
+                                    View Resume
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 )}
             </Modal>

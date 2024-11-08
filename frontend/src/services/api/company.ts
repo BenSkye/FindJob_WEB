@@ -2,6 +2,11 @@ import apiClient from './apiClient';
 import { Company, CompanyUpdateDto } from '../types/company.types';
 
 export const companyApi = {
+    getPersonalCompany: async (): Promise<Company> => {
+        const response = await apiClient.get('/company/personal-company');
+        return response.data.metadata;
+    },
+
     getCompanyById: async (id: string): Promise<Company> => {
         const response = await apiClient.get(`/company/get-by-id/${id}`);
         return response.data.metadata;
