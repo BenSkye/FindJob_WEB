@@ -11,12 +11,13 @@ import {
     Divider,
     Select,
     Spin,
-    Image
+    Image,
+    Upload
 } from 'antd';
 import {
     UserOutlined,
     MailOutlined,
-    PhoneOutlined,
+    UploadOutlined,
     BankOutlined,
     EnvironmentOutlined,
     FacebookOutlined,
@@ -25,6 +26,7 @@ import {
 } from '@ant-design/icons';
 import { companyApi } from '../../services/api/company';
 import { Company, CompanyUpdateDto } from '../../services/types/company.types';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import './EditProfile.css';
 
 const { Title } = Typography;
@@ -37,6 +39,7 @@ const EditProfile: React.FC = () => {
     const [initialLoading, setInitialLoading] = useState(true);
     const [logoUrl, setLogoUrl] = useState<string>('');
     const [companyData, setCompanyData] = useState<Company | null>(null);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     useEffect(() => {
         fetchCompanyData();
@@ -48,26 +51,73 @@ const EditProfile: React.FC = () => {
             setCompanyData(company);
             setLogoUrl(company.logo || '');
 
-            // Set form values
+            // Set initial file list if logo exists
+            if (company.logo) {
+                setFileList([{
+                    uid: '-1',
+                    name: 'company-logo.png',
+                    status: 'done',
+                    url: company.logo,
+                }]);
+            }
+
             form.setFieldsValue({
-                name: company.name,
-                email: company.email,
-                phone: company.phone,
-                address: company.address,
-                website: company.website,
-                companySize: company.companySize,
-                description: company.description,
-                facebook: company.facebook,
-                linkedin: company.linkedin,
-                twitter: company.twitter,
-                taxNumber: company.taxNumber,
+                ...company,
                 logo: company.logo
             });
-
         } catch (error: any) {
             message.error('Không thể tải thông tin công ty');
         } finally {
             setInitialLoading(false);
+        }
+    };
+
+    const beforeUpload = (file: RcFile) => {
+        const isImage = file.type.startsWith('image/');
+        if (!isImage) {
+            message.error('Bạn chỉ có thể tải lên file hình ảnh!');
+        }
+
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error('Hình ảnh phải nhỏ hơn 2MB!');
+        }
+
+        return isImage && isLt2M;
+    };
+
+    const handleChange: UploadProps['onChange'] = async (info) => {
+        if (info.file.status === 'uploading') {
+            setLoading(true);
+            return;
+        }
+
+        if (info.file.status === 'done') {
+            // Get uploaded file URL from response
+            const uploadedUrl = info.file.response.url;
+            setLogoUrl(uploadedUrl);
+            form.setFieldValue('logo', uploadedUrl);
+            setLoading(false);
+        }
+
+        setFileList(info.fileList.slice(-1)); // Only keep latest file
+    };
+
+    const customUploadRequest = async ({ file, onSuccess, onError }: any) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Thay thế bằng API upload của bạn
+            const response = await companyApi.uploadLogo(formData);
+
+            if (response.url) {
+                onSuccess(response);
+            } else {
+                onError(new Error('Upload failed'));
+            }
+        } catch (error) {
+            onError(error);
         }
     };
 
@@ -78,7 +128,7 @@ const EditProfile: React.FC = () => {
 
             const updateData: CompanyUpdateDto = {
                 ...values,
-                logo: values.logo || logoUrl
+                logo: logoUrl
             };
 
             await companyApi.updateCompany(companyData._id, updateData);
@@ -114,25 +164,29 @@ const EditProfile: React.FC = () => {
                 >
                     <Row gutter={24}>
                         <Col span={24} className="logo-section">
-                            {logoUrl && (
-                                <div className="current-logo">
-                                    <Image
-                                        src={logoUrl}
-                                        alt="Company Logo"
-                                        width={200}
-                                        className="logo-preview"
-                                    />
-                                </div>
-                            )}
                             <Form.Item
                                 name="logo"
-                                label="Logo URL công ty"
-                                help="Nhập URL hình ảnh logo công ty"
+                                label="Logo công ty"
+                                help="Tải lên logo công ty (JPG, PNG < 2MB)"
                             >
-                                <Input
-                                    placeholder="https://example.com/logo.png"
-                                    onChange={(e) => setLogoUrl(e.target.value)}
-                                />
+                                <Upload
+                                    name="logo"
+                                    listType="picture-card"
+                                    className="avatar-uploader"
+                                    showUploadList={true}
+                                    fileList={fileList}
+                                    beforeUpload={beforeUpload}
+                                    onChange={handleChange}
+                                    customRequest={customUploadRequest}
+                                    maxCount={1}
+                                >
+                                    {fileList.length === 0 && (
+                                        <div>
+                                            <UploadOutlined />
+                                            <div style={{ marginTop: 8 }}>Tải lên</div>
+                                        </div>
+                                    )}
+                                </Upload>
                             </Form.Item>
                         </Col>
 

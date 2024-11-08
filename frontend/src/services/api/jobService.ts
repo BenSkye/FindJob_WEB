@@ -36,7 +36,7 @@ const getJobById = async (jobId: string) => {
 
 const createJob = async (data: any) => {
     try {
-        const response = await apiClient.post('/job/create-job', data);
+        const response = await apiClient.post('/job/create', data);
         return response.data;
     } catch (error: any) {
         console.error('Error createJob:', error);
@@ -44,4 +44,45 @@ const createJob = async (data: any) => {
     }
 }
 
-export { getListJobByCandidate, getJobById, getHotListJobByCandidate, createJob };
+const getPersonalJob = async () => {
+    try {
+        const response = await apiClient.get('/job/personal-job');
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getPersonalJob:', error);
+        return error.response.data;
+    }
+}
+
+const getCompanyJob = async () => {
+    try {
+        const response = await apiClient.get('/job/company-job');
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getCompanyJob:', error);
+        return error.response.data;
+    }
+}
+
+const updateJob = async (jobId: string, data: any) => {
+    try {
+        const response = await apiClient.put(`/job/update/${jobId}`, data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error updateJob:', error);
+        return error.response.data;
+    }
+}
+
+const publishJobWhenActiveSubscription = async (jobId: string) => {
+    try {
+        const response = await apiClient.put(`/job/publish-job-when-active-subscription/${jobId}`);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error publishJob:', error);
+        return error.response.data;
+    }
+}
+
+
+export { getListJobByCandidate, getJobById, getHotListJobByCandidate, createJob, getPersonalJob, getCompanyJob, updateJob, publishJobWhenActiveSubscription };

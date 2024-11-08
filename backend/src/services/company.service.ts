@@ -7,6 +7,10 @@ class CompanyService {
         return await companyRepo.createCompany(data);
     }
 
+    static getListCompany = async (query: any, select: string[] = []) => {
+        return await companyRepo.getListCompany(query, select);
+    }
+
     static getCompanyById = async (companyId: string) => {
         return await companyRepo.getCompanyById(companyId);
     }

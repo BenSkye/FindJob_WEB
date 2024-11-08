@@ -10,6 +10,7 @@ import templateRouter from './template';
 import cvRouter from './cv';
 import applicationRouter from './application';
 import companyRouter from './company';
+import subscriptionRouter from './subscription';
 
 
 const router = Router();
@@ -30,5 +31,6 @@ router.use('/v1/api/job', jobRouter);
 router.use('/v1/api/template', templateRouter);
 router.use('/v1/api/cv', cvRouter);
 router.use('/v1/api/application', applicationRouter);
+router.use('/v1/api/subscription', subscriptionRouter);
 
 export default router;

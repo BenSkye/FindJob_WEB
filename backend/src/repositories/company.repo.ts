@@ -6,6 +6,10 @@ class CompanyRepo {
         return await companyModel.create(data);
     }
 
+    async getListCompany(query: any, select: string[] = []) {
+        return await companyModel.find(query).select(select.join(' '));
+    }
+
     async getCompany(query: any, select: string[] = []) {
         return await companyModel.findOne(query).select(select.join(' '));
     }

@@ -7,7 +7,7 @@ import companyController from '../../controllers/company.controller';
 const companyRouter = Router();
 
 companyRouter.get('/get-by-id/:id', companyController.getCompanyById);
-
+companyRouter.get('/get-list', companyController.getListCompany);
 //authentication//
 companyRouter.use(authentication);
 ////////////////////////////

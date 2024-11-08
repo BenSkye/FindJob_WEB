@@ -12,13 +12,18 @@ interface User {
     roles: string[];
 }
 
+interface GoogleSignUpData {
+    credential: string;
+}
+
+
 interface AuthContextType {
     user: User | null;
     login: (data: unknown) => Promise<any>;
     logout: () => void;
     isAuthenticated: boolean;
     isLoading: boolean;
-    logoutInvalidSignature: () => void;
+    googleSignUp: (data: GoogleSignUpData) => Promise<any>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -66,6 +71,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const googleSignUp = async (data: GoogleSignUpData) => {
+        try {
+            const response = await apiClient.post(`user/google-signup`, data);
+            const { apiKey, user, tokens } = response.data.metadata;
+            Cookies.set('x-api-key', apiKey);
+            Cookies.set('x-client-id', user._id);
+            Cookies.set('authorization', tokens.accessToken);
+            Cookies.set('x-refresh-token', tokens.refreshToken);
+
+            const decodedUser = jwtDecode(tokens.accessToken) as User;
+            console.log('decodedUser', decodedUser);
+            setUser(decodedUser);
+            return response.data;
+        } catch (error: any) {
+            console.error('Error googleSignUp:', error);
+            throw error;
+        }
+    };
+
     const logout = async () => {
         const respone = await apiClient.post('/user/logout');
         console.log(respone);
@@ -81,7 +105,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const isAuthenticated = user !== null;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading, googleSignUp }}>
             {children}
         </AuthContext.Provider>
     );

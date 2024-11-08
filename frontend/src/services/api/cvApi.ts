@@ -1,7 +1,7 @@
 import axios from "axios";
-import { ICv } from '../types/cv.types';
+import { ICV } from '../types/cv.types';
 
-export const createCv = async (cvData: ICv) => {
+export const createCv = async (cvData: ICV) => {
     const response = await axios.post('http://localhost:2024/v1/api/cv/create', cvData);
     return response.data;
 };
@@ -11,7 +11,7 @@ export const getCvById = async (cvId: string) => {
     return response.data;
 };
 
-export const updateCv = async (cvId: string, cvData: ICv) => {
+export const updateCv = async (cvId: string, cvData: ICV) => {
     const response = await axios.put(`http://localhost:2024/v1/api/cv/${cvId}`, cvData);
     return response.data;
 };

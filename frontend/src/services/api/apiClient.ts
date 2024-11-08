@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useAuth } from '../../hooks/useAuth';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:2024/v1/api',

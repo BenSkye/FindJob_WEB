@@ -10,8 +10,8 @@ const applicationRouter = Router();
 applicationRouter.use(authentication);
 ////////////////////////////
 applicationRouter.use(apiKey)
-applicationRouter.use(permission('candidate'));
-applicationRouter.post('/send-application/:jobId', applicationController.sendApplication);
-applicationRouter.get('/personal-applications', applicationController.getPersonalApplications);
-applicationRouter.get('/personal-job-has-applied', applicationController.getPersonalJobHasApplied);
+applicationRouter.post('/send-application/:jobId', permission('candidate'), applicationController.sendApplication);
+applicationRouter.get('/personal-applications', permission('candidate'), applicationController.getPersonalApplications);
+applicationRouter.get('/personal-job-has-applied', permission('candidate'), applicationController.getPersonalJobHasApplied);
+applicationRouter.get('/user-company-applications', permission('employer'), applicationController.getApplicationByUserCompany);
 export default applicationRouter;

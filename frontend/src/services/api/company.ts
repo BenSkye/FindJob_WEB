@@ -1,6 +1,15 @@
 import apiClient from './apiClient';
 import { Company, CompanyUpdateDto } from '../types/company.types';
 
+const uploadLogo = async (formData: FormData) => {
+    const response = await apiClient.post('/upload/company-logo', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
 export const companyApi = {
     getPersonalCompany: async (): Promise<Company> => {
         const response = await apiClient.get('/company/personal-company');
@@ -17,15 +26,5 @@ export const companyApi = {
         return response.data.metadata;
     },
 
-    uploadLogo: async (id: string, file: File): Promise<string> => {
-        const formData = new FormData();
-        formData.append('logo', file);
-
-        const response = await apiClient.post(`/company/upload-logo/${id}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        return response.data.metadata.logo;
-    }
+    uploadLogo,
 };

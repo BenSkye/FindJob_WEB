@@ -98,3 +98,54 @@
 .ant-image-mask {
     border-radius: 8px;
 }
+
+.avatar-uploader .ant-upload-list-item-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-uploader .ant-upload {
+    width: 128px;
+    height: 128px;
+    margin-bottom: 10px;
+}
+
+.avatar-uploader .ant-upload-select {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.avatar-uploader .ant-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+/* Thêm style cho container của icon và text */
+.upload-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}

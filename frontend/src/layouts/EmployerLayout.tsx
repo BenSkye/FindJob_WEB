@@ -50,6 +50,12 @@ const EmployerLayout: React.FC = () => {
             label: 'ManageJobs',
             path: '/employer/managejobs',
         },
+        {
+            key: 'personal-job',
+            icon: <SettingOutlined />,
+            label: 'Các tin đăng',
+            path: '/employer/personal-job',
+        },
     ];
 
     return (

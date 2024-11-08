@@ -61,7 +61,6 @@ class JobService {
         return await jobRepo.updateJob(jobId, job);
     }
 
-
     static publistJobWhenPayment = async (jobId: string, userId: string, paymentId: string) => {
         const job = await jobRepo.getJobById(jobId);
         if (!job) {
@@ -79,7 +78,6 @@ class JobService {
         return await jobRepo.updateJob(jobId, jobData);
     }
 
-
     static getListApplicationsByJobId = async (jobId: string) => {
         const job = await jobRepo.getJobById(jobId);
         if (!job) {
@@ -96,6 +94,21 @@ class JobService {
         return applications;
     }
 
+    static getPersonalJob = async (userId: string) => {
+        return await jobRepo.getPersonalJob(userId);
+    }
+
+    static getCompanyJob = async (userId: string) => {
+        const user = await userModel.findById(userId).select('companyId');
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return await jobRepo.getCompanyJob(user.companyId.toString());
+    }
+
+    static updateJob = async (jobId: string, data: any) => {
+        return await jobRepo.updateJob(jobId, data);
+    }
 
 }
 export default JobService;

@@ -50,6 +50,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             path: '/admin/job-category',
         },
         {
+            key: 'companies',
+            icon: <TeamOutlined />,
+            label: 'Quản lý công ty',
+            path: '/admin/companies',
+        },
+        {
             key: 'settings',
             icon: <SettingOutlined />,
             label: 'Cài đặt',
