@@ -32,7 +32,7 @@ export function JobHasApplyProvider({ children }: { children: ReactNode }) {
     }
 
     useEffect(() => {
-        if (user) {
+        if (user && user.roles.includes('candidate')) {
             fetchAppliedJobs();
         } else {
             setAppliedJobs([]);

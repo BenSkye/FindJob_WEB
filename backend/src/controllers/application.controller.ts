@@ -26,5 +26,12 @@ class ApplicationController {
         }).send(res);
     });
 
+    getApplicationByUserCompany = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get application by company id successfully',
+            metadata: await ApplicationService.getApplicationByUserCompany(req.keyStore.user),
+        }).send(res);
+    });
+
 }
 export default new ApplicationController();

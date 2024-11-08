@@ -96,16 +96,7 @@ const styles = {
     },
 };
 
-const getStatusColor = (status: string) => {
-    const statusColors = {
-        pending: 'orange',
-        reviewing: 'blue',
-        accepted: 'green',
-        rejected: 'red',
-        withdrawn: 'gray',
-    };
-    return statusColors[status] || 'default';
-};
+
 
 
 const PersonalApplication = () => {

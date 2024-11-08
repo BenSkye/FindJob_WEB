@@ -1,0 +1,26 @@
+.ant-table-wrapper {
+    background: white;
+    border-radius: 8px;
+}
+
+.ant-table-pagination {
+    margin: 16px 0;
+}
+
+.ant-card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.ant-tabs-nav {
+    margin-bottom: 16px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.status-tag {
+    min-width: 80px;
+    text-align: center;
+}

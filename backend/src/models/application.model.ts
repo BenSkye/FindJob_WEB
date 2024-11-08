@@ -10,6 +10,11 @@ const applicationSchema = new Schema(
             ref: 'Job',
             required: true,
         },
+        companyId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Company',
+            required: true,
+        },
         candidateId: {
             type: Schema.Types.ObjectId,
             ref: 'User',

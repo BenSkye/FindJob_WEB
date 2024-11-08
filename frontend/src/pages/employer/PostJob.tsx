@@ -6,7 +6,7 @@ import { getListCategory } from '../../services/api/categoryService';
 import { getListLevel } from '../../services/api/levelService';
 import { createJob } from '../../services/api/jobService';
 import './PostJob.css';
-import { JOB_TYPE_OPTIONS } from '../../config/jobTypes';
+import { JOB_TYPE_OPTIONS } from '../../config';
 
 const { Option } = Select;
 
@@ -17,6 +17,8 @@ const PostJob = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isNegotiable, setIsNegotiable] = useState(false);
+    const [subCategory, setSubCategory] = useState(null);
+
 
 
     useEffect(() => {
@@ -34,6 +36,13 @@ const PostJob = () => {
         };
         fetchData();
     }, []);
+
+    const handleCategoryChange = (value: string, option: any) => {
+        setSelectedCategory(option);
+        // Reset subCategory trong form và state
+        form.setFieldValue('subCategory', undefined);
+        setSubCategory(null);
+    };
 
     const handleNegotiableChange = (checked: boolean) => {
         setIsNegotiable(checked);
@@ -101,7 +110,7 @@ const PostJob = () => {
                     >
                         <Select
                             placeholder="Chọn ngành nghề"
-                            onChange={(value, option: any) => setSelectedCategory(option)}
+                            onChange={handleCategoryChange}
                         >
                             {categories.map((category: any) => (
                                 <Option key={category._id} value={category._id} subCategories={category.subCategories}>
@@ -116,7 +125,12 @@ const PostJob = () => {
                         label="Chuyên ngành"
                         rules={[{ required: true, message: 'Vui lòng chọn chuyên ngành' }]}
                     >
-                        <Select placeholder="Chọn chuyên ngành" disabled={!selectedCategory}>
+                        <Select
+                            placeholder="Chọn chuyên ngành"
+                            disabled={!selectedCategory}
+                            value={subCategory}
+                            onChange={(value) => setSubCategory(value)}
+                        >
                             {selectedCategory?.subCategories?.map((sub: any) => (
                                 <Option key={sub} value={sub.name}>{sub.name}</Option>
                             ))}

@@ -27,7 +27,6 @@ class JobRepo {
             .sort({ createdAt: -1 });
     }
 
-
     async getListJobByCandidate(query: any, select: string[] = []) {
         console.log('query', query);
         const { skip, limit, title, level, jobType, location, mainCategory, subCategory, ...otherQuery } = query;
@@ -78,6 +77,14 @@ class JobRepo {
 
     async getJob(query: any) {
         return await jobModel.findOne(query);
+    }
+
+    async getPersonalJob(userId: string) {
+        return await jobModel.find({ employerId: userId });
+    }
+
+    async getCompanyJob(companyId: string) {
+        return await jobModel.find({ companyId });
     }
 
     async getJobById(jobId: string) {

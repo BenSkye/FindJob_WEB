@@ -21,3 +21,25 @@ export const JOB_TYPE_OPTIONS = [
     { value: JOB_TYPES.INTERNSHIP, label: JOB_TYPE_LABELS[JOB_TYPES.INTERNSHIP] },
     { value: JOB_TYPES.REMOTE, label: JOB_TYPE_LABELS[JOB_TYPES.REMOTE] }
 ];
+
+
+export const JOB_STATUS = {
+    DRAFT: 'draft',
+    PUBLISHED: 'published',
+    CLOSED: 'closed',
+    EXPIRED: 'expired'
+} as const;
+
+export const JOB_STATUS_LABELS = {
+    [JOB_STATUS.DRAFT]: 'Nháp',
+    [JOB_STATUS.PUBLISHED]: 'Đã đăng',
+    [JOB_STATUS.CLOSED]: 'Đã đóng',
+    [JOB_STATUS.EXPIRED]: 'Hết hạn'
+} as const;
+
+export const JOB_STATUS_COLORS = {
+    [JOB_STATUS.DRAFT]: 'default',
+    [JOB_STATUS.PUBLISHED]: 'success',
+    [JOB_STATUS.CLOSED]: 'error',
+    [JOB_STATUS.EXPIRED]: 'warning'
+} as const;

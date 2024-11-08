@@ -1,3 +1,4 @@
+import { userModel } from "../models/user.model";
 import applicationRepo from "../repositories/application.repo";
 import categoryRepo from "../repositories/category.repo";
 import jobRepo from "../repositories/job.repo";
@@ -12,6 +13,7 @@ class ApplicationService {
         const applicationData = {
             jobId: jobId,
             candidateId: userId,
+            companyId: job.companyId,
             employerId: job.employerId,
             status: 'pending',
             resume: data.resume,
@@ -34,6 +36,15 @@ class ApplicationService {
             jobIds.push(application.jobId.toString());
         });
         return jobIds;
+    }
+
+
+    static getApplicationByUserCompany = async (userId: string) => {
+        const user = await userModel.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return await applicationRepo.getApplications({ companyId: user.companyId });
     }
 
 }

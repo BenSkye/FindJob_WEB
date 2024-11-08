@@ -11,13 +11,13 @@ const EmployerRoute: React.FC<EmployerRouteProps> = ({ children }) => {
     const { isAuthenticated, user } = useAuth();
     const isEmployer = user?.roles.includes('employer');
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
-    }
+    // if (!isAuthenticated) {
+    //     return <Navigate to="/login" state={{ from: location }} replace />;
+    // }
 
-    if (!isEmployer) {
-        return <Navigate to="/" replace />;
-    }
+    // if (!isEmployer) {
+    //     return <Navigate to="/" replace />;
+    // }
 
     return <>{children}</>;
 };
