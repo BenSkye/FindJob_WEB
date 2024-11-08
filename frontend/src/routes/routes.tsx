@@ -7,7 +7,7 @@ import JobSearch from '../pages/candidate/JobSearch';
 
 import Dashboard from '../pages/employer/Dashboard';
 import PostJob from '../pages/employer/PostJob';
-import Applications from '../pages/employer/Applications';
+
 import ManageJobs from '../pages/employer/ManageJobs';
 import Template from '../pages/candidate/teamplate';
 import CVBuilder from '../pages/candidate/CVBuilder';
@@ -111,10 +111,8 @@ export const routes: RouteObject[] = [
         path: '/employer/post-job',
         element: <PostJob />
       },
-      {
-        path: '/employer/applications',
-        element: <Applications />
-      },
+
+
       {
         path: '/employer/editprofile',
         element: <EditProfile />

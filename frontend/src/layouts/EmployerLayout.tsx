@@ -30,12 +30,8 @@ const EmployerLayout: React.FC = () => {
             label: 'Post Job',
             path: '/employer/post-job',
         },
-        {
-            key: 'applications',
-            icon: <TeamOutlined />,
-            label: 'Manage Applications',
-            path: '/employer/applications',
-        },
+
+
         {
             key: 'editprofile',
             icon: <ProfileOutlined />,
