@@ -110,5 +110,9 @@ class JobService {
         return await jobRepo.updateJob(jobId, data);
     }
 
+    static getPersonalisPayTrue = async (userId: string) => {
+        return await jobRepo.getJobsHasPay(userId);
+    }
+
 }
 export default JobService;

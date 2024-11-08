@@ -5,7 +5,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import './ApplyJobModal.css';
 import { uploadFileToFirebase } from '../../utils/firebaseUpload';
-
+import ImageUploader from '../../components/upload/ImageUploader';
+import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
+import FileUploader from '../../components/upload/FileUploader';
 interface ApplyJobModalProps {
     isVisible: boolean;
     jobId: string;
@@ -21,6 +23,7 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
 }) => {
     const [form] = Form.useForm();
     const [coverLetter, setCoverLetter] = useState('');
+    const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([]);
 
     const handleSubmit = async (values: any) => {
         if (!coverLetter.trim()) {
@@ -31,7 +34,7 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
         const applicationData = {
             jobId,
             resume: {
-                url: values.resume,
+                url: uploadedFileUrls[0].url,
                 name: values.name,
                 email: values.email,
                 phone: values.phone,
@@ -49,10 +52,16 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
     };
 
     const handleUploadResume = async (file: File) => {
+
         const url = await uploadFileToFirebase(file, `resumes/${file.name}`);
         console.log('url', url);
         form.setFieldValue('resume', url);
         return url;
+    };
+
+    const handleFileUpload = (urls: any[]) => {
+        setUploadedFileUrls(urls);
+        form.setFieldValue('resume', urls[0].url);
     };
 
     return (
@@ -109,15 +118,12 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
                     label="CV của bạn"
                     rules={[{ required: true, message: 'Vui lòng tải lên CV!' }]}
                 >
-                    <Upload
-                        maxCount={1}
-                        beforeUpload={(file) => {
-                            const url = handleUploadResume(file);
-                            return false;
-                        }}
-                    >
-                        <Button icon={<UploadOutlined />}>Tải lên CV (PDF)</Button>
-                    </Upload>
+
+                    <FileUploader
+                        onUploadSuccess={handleFileUpload}
+                        storagePath={FIREBASE_STORAGE_PATH.RESUME_ME}
+                        accept=".pdf,.doc,.docx"
+                    />
                 </Form.Item>
 
                 <Form.Item

@@ -79,6 +79,14 @@ class JobRepo {
         return await jobModel.findOne(query);
     }
 
+    async getJobs(query: any) {
+        return await jobModel.find(query);
+    }
+
+    async getJobsHasPay(userId: string) {
+        return await jobModel.find({ employerId: userId, isPay: true }).populate('paymentId');
+    }
+
     async getPersonalJob(userId: string) {
         return await jobModel.find({ employerId: userId });
     }

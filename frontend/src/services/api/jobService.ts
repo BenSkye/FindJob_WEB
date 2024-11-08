@@ -95,5 +95,20 @@ const getJobApplications = async (jobId: string) => {
     }
 }
 
+const getPersonalJobHasPay = async () => {
+    try {
+        const response = await apiClient.get('/job/personal-job-has-pay');
+        console.log('response101', response);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getPersonalJobHasPay:', error);
+        return error.response.data;
+    }
+}
 
-export { getListJobByCandidate, getJobById, getHotListJobByCandidate, createJob, getPersonalJob, getCompanyJob, updateJob, publishJobWhenActiveSubscription, getJobApplications };
+
+export {
+    getListJobByCandidate, getJobById, getHotListJobByCandidate,
+    createJob, getPersonalJob, getCompanyJob, updateJob, publishJobWhenActiveSubscription,
+    getJobApplications, getPersonalJobHasPay
+};

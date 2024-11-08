@@ -16,7 +16,10 @@ class SubscriptionRepo {
     }
 
     async getSubscriptionByUserId(userId: string) {
-        return await subscriptionModel.findOne({ userId });
+        return await subscriptionModel.findOne({ userId }).populate({
+            path: 'history.paymentId',
+            model: 'Payment'
+        });;
     }
 
     async getSubscriptionById(subscriptionId: string) {
