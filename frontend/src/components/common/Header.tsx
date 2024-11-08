@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     <Menu.Item
                         key="jobs"
                         style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('jobslist')}
+                        onClick={() => handleMenuClick('job-search')}
                     >
                         Việc Làm
                     </Menu.Item>
