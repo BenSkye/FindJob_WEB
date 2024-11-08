@@ -31,6 +31,13 @@ class CVController {
             metadata: await CVService.deleteCV(req.params.cvId),
         }).send(res);
     })  ;
+
+    static findCVByUserId = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get CV by user id successfully',
+            metadata: await CVService.findCVByUserId(req.params.userId),
+        }).send(res);
+    });
 }
 
 export default CVController;

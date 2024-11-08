@@ -61,6 +61,12 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     onClick: () => navigate('/personal-applications')
                 },
                 {
+                    key: 'profile-cv',
+                    label: 'Hồ sơ và CV',
+                    icon: <FileTextOutlined />,
+                    onClick: () => navigate(`/cv-profile`)
+                },
+                {
                     key: 'change-password',
                     label: 'Đổi mật khẩu',
                     icon: <LockFilled />,
@@ -84,7 +90,13 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                 </Link>
 
                 <Menu mode="horizontal" style={styles.menu}>
-
+                    <Menu.Item
+                        key="home"
+                        style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                        onClick={() => handleMenuClick('')}
+                    >
+                        Trang chủ
+                    </Menu.Item>
                     <Menu.Item
                         key="jobs"
                         style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
