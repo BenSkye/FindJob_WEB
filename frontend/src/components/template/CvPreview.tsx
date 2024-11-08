@@ -11,7 +11,16 @@ const CvPreview: React.FC<CvPreviewProps> = ({ template, cvData }) => {
     const renderContent = () => {
         try {
             // Convert Map to plain object for Handlebars
-            const templateData = Object.fromEntries(cvData.content);
+            const templateData = Object.fromEntries(
+                Array.from(cvData.content.entries()).map(([key, value]) => {
+                    // Nếu value là UploadedImage, sử dụng base64 để render
+                    if (value && typeof value === 'object' && 'base64' in value) {
+                        return [key, value.base64];
+                    }
+                    // Các trường khác giữ nguyên
+                    return [key, value];
+                })
+            );
 
             // Register custom helpers
             Handlebars.registerHelper('isSelected', function (fieldName) {
