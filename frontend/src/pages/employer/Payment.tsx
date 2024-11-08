@@ -119,16 +119,6 @@ const Payment = () => {
             key: 'updatedAt',
             render: (date: string) => formatDateTime.dateOnly(date),
         },
-        // {
-        //     title: 'Trạng thái',
-        //     dataIndex: 'status',
-        //     key: 'status',
-        //     render: (status: string) => (
-        //         <Tag color={status === 'active' ? 'success' : 'default'}>
-        //             {status === 'active' ? 'Đang hiển thị' : 'Đã ẩn'}
-        //         </Tag>
-        //     ),
-        // },
     ];
 
     if (loading) {
