@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { User } from '../../services/types/user.types';
+import { Company } from '../../services/types/company.types';
 import { adminGetUser } from '../../services/api/userApi';
 import CustomTableUser from '../../components/User/TableUser';
 
+interface UserWithCompany extends User {
+    company?: Company;
+}
+
 const UserPage: React.FC = () => {
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<UserWithCompany[]>([]);
     const [loading, setLoading] = useState(false);
 
     const fetchUsers = async () => {
@@ -26,12 +31,14 @@ const UserPage: React.FC = () => {
         fetchUsers();
     }, []);
 
-    const columns: ColumnsType<User> = [
+
+    
+    const columns: ColumnsType<UserWithCompany> = [
         {
             title: 'Tên',
             dataIndex: 'name',
             key: 'name',
-            width: '20%',
+            width: '15%',
         },
         {
             title: 'Email',
@@ -65,6 +72,27 @@ const UserPage: React.FC = () => {
             ),
         },
         {
+            title: 'Vai trò',
+            dataIndex: 'roles',
+            key: 'roles',
+            width: '10%',
+            render: (roles: string[]) => (
+                <span>
+                    {Array.isArray(roles) ? roles.map((role) => (
+                        <Tag color={role === 'employer' ? 'blue' :
+                             role === 'candidate' ? 'green' :
+                             role === 'admin' ? 'red' :
+                             'default'} key={role}>
+                            {role === 'employer' ? 'Nhà tuyển dụng' :
+                             role === 'candidate' ? 'Ứng viên' :
+                             role === 'admin' ? 'Quản trị viên' :
+                             role.toUpperCase()}
+                        </Tag>
+                    )) : roles}
+                </span>
+            ),
+        },
+        {
             title: 'Xác thực',
             dataIndex: 'verify',
             key: 'verify',
@@ -77,6 +105,17 @@ const UserPage: React.FC = () => {
                 </span>
             ),
         },
+        {
+            title: 'Công ty',
+            dataIndex: ['company', 'name'],
+            key: 'companyName',
+            width: '15%',
+            render: (_text: string, record: UserWithCompany) => (
+                <span>
+                    {record.company?.name || 'Chưa có công ty'}
+                </span>
+            ),
+        },
     ];
 
     return (
@@ -85,7 +124,7 @@ const UserPage: React.FC = () => {
                 <h2>Quản lý Người dùng</h2>
             </div>
 
-            <CustomTableUser<User>
+            <CustomTableUser<UserWithCompany>
                 data={users}
                 loading={loading}
                 columns={columns}

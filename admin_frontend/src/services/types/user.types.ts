@@ -9,6 +9,8 @@ interface User {
   address: string;
   createdAt: string;
   updatedAt: string;
+  roles: string[];
+  companyId: string;
 }
 
 export type { User };

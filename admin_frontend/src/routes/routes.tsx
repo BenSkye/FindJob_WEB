@@ -11,7 +11,7 @@ import NotFound from '../components/common/404';
 import Forbidden from '../components/common/403';
 import ProtectedRoute from './ProtectedRoute';
 import ProfilePage from '../pages/Admin/profile/ProfilePage';
-
+import CompaniesPage from '../pages/Admin/Companies';
 const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => ({
   default: () => {
     const Layout = module.default;
@@ -57,6 +57,10 @@ export const routes: RouteObject[] = [
       {
         path: '/admin/settings',
         element: <Setting />,
+      },
+      {
+        path: '/admin/companies',
+        element: <CompaniesPage />,
       },
       {
         path: '/admin/profile',

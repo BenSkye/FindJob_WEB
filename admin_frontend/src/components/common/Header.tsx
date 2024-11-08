@@ -121,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                         <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
                                 <Avatar icon={<UserOutlined />} style={styles.avatar} />
-                                <span>{authContext?.user?.name}</span>
+                                <span>{authContext?.user?.email}</span>
                             </div>
                         </Dropdown>
                     </div>
