@@ -208,12 +208,18 @@ class AccessService {
           (tokens as { refreshToken: string }).refreshToken
         );
 
+        const apiKey = await findByUserId(user._id);
+        if (!apiKey) {
+          throw new NotFoundError('API Key not found');
+        }
+
         return {
           user: getInfoData({
             fields: ['_id', 'name', 'email', 'roles', 'avatar'],
             object: user
           }),
-          tokens
+          tokens,
+          apiKey: apiKey.key
         };
       }
 

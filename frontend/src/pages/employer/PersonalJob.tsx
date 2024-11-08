@@ -1,45 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, Card, Table, Tag, Button, message, Spin, Modal } from 'antd';
-import { EditOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, SendOutlined, ShoppingCartOutlined, CrownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getPersonalJob, getCompanyJob, publishJobWhenActiveSubscription } from '../../services/api/jobService';
 import { JOB_STATUS_COLORS, JOB_STATUS_LABELS, JOB_TYPE_LABELS } from '../../config';
 import { formatCurrency } from '../../utils/formatters';
 import { useSubscription } from '../../hooks/useSubscription';
+import apiClient from '../../services/api/apiClient';
+import { checkoutPublishJob, checkoutSubscription } from '../../services/api/checkoutService';
 
 const { TabPane } = Tabs;
 
-const SubscriptionModal = ({ visible, onCancel, onSubscribe }: { visible: boolean, onCancel: () => void, onSubscribe: (type: string) => void }) => (
+const SubscriptionModal = ({ visible, onCancel, onSubscribe }: { visible: boolean, onCancel: () => void, onSubscribe: (type: 'basic' | 'premium') => void }) => (
     <Modal
         title="Yêu cầu gói đăng tin"
         visible={visible}
         onCancel={onCancel}
-        footer={[
-            <Button key="cancel" onClick={onCancel}>
-                Hủy
-            </Button>,
-            <Button
-                key="basic"
-                type="primary"
-                onClick={() => onSubscribe('basic')}
-                style={{ marginRight: 8 }}
-            >
-                Gói đăng 1 bài - 5.000đ
-            </Button>,
-            <Button
-                key="premium"
-                type="primary"
-                onClick={() => onSubscribe('premium')}
-            >
-                Gói 30 ngày - 50.000đ
-            </Button>,
-        ]}
+        footer={null} // Bỏ footer mặc định
     >
         <p>Bạn cần mua gói đăng tin để đăng bài tuyển dụng.</p>
         <ul>
             <li>Gói đăng 1 bài: 5.000đ/bài đăng</li>
             <li>Gói 30 ngày: 50.000đ/tháng không giới hạn bài đăng</li>
         </ul>
+
+        <div style={{
+            marginTop: 24,
+            display: 'flex',
+            gap: 12,
+            justifyContent: 'flex-end'
+        }}>
+            <Button
+                onClick={onCancel}
+            >
+                Hủy
+            </Button>
+            <Button
+                type="primary"
+                onClick={() => onSubscribe('basic')}
+                icon={<ShoppingCartOutlined />}
+            >
+                Mua gói 1 bài
+            </Button>
+            <Button
+                type="primary"
+                onClick={() => onSubscribe('premium')}
+                style={{
+                    background: '#52c41a',
+                    borderColor: '#52c41a'
+                }}
+                icon={<CrownOutlined />}
+            >
+                Mua gói 30 ngày
+            </Button>
+        </div>
     </Modal>
 );
 
@@ -51,7 +65,7 @@ const PersonalJob = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [pendingJobId, setPendingJobId] = useState(null);
+    const [pendingJobId, setPendingJobId] = useState<string | null>(null);
     useEffect(() => {
         fetchJobs();
     }, []);
@@ -100,11 +114,35 @@ const PersonalJob = () => {
         }
     };
 
-
     const handleSubscribe = async (type: 'basic' | 'premium') => {
         try {
-            // Redirect to payment page with subscription type and pending job id
-            navigate(`/employer/payment?type=${type}&jobId=${pendingJobId}`);
+            let result;
+
+            if (type === 'basic') {
+                // API cho gói đăng 1 bài - 5.000đ
+                result = await checkoutPublishJob(pendingJobId as string);
+                if (result.metadata && result.metadata.paymentUrl) {
+                    window.location.href = result.metadata.paymentUrl;
+                } else {
+                    message.error('Không thể tạo URL thanh toán');
+                }
+            } else {
+                // API cho gói 30 ngày - 50.000đ
+                result = await checkoutSubscription();
+                if (result.metadata && result.metadata.paymentUrl) {
+                    window.location.href = result.metadata.paymentUrl;
+                } else {
+                    message.error('Không thể tạo URL thanh toán');
+                }
+            }
+
+            console.log('result', result);
+
+            if (result.metadata && result.metadata.paymentUrl) {
+                window.location.href = result.metadata.paymentUrl;
+            } else {
+                message.error('Không thể tạo URL thanh toán');
+            }
         } catch (error) {
             message.error('Lỗi khi xử lý yêu cầu');
         } finally {
@@ -203,6 +241,18 @@ const PersonalJob = () => {
     return (
         <div style={{ padding: '24px' }}>
             <Card>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    {subcription?.status === 'expired' && (
+                        <div>Gói đăng tin của bạn đã hết hạn, vui lòng mua gói đăng tin để đăng tin</div>
+                    )}
+                    {subcription?.status === 'inactive' && (
+                        <div>Gói đăng tin của bạn chưa kích hoạt, vui lòng mua gói đăng tin để đăng tin</div>
+                    )}
+                    {subcription?.status === 'active' && (
+                        <div>Gói đăng tin của bạn còn {Math.ceil((new Date(subcription.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} ngày</div>
+                    )}
+
+                </div>
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="Việc làm của tôi" key="1">
                         <Table
