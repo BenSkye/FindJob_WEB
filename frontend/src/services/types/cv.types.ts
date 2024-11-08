@@ -1,8 +1,13 @@
+interface UploadedImage {
+    url: string;
+    base64: string;
+}
+
 export interface ICV {
     _id?: string;
     userId: string;
     templateId: string;
-    content: Map<string, any>;  // Hoặc Record<string, any>
+    content: Map<string, string | UploadedImage | any>;  // Hoặc Record<string, any>
     selectedFields: string[];
     status: 'draft' | 'active' | 'inactive';
     isPaid: boolean;
