@@ -1,0 +1,35 @@
+.notification-dropdown {
+  width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: white;
+}
+
+.notification-dropdown .ant-empty {
+  padding: 24px;
+  background-color: white;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  background-color: #f5f5f5;
+}
+
+.notification-content {
+  margin-left: 10px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.notification-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}

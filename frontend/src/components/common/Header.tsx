@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
 import { useAuth } from '../../hooks/useAuth';
+import Notification from '../candidate/Notification';
+import '../../assets/styles/Noti.css';
 
 const { Header: AntHeader } = Layout;
 
@@ -24,6 +26,16 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
     const [activeMenuItem, setActiveMenuItem] = useState<string>('');
     const { user, logout } = useAuth();
+    const [notifications, setNotifications] = useState([
+        // {
+        //     id: '1',
+        //     title: 'Thông báo mới',
+        //     content: 'Bạn có một tin nhắn mới',
+        //     time: '5 phút trước',
+        //     isRead: false,
+        // },
+        // Thêm các thông báo mẫu khác nếu cần
+    ]);
 
     useEffect(() => {
 
@@ -44,6 +56,19 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
         setActiveMenuItem(key);
         navigate(`/${key}`);
     };
+
+    const handleNotificationClick = (id: string) => {
+        setNotifications(notifications.map(notif => 
+            notif.id === id ? { ...notif, isRead: true } : notif
+        ));
+    };
+
+    const notificationMenu = (
+        <Notification 
+            notifications={notifications}
+            onNotificationClick={handleNotificationClick}
+        />
+    );
 
     const userMenu = (
         <Menu
@@ -140,7 +165,13 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     </div>
                 ) : (
                     <div style={styles.userSection}>
-                        <BellOutlined style={styles.bellIcon} />
+                        <Dropdown 
+                            overlay={notificationMenu} 
+                            placement="bottomRight" 
+                            trigger={['click']}
+                        >
+                            <BellOutlined style={styles.bellIcon} />
+                        </Dropdown>
                         <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
                                 <Avatar
@@ -245,7 +276,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontWeight: 'bold',
         color: colors.brand.primary.contrast,
         backgroundColor: 'transparent',
-        // borderBottom: 'none',  // Thêm dòng này để loại bỏ border mặc định của Menu
     },
 }
 
