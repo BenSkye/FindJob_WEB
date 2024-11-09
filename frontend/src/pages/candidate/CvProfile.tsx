@@ -189,8 +189,8 @@ const CvProfile: React.FC = () => {
                 textAlign: 'center',
                 padding: '2rem'
             }}>
-                <h2>No CVs found</h2>
-                <p>Create your first CV to get started</p>
+                <h2>Không tìm thấy cv</h2>
+                <p>Tạo Cv đầu tiên để bắt đầu</p>
             </div>
         );
     }
@@ -201,6 +201,7 @@ const CvProfile: React.FC = () => {
             maxWidth: '800px', // Giảm maxWidth xuống
             margin: '0 auto'
         }}>
+            <h1>Tải xuống 5k</h1>
             <div className="cv-list" style={{
                 display: 'flex',
                 flexDirection: 'column', // Thay đổi thành column

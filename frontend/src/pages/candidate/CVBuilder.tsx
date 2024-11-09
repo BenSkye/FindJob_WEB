@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ICV } from '../../services/types/cv.types';
 import { ITemplate } from '../../services/types/template.types';
 import { getTemplateById } from '../../services/api/templateApi';
@@ -32,7 +32,7 @@ const { TextArea } = Input;
 
 const CVBuilder = () => {
     const { user } = useAuth();
-
+    const navigate = useNavigate();
     const { templateId } = useParams();
     const [template, setTemplate] = useState<ITemplate | null>(null);
     const [form] = Form.useForm();
@@ -436,6 +436,8 @@ const CVBuilder = () => {
             if (response.status === 201) {
                 console.log(response);
                 message.success('CV saved successfully!');
+                // Chuyển hướng đến trang CV Profile
+                navigate('/cv-profile');
             } else {
                 console.log(response);
                 message.error('Failed to save CV');
@@ -614,13 +616,13 @@ const CVBuilder = () => {
             >
                 Save CV
             </Button>
-            <Button
+            {/* <Button
                 type="primary"
                 icon={<DownloadOutlined />}
                 onClick={downloadPDF}
             >
                 Download PDF
-            </Button>
+            </Button> */}
         </Space>
     </Card>
 
