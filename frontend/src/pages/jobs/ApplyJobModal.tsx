@@ -6,6 +6,7 @@ import './ApplyJobModal.css';
 import { uploadFileToFirebase } from '../../utils/firebaseUpload';
 import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
 import FileUploader from '../../components/upload/FileUploader';
+import CustomCKEditor from '../../components/candidate/CustomCKEditor';
 interface ApplyJobModalProps {
     isVisible: boolean;
     jobId: string;
@@ -129,28 +130,10 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
                     required
                 >
                     <div className="cover-letter-editor">
-                        <CKEditor
-                            editor={ClassicEditor}
+                        <CustomCKEditor
                             data={coverLetter}
-                            config={{
-                                toolbar: [
-                                    'heading',
-                                    '|',
-                                    'bold',
-                                    'italic',
-                                    'link',
-                                    'bulletedList',
-                                    'numberedList',
-                                    '|',
-                                    'undo',
-                                    'redo'
-                                ],
-                                placeholder: 'Viết giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp với vị trí này...',
-                            }}
-                            onChange={(event: any, editor: any) => {
-                                const data = editor.getData();
-                                setCoverLetter(data);
-                            }}
+                            onChange={(data) => setCoverLetter(data)}
+                            placeholder="Viết giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp với vị trí này..."
                         />
                     </div>
                     {!coverLetter && (

@@ -7,6 +7,7 @@ import { getListLevel } from '../../services/api/levelService';
 import { createJob } from '../../services/api/jobService';
 import './PostJob.css';
 import { JOB_TYPE_OPTIONS } from '../../config';
+import CustomCKEditor from '../../components/candidate/CustomCKEditor';
 
 const { Option } = Select;
 
@@ -142,12 +143,10 @@ const PostJob = () => {
                         label="Yêu cầu công việc"
                         rules={[{ required: true, message: 'Vui lòng nhập yêu cầu công việc' }]}
                     >
-                        <CKEditor
-                            editor={ClassicEditor}
-                            onChange={(event, editor) => {
-                                const data = editor.getData();
-                                form.setFieldsValue({ requirements: data });
-                            }}
+
+                        <CustomCKEditor
+                            onChange={(data: any) => form.setFieldsValue({ requirements: data })}
+                            placeholder="Nhập yêu cầu công việc..."
                         />
                     </Form.Item>
 
@@ -156,12 +155,9 @@ const PostJob = () => {
                         label="Mô tả công việc"
                         rules={[{ required: true, message: 'Vui lòng nhập mô tả công việc' }]}
                     >
-                        <CKEditor
-                            editor={ClassicEditor}
-                            onChange={(event, editor) => {
-                                const data = editor.getData();
-                                form.setFieldsValue({ description: data });
-                            }}
+                        <CustomCKEditor
+                            onChange={(data) => form.setFieldsValue({ description: data })}
+                            placeholder="Nhập mô tả công việc..."
                         />
                     </Form.Item>
 
@@ -212,12 +208,10 @@ const PostJob = () => {
                         label="Phúc lợi"
                         rules={[{ required: true, message: 'Vui lòng nhập phúc lợi' }]}
                     >
-                        <CKEditor
-                            editor={ClassicEditor}
-                            onChange={(event, editor) => {
-                                const data = editor.getData();
-                                form.setFieldsValue({ benefits: data });
-                            }}
+
+                        <CustomCKEditor
+                            onChange={(data) => form.setFieldsValue({ benefits: data })}
+                            placeholder="Nhập phúc lợi..."
                         />
                     </Form.Item>
                     <Form.Item
