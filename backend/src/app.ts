@@ -13,6 +13,7 @@ import path from 'path';
 import indexRouter from './routes/index';
 import userRouter from './routes/user';
 import SubscriptionService from './services/subscription.service';
+import JobService from './services/job.service';
 // import { ordersModel } from './models/order.model';
 
 const app = express();
@@ -50,10 +51,11 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-cron.schedule('0 0 * * *', async () => {
-  //check subscription expired every day at midnight (00:00)
+cron.schedule('0 * * * *', async () => {
+  //check subscription expired every hour
   await SubscriptionService.checkSubscriptionExpired();
-  console.log('Checked subscription expired');
+  await JobService.checkJobExpired();
+  console.log('Checked expired items at:', new Date().toISOString());
 });
 
 export default app;

@@ -62,5 +62,12 @@ class JobController {
         }).send(res);
     });
 
+    getPersonalisPayTrue = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get personal job pay true successfully',
+            metadata: await JobService.getPersonalisPayTrue(req.keyStore.user),
+        }).send(res);
+    });
+
 }
 export default new JobController();

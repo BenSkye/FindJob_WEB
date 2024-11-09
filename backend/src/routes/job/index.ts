@@ -19,4 +19,5 @@ jobRouter.get('/list-applications-by-job-id/:jobId', permission('employer'), job
 jobRouter.get('/personal-job', permission('employer'), jobController.getPersonalJob);
 jobRouter.get('/company-job', permission('employer'), jobController.getCompanyJob);
 jobRouter.put('/update/:jobId', permission('employer'), jobController.updateJob);
+jobRouter.get('/personal-job-has-pay', permission('employer'), jobController.getPersonalisPayTrue);
 export default jobRouter;

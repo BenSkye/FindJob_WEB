@@ -56,6 +56,12 @@ const EmployerLayout: React.FC = () => {
             label: 'Các tin đăng',
             path: '/employer/personal-job',
         },
+        {
+            key: 'payment',
+            icon: <SettingOutlined />,
+            label: 'Payment',
+            path: '/employer/payment',
+        },
     ];
 
     return (

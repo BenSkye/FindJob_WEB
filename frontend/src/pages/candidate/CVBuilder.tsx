@@ -60,7 +60,7 @@ const CVBuilder = () => {
             status: 'active',
             isPaid: true
         };
-
+        cvPayload.content.avatar = cvPayload.content.avatar.url;
         const response = await createCv(cvPayload as ICV);
         if (response.status !== 201) {
             throw new Error('Failed to create CV');

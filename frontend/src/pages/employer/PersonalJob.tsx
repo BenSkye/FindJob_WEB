@@ -210,13 +210,21 @@ const PersonalJob = () => {
                     >
                         Sửa
                     </Button>
-                    {record.status === 'draft' && (
+                    {record.status === 'draft' ? (
                         <Button
                             type="default"
                             icon={<SendOutlined />}
                             onClick={() => handlePublish(record._id)}
                         >
                             Đăng
+                        </Button>
+                    ) : (
+                        <Button
+                            type="default"
+                            icon={<EyeOutlined />}
+                            onClick={() => navigate(`/employer/job-applications/${record._id}`)}
+                        >
+                            Xem đơn ứng tuyển
                         </Button>
                     )}
                     {/* <Button

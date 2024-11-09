@@ -1,0 +1,74 @@
+.dashboard-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.stats-card {
+    text-align: center;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* Thêm vào để căn giữa theo chiều ngang */
+    justify-content: center; /* Thay đổi để căn giữa theo chiều dọc */
+}
+
+.stats-card .ant-card-head {
+    margin-bottom: 0;        /* Giảm khoảng cách giữa title và content */
+    padding: 0 16px;        /* Thêm padding cho title */
+}
+
+.stats-card .ant-card-body {
+    padding: 12px 16px;     /* Điều chỉnh padding cho body */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.stats-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1890ff;
+    line-height: 1;         /* Thêm line-height để căn chỉnh số */
+    margin: 0;              /* Bỏ margin mặc định */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .stats-card {
+        height: 100px;
+    }
+    
+    .stats-number {
+        font-size: 24px;
+    }
+}
+.chart-card {
+    margin-top: 24px;
+}
+
+.loading-container {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stats-title {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.chart-container {
+    margin-top: 16px;
+    padding: 8px;
+}
+
+.radio-group {
+    margin-bottom: 16px;
+}
+
+.stats-row {
+    margin-bottom: 24px;
+}

@@ -16,6 +16,8 @@ import EditProfile from '../pages/employer/EditProfile';
 import EmployerProfile from '../pages/employer/EmployerProfile';
 import PersonalJob from '../pages/employer/PersonalJob';
 import EditJob from '../pages/employer/EditJob';
+import JobApplications from '../pages/employer/JobApplications';
+import Payment from '../pages/employer/Payment';
 import CvProfile from '../pages/candidate/CvProfile';
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
 
@@ -136,8 +138,15 @@ export const routes: RouteObject[] = [
       {
         path: '/employer/edit-job/:id',
         element: <EditJob />
+      },
+      {
+        path: '/employer/job-applications/:jobId',
+        element: <JobApplications />
+      },
+      {
+        path: '/employer/payment',
+        element: <Payment />
       }
-
     ]
   },
   {

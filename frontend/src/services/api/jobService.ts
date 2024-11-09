@@ -85,4 +85,30 @@ const publishJobWhenActiveSubscription = async (jobId: string) => {
 }
 
 
-export { getListJobByCandidate, getJobById, getHotListJobByCandidate, createJob, getPersonalJob, getCompanyJob, updateJob, publishJobWhenActiveSubscription };
+const getJobApplications = async (jobId: string) => {
+    try {
+        const response = await apiClient.get(`/job/list-applications-by-job-id/${jobId}`);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getJobApplications:', error);
+        return error.response.data;
+    }
+}
+
+const getPersonalJobHasPay = async () => {
+    try {
+        const response = await apiClient.get('/job/personal-job-has-pay');
+        console.log('response101', response);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getPersonalJobHasPay:', error);
+        return error.response.data;
+    }
+}
+
+
+export {
+    getListJobByCandidate, getJobById, getHotListJobByCandidate,
+    createJob, getPersonalJob, getCompanyJob, updateJob, publishJobWhenActiveSubscription,
+    getJobApplications, getPersonalJobHasPay
+};
