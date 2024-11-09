@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Badge, Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 import type Notification from "../../services/types/notification";
-import '../../assets/styles/noti.css';
+import '../../assets/styles/Noti.css';
 
 interface NotiProps {
     notifications: Notification[];
