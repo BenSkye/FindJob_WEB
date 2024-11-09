@@ -18,8 +18,8 @@ class CVRepo {
 
     static updateCV = async (cvId: string, cv: Partial<ICV>) => {
         return await cvModel.findByIdAndUpdate(
-            cvId, 
-            cv, 
+            cvId,
+            cv,
             { new: true }
         ).populate('templateId', 'name fields htmlStructure cssStyles');
     };
@@ -37,7 +37,7 @@ class CVRepo {
     };
 
     static updateCVContent = async (
-        cvId: string, 
+        cvId: string,
         content: ICV['content'],
         selectedFields: string[]
     ) => {

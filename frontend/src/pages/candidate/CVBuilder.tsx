@@ -634,8 +634,9 @@ const CVBuilder = () => {
         <Layout style={{ minHeight: '100vh', padding: '24px', background: '#f0f2f5' }}>
             <Content style={{ maxWidth: '1400px', margin: '0 auto' }}>
                 <Row gutter={[24, 24]}>
+                    {/* Left Column */}
                     <Col xs={24} lg={8}>
-                        <Affix offsetTop={20}>
+                        <div style={styles.stickyCol}>
                             <Card style={{ marginBottom: '24px' }}>
                                 <Space>
                                     <Button
@@ -653,36 +654,37 @@ const CVBuilder = () => {
                                     >
                                         Save CV
                                     </Button>
-
                                 </Space>
                             </Card>
-                        </Affix>
 
-                        <div style={{ background: 'white', padding: '24px', borderRadius: '8px' }}>
-                            <Form
-                                form={form}
-                                layout="vertical"
-                            >
-                                <Tabs
-                                    type="card"
-                                    style={{ marginBottom: '24px' }}
-                                    items={Object.entries(groupedFields).map(([section, fields]) => ({
-                                        key: section,
-                                        label: (
-                                            <Space>
-                                                {getSectionIcon(section)}
-                                                {section.charAt(0).toUpperCase() + section.slice(1)}
-                                            </Space>
-                                        ),
-                                        children: renderSectionCard(section, fields)
-                                    }))}
-                                />
-                            </Form>
+                            <div style={styles.scrollableContent}>
+                                <Form
+                                    form={form}
+                                    layout="vertical"
+                                    style={{ padding: '24px' }}
+                                >
+                                    <Tabs
+                                        type="card"
+                                        style={{ marginBottom: '24px' }}
+                                        items={Object.entries(groupedFields).map(([section, fields]) => ({
+                                            key: section,
+                                            label: (
+                                                <Space>
+                                                    {getSectionIcon(section)}
+                                                    {section.charAt(0).toUpperCase() + section.slice(1)}
+                                                </Space>
+                                            ),
+                                            children: renderSectionCard(section, fields)
+                                        }))}
+                                    />
+                                </Form>
+                            </div>
                         </div>
                     </Col>
 
+                    {/* Right Column */}
                     <Col xs={24} lg={16}>
-                        <Affix offsetTop={20}>
+                        <div style={styles.stickyCol}>
                             <Card
                                 title={
                                     <Space>
@@ -690,27 +692,42 @@ const CVBuilder = () => {
                                         Preview
                                     </Space>
                                 }
-                                style={{
-                                    width: '100%',
-                                    height: 'calc(100vh - 40px)', // Chiều cao cố định
-                                    overflow: 'hidden' // Ẩn overflow của Card
-                                }}
                                 bodyStyle={{
-                                    padding: '0',
+                                    padding: 0,
                                     height: '100%',
-                                    overflow: 'auto' // Cho phép cuộn nội dung
+                                    overflow: 'auto'
                                 }}
+                                style={{ height: '100%' }}
                             >
-                                {template && <div id="cv-preview">  {/* Add this wrapper div with ID */}
-                                    <CvPreview template={template} cvData={cvData} />
-                                </div>}
+                                {template &&
+                                    <div id="cv-preview">
+                                        <CvPreview template={template} cvData={cvData} />
+                                    </div>
+                                }
                             </Card>
-                        </Affix>
+                        </div>
                     </Col>
                 </Row>
             </Content>
         </Layout>
     );
 };
+
+const styles = {
+    stickyCol: {
+        height: 'calc(100vh - 48px)', // 48px là padding của Layout
+        position: 'sticky',
+        top: '24px',
+        display: 'flex',
+        flexDirection: 'column' as const
+    },
+    scrollableContent: {
+        flex: 1,
+        overflowY: 'auto' as const,
+        backgroundColor: 'white',
+        borderRadius: '8px'
+    }
+};
+
 
 export default CVBuilder;
