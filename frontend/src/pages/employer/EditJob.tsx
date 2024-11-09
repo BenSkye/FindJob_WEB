@@ -11,7 +11,6 @@ import Editor from '../../components/editor/Editor';
 
 const { Option } = Select;
 
-
 const EditJob = () => {
     const [form] = Form.useForm();
     const { id } = useParams();
