@@ -35,4 +35,8 @@ router.use('/v1/api/application', applicationRouter);
 router.use('/v1/api/subscription', subscriptionRouter);
 router.use('/v1/api/notification', notificationRouter);
 
+router.use('/', (req: Request, res: Response) => {
+    res.send('FindJob API');
+});
+
 export default router;
