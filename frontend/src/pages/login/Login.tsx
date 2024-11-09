@@ -124,7 +124,7 @@ const Login: React.FC = () => {
                         <div className="login-content">
                             <img src={logoImage} alt="Tìm việc" className="login-image circle-logo" />
                             <Title level={1}>Welcome</Title>
-                            <Text className="subtitle">Tìm công việc mơ ước của bạn với JobFinder</Text>
+                            <Text className="subtitle">Tìm công việc mơ ước của bạn với ME</Text>
                         </div>
                     </Col>
 

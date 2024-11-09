@@ -272,7 +272,7 @@ const JobSearch: React.FC = () => {
                     <Col xs={24} md={24}>
                         <Input.Group compact>
                             <Input
-                                style={styles.searchInput}
+                                style={{ width: 'calc(100% - 120px)', height: '50px' }}
                                 placeholder="Nhập vị trí công việc, công ty, kỹ năng..."
                                 prefix={<SearchOutlined />}
                                 value={title}
@@ -281,11 +281,29 @@ const JobSearch: React.FC = () => {
                             />
                             <Button
                                 className='button-hover'
-                                style={{ backgroundColor: colors.brand.primary.main }}
+                                style={{ width: '120px', height: '50px' }}
+                                onClick={handleSearch}
+                                type="primary"
+                            >
+                                Tìm kiếm
+                            </Button>
+
+                            {/* <Input
+                                style={{ width: 'calc(100% - 120px)', height: '50px' }}
+                                placeholder="Nhập vị trí công việc, công ty, kỹ năng..."
+                                prefix={<SearchOutlined />}
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                onPressEnter={handleSearch}
+                            />
+                            <Button
+                                className='button-hover'
+                                type="primary"
+                                style={{ width: '120px', height: '50px' }}
                                 onClick={handleSearch}
                             >
-                                <span style={{ color: colors.brand.primary.contrast }}>Tìm kiếm</span>
-                            </Button>
+                                Tìm kiếm
+                            </Button> */}
                         </Input.Group>
                     </Col>
                     <Col xs={24} md={12}>
