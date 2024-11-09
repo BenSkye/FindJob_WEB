@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Modal, Form, Input, Upload, Button, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Button, message } from 'antd';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import './ApplyJobModal.css';
 import { uploadFileToFirebase } from '../../utils/firebaseUpload';
