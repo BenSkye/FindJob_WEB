@@ -5,10 +5,8 @@ import PostJob from '../pages/Admin/PostJob';
 import User from '../pages/Admin/User';
 import Level from '../pages/Admin/Level';
 import Category from '../pages/Admin/Category';
-import Setting from '../pages/Admin/Setting';
 import Login from '../pages/Admin/login/Login';
 import NotFound from '../components/common/404';
-import Forbidden from '../components/common/403';
 import ProtectedRoute from './ProtectedRoute';
 import ProfilePage from '../pages/Admin/profile/ProfilePage';
 import CompaniesPage from '../pages/Admin/Companies';
@@ -57,10 +55,6 @@ export const routes: RouteObject[] = [
       {
         path: '/admin/job-category',
         element: <Category />,
-      },
-      {
-        path: '/admin/settings',
-        element: <Setting />,
       },
       {
         path: '/admin/companies',
