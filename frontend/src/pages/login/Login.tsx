@@ -23,7 +23,7 @@ const Login: React.FC = () => {
             placement: 'top',
             duration: 3,
             style: {
-                marginTop: '20px'
+                marginTop: '5px'
             }
         });
     };
@@ -94,6 +94,13 @@ const Login: React.FC = () => {
                     'success',
                     'Đăng nhập thành công!',
                     'Chào mừng bạn đã quay trở lại!'
+                );
+            }
+            else if (response.code === 401) {
+                showNotification(
+                    'error',
+                    'Đăng nhập thất bại',
+                    'Email hoặc mật khẩu không chính xác. Vui lòng thử lại!'
                 );
             }
         } catch (error: any) {
@@ -185,9 +192,7 @@ const Login: React.FC = () => {
                                             locale="vi"
                                         />
                                     </div>
-                                    <Button icon={<LinkedinOutlined />} className="social-button">
-                                        LinkedIn
-                                    </Button>
+
                                 </div>
 
                                 <div className="register-link">

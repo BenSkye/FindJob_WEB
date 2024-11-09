@@ -319,9 +319,7 @@ const Register: React.FC = () => {
                                             locale="vi"
                                         />
                                     </div>
-                                    <Button icon={<LinkedinOutlined />} className="social-button">
-                                        LinkedIn
-                                    </Button>
+
                                 </div>
 
                                 <div className="register-link">

@@ -8,6 +8,10 @@ class NotificationRepo {
     async getNotificationsByUserId(userId: string) {
         return await notificationModel.find({ userId });
     }
+
+    createManyNotifications = async (notifications: any[]) => {
+        return await notificationModel.insertMany(notifications);
+    }
 }
 
 export default new NotificationRepo();
