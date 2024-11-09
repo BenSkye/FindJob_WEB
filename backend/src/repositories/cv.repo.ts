@@ -47,6 +47,11 @@ class CVRepo {
             { new: true }
         ).populate('templateId', 'name fields htmlStructure cssStyles');
     };
+
+    static findCVByUserId = async (userId: string) => {
+        return await cvModel.find({ userId })
+            .populate('templateId', 'name fields htmlStructure cssStyles');
+    };
 }
 
 export default CVRepo;
