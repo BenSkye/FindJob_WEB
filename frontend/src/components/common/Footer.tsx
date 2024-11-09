@@ -108,8 +108,8 @@ const Footer: React.FC = () => {
     ];
 
     const contactInfo = [
-        { icon: <PhoneOutlined />, text: '+84 123 456 789' },
-        { icon: <MailOutlined />, text: 'contact@jobportal.com' },
+        { icon: <PhoneOutlined />, text: '0909090909' },
+        { icon: <MailOutlined />, text: 'nhatdm9a7@gmail.com' },
         { icon: <EnvironmentOutlined />, text: '123 Đường ABC, Quận XYZ, TP.HCM' }
     ];
 
@@ -119,12 +119,16 @@ const Footer: React.FC = () => {
                 <Row gutter={[32, 32]}>
                     <Col xs={24} sm={24} md={8} lg={8}>
                         <div style={styles.logoSection}>
-                            <img src={logo} alt="Logo" style={styles.logo} />
-                            <Text style={styles.description}>
-                                Nền tảng kết nối ứng viên và nhà tuyển dụng hàng đầu.
-                                Chúng tôi giúp ứng viên tìm được công việc phù hợp và
-                                hỗ trợ doanh nghiệp tìm kiếm nhân tài.
-                            </Text>
+                            <Col>
+                                <img src={logo} alt="Logo" style={styles.logo} />
+                            </Col>
+                            <Col>
+                                <Text style={styles.description}>
+                                    Nền tảng kết nối ứng viên và nhà tuyển dụng hàng đầu.
+                                    Chúng tôi giúp ứng viên tìm được công việc phù hợp và
+                                    hỗ trợ doanh nghiệp tìm kiếm nhân tài.
+                                </Text>
+                            </Col>
                         </div>
                         <Space size="large" style={styles.socialLinks}>
                             {socialLinks.map((link, index) => (

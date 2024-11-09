@@ -145,7 +145,7 @@ const Register: React.FC = () => {
                 showNotification(
                     'success',
                     'Đăng ký Google thành công!',
-                    'Chào mừng bạn đến với JobFinder!'
+                    'Chào mừng bạn đến với ME!'
                 );
                 navigate('/');
             }
@@ -178,7 +178,7 @@ const Register: React.FC = () => {
                         <div className="login-content">
                             <img src={logoImage} alt="Job Search" className="login-image circle-logo" />
                             <Title level={1}>Welcome</Title>
-                            <Text className="subtitle">Tìm công việc mơ ước của bạn với JobFinder</Text>
+                            <Text className="subtitle">Tìm công việc mơ ước của bạn với ME</Text>
                         </div>
                     </Col>
 

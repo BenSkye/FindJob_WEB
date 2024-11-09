@@ -138,7 +138,7 @@ const RegisterEmployer: React.FC = () => {
                         <div className="login-content">
                             <img src={logoImage} alt="Job Search" className="login-image circle-logo" />
                             <Title level={1}>Welcome Employer</Title>
-                            <Text className="subtitle">Tìm kiếm ứng viên tiềm năng với JobFinder</Text>
+                            <Text className="subtitle">Tìm kiếm ứng viên tiềm năng với ME</Text>
                         </div>
                     </Col>
 
