@@ -302,6 +302,7 @@ class AccessService {
         company = await companyModel.create({
           name: companyName,
           description: '',
+          taxNumber: `TAX${Date.now()}`,
         });
 
         // Cập nhật lại companyId cho user

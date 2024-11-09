@@ -10,5 +10,6 @@ subscriptionRouter.use(authentication);
 ////////////////////////////
 subscriptionRouter.use(apiKey)
 subscriptionRouter.get('/personal', permission('employer'), subscriptionController.getPersonalSubcriptions);
+subscriptionRouter.get('/stats', permission('admin'), subscriptionController.getSubscriptionsByDateRange);
 
 export default subscriptionRouter;

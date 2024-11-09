@@ -19,6 +19,7 @@ import EditJob from '../pages/employer/EditJob';
 import JobApplications from '../pages/employer/JobApplications';
 import Payment from '../pages/employer/Payment';
 import CvProfile from '../pages/candidate/CvProfile';
+import RegisterEmployer from '../pages/login/RegisterEmployer';
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
 import ForgotPassword from '../pages/login/ForgotPassword';
 import ResetPassword from '../pages/login/ResetPassword';
@@ -166,5 +167,10 @@ export const routes: RouteObject[] = [
   {
     path: '/reset-password',
     element: <ResetPassword />,
+  }
+  ,
+  {
+    path: '/register/employer',
+    element: <RegisterEmployer />,
   }
 ];

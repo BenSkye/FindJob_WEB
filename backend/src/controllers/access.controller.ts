@@ -4,6 +4,7 @@ import { CREATED, SuccessResponse } from '../core/success.response';
 import { asyncHandler } from '../helpers/asyncHandler';
 import { OAuth2Client } from 'google-auth-library';
 import { BadRequestError } from '../core/error.response';
+import {getUserStats} from '../services/user.service';
 
 class AccessController {
 
@@ -90,6 +91,15 @@ class AccessController {
       metadata: await AccessService.googleSignup(credential),
     }).send(res);
   });
+
+  getUserStats = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    new SuccessResponse({
+      message: 'Get user stats successfully',
+      metadata: await getUserStats(),
+    }).send(res);
+  });
+
+
 
 }
 export default new AccessController();

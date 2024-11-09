@@ -56,33 +56,41 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
 
     const userMenu = (
         <Menu
-            items={[
-                {
-                    key: 'profile',
-                    label: 'Thông tin cá nhân',
-                    icon: <UserOutlined />,
-                    onClick: () => navigate('/profile')
-                },
-                {
-                    key: 'personal-applications',
-                    label: 'Ứng tuyển của tôi',
-                    icon: <FileTextOutlined />,
-                    onClick: () => navigate('/personal-applications')
-                },
-                {
-                    key: 'profile-cv',
-                    label: 'Hồ sơ và CV',
-                    icon: <FileTextOutlined />,
-                    onClick: () => navigate(`/cv-profile`)
-                },
-
-                {
-                    key: 'logout',
-                    label: 'Đăng xuất',
-                    icon: <LogoutOutlined />,
-                    onClick: handleLogout
-                },
-            ]}
+            items={user?.roles.includes('employer')
+                ? [
+                    {
+                        key: 'logout',
+                        label: 'Đăng xuất',
+                        icon: <LogoutOutlined />,
+                        onClick: handleLogout
+                    }
+                ]
+                : [
+                    {
+                        key: 'profile',
+                        label: 'Thông tin cá nhân',
+                        icon: <UserOutlined />,
+                        onClick: () => navigate('/profile')
+                    },
+                    {
+                        key: 'personal-applications',
+                        label: 'Ứng tuyển của tôi',
+                        icon: <FileTextOutlined />,
+                        onClick: () => navigate('/personal-applications')
+                    },
+                    {
+                        key: 'profile-cv',
+                        label: 'Hồ sơ và CV',
+                        icon: <FileTextOutlined />,
+                        onClick: () => navigate(`/cv-profile`)
+                    },
+                    {
+                        key: 'logout',
+                        label: 'Đăng xuất',
+                        icon: <LogoutOutlined />,
+                        onClick: handleLogout
+                    }
+                ]}
         />
     );
 
@@ -100,37 +108,37 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     </Link>
                 )}
 
-
-                <Menu mode="horizontal" style={styles.menu}>
-                    <Menu.Item
-                        key="home"
-                        style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('')}
-                    >
-                        Trang chủ
-                    </Menu.Item>
-                    <Menu.Item
-                        key="jobs"
-                        style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('job-search')}
-                    >
-                        Việc Làm
-                    </Menu.Item>
-                    <Menu.Item
-                        key="about"
-                        style={activeMenuItem === 'about' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('about')}
-                    >
-                        Giới thiệu
-                    </Menu.Item>
-                    <Menu.Item
-                        key="profile-cv"
-                        style={activeMenuItem === 'profile-cv' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('template')}
-                    >
-                        Hồ sơ và CV
-                    </Menu.Item>
-                </Menu>
+                {userType !== 'employer' && (
+                    <Menu mode="horizontal" style={styles.menu}>
+                        <Menu.Item
+                            key="home"
+                            style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('')}
+                        >
+                            Trang chủ
+                        </Menu.Item>
+                        <Menu.Item
+                            key="jobs"
+                            style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('job-search')}
+                        >
+                            Việc Làm
+                        </Menu.Item>
+                        <Menu.Item
+                            key="about"
+                            style={activeMenuItem === 'about' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('about')}
+                        >
+                            Giới thiệu
+                        </Menu.Item>
+                        <Menu.Item
+                            key="profile-cv"
+                            style={activeMenuItem === 'profile-cv' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('template')}
+                        >
+                            Hồ sơ và CV
+                        </Menu.Item>
+                    </Menu>)}
 
                 {!user ? (
                     <div style={styles.authSection}>
@@ -238,11 +246,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         color: colors.brand.primary.contrast,
         borderBottom: '2px solid transparent',
     },
-    menuItemHover: {
-        color: colors.brand.primary.contrast,
-        backgroundColor: 'black',
-        borderBottom: `2px solid ${colors.brand.primary.contrast}`,
-    },
+
     menu: {
         flex: 1,
         justifyContent: 'center',

@@ -26,6 +26,15 @@ class PaymentRepo {
         return await paymentModel.findOneAndDelete({ paymentCode });
     }
 
+     async getPaymentsByDateRange(startDate: Date, endDate: Date) {
+        return await paymentModel.find({
+            paymentDate: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }).sort({ paymentDate: 1 });
+    }
+
 
 }
 

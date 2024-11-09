@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import Login from "../../pages/login/Login";
 import apiClient from "./apiClient";
 
@@ -33,15 +34,28 @@ export const login = async (email: string, password: string) => {
 }
 
 
-export const signupEmployer = async (data: unknown) => {
+export const signupEmployer = async (data: any) => {
     try {
-        const response = await apiClient.post('/user/signup-employer', data);
+        // Đảm bảo data gửi đi đúng format như Postman
+        const registerData = {
+            email: data.email,
+            name: data.name,
+            password: data.password,
+            address: data.address,
+            companyName: data.companyName,
+            phone: data.phone
+        };
+
+        // Sử dụng apiClient thay vì axiosInstance (nếu có)
+        const response = await apiClient.post('/user/signup-employer', registerData);
+        
+        // Trả về response.data thay vì toàn bộ response
         return response.data;
     } catch (error: any) {
-        console.error('Error loginEmployer:', error);
-        return error.response.data;
+        console.log('error:', error.response);
+        return error.response;
     }
-}
+};
 
 export const forgotPassword = async (data: any) => {
     try {
@@ -83,7 +97,8 @@ export const googleSignUp = async (data: GoogleSignUpData) => {
         const response = await apiClient.post(`user/google-signup`, data);
         return response;
     } catch (error: any) {
-        console.error('Error googleSignUp:', error);
+        message.error(error.message);
         throw error;
     }
 };
+

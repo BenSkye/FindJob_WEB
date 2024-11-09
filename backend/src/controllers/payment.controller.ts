@@ -26,5 +26,12 @@ class PaymentController {
         }).send(res);
     });
 
+    getPaymentStats = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get payment stats successfully',
+            metadata: await PaymentService.getPaymentStats(),
+        }).send(res);
+    });
+
 }
 export default new PaymentController();

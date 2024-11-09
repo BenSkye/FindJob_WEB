@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Outlet, RouteObject } from 'react-router-dom';
+import { Outlet, RouteObject, Navigate } from 'react-router-dom';
 import Dashboard from '../pages/Admin/Dashboard';
 import PostJob from '../pages/Admin/PostJob';
 import User from '../pages/Admin/User';
@@ -26,6 +26,10 @@ const AdminLayout = lazy(() => import('../layouts/AdminLayout').then(module => (
 
 
 export const routes: RouteObject[] = [
+  {
+    path: '/', // Root path
+    element: <Navigate to="/admin/login" replace />,
+  },
   {
     path: '/admin',
     element: (
