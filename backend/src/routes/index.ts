@@ -39,4 +39,8 @@ router.use('/v1/api/user-stats', userRouter);
 router.use('/v1/api/payment', paymentRouter);
 router.use('/v1/api/notification', notificationRouter);
 
+router.use('/', (req: Request, res: Response) => {
+    res.send('FindJob API');
+});
+
 export default router;

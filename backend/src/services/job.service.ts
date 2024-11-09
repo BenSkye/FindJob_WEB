@@ -36,15 +36,26 @@ class JobService {
             isHot: data.isHot,
             level: data.level,
         }
-        
+
         const newJob = await jobRepo.createJob(jobData);
 
         // Tạo thông báo cho tất cả candidates với mức lương max
-        await NotificationService.createNotificationForAllCandidates({
-            title: 'Có việc làm mới phù hợp với bạn',
-            content: `${company.name} vừa đăng tuyển vị trí ${data.title} với mức lương lên đến ${data.salary.max.toLocaleString('vi-VN')} VNĐ`,
-            type: 'new_job'
-        });
+        //nếu mức lương thỏa thuận thì tạo thông báo với mức lương thỏa thuận 
+        if (!data.salary.negotiable && data.salary.max) {
+            await NotificationService.createNotificationForAllCandidates({
+                title: 'Có việc làm mới phù hợp với bạn',
+                content: `${company.name} vừa đăng tuyển vị trí ${data.title} với mức lương lên đến ${data.salary.max.toLocaleString('vi-VN')} VNĐ`,
+                type: 'new_job'
+            });
+        }
+        if (data.salary.negotiable) {
+            await NotificationService.createNotificationForAllCandidates({
+                title: 'Có việc làm mới phù hợp với bạn',
+                content: `${company.name} vừa đăng tuyển vị trí ${data.title} với mức lương lên  thỏa thuận`,
+                type: 'new_job'
+            });
+        }
+
 
         return newJob;
     }
@@ -139,11 +150,11 @@ class JobService {
             await jobRepo.updateJob(job._id.toString(), job);
         }
     }
-    
+
     static async getJobStats() {
         try {
             const stats = await jobRepo.getJobStats();
-            
+
             if (!stats) {
                 throw new BadRequestError('Cannot get job statistics');
             }
