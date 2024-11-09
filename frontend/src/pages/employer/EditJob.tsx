@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Form, Input, Select, DatePicker, InputNumber, Switch, Button, message } from 'antd';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getListCategory } from '../../services/api/categoryService';
 import { getListLevel } from '../../services/api/levelService';
@@ -9,6 +7,7 @@ import { getJobById, updateJob } from '../../services/api/jobService';
 import dayjs from 'dayjs';
 import './PostJob.css';
 import { JOB_TYPE_OPTIONS } from '../../config';
+import Editor from '../../components/editor/Editor';
 
 const { Option } = Select;
 
@@ -158,13 +157,9 @@ const EditJob = () => {
                             label="Yêu cầu công việc"
                             rules={[{ required: true, message: 'Vui lòng nhập yêu cầu công việc' }]}
                         >
-                            <CKEditor
-                                editor={ClassicEditor}
+                            <Editor
                                 data={initialValues.requirements}
-                                onChange={(event, editor) => {
-                                    const data = editor.getData();
-                                    form.setFieldsValue({ requirements: data });
-                                }}
+                                onChange={(data: string) => form.setFieldsValue({ requirements: data })}
                             />
                         </Form.Item>
 
@@ -173,13 +168,9 @@ const EditJob = () => {
                             label="Mô tả công việc"
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả công việc' }]}
                         >
-                            <CKEditor
-                                editor={ClassicEditor}
-                                data={initialValues.description}
-                                onChange={(event, editor) => {
-                                    const data = editor.getData();
-                                    form.setFieldsValue({ description: data });
-                                }}
+                            <Editor
+                                data={initialValues.requirements}
+                                onChange={(data: string) => form.setFieldsValue({ requirements: data })}
                             />
                         </Form.Item>
 
@@ -231,13 +222,9 @@ const EditJob = () => {
                             label="Phúc lợi"
                             rules={[{ required: true, message: 'Vui lòng nhập phúc lợi' }]}
                         >
-                            <CKEditor
-                                editor={ClassicEditor}
+                            <Editor
                                 data={initialValues.benefits}
-                                onChange={(event, editor) => {
-                                    const data = editor.getData();
-                                    form.setFieldsValue({ benefits: data });
-                                }}
+                                onChange={(data: string) => form.setFieldsValue({ benefits: data })}
                             />
                         </Form.Item>
 
