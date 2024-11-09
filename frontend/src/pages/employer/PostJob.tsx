@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Input, Select, DatePicker, InputNumber, Switch, Button, message } from 'antd';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { Card, Form, Input, Select, DatePicker, InputNumber, Switch, Button, message } from 'antd';
 import { getListCategory } from '../../services/api/categoryService';
 import { getListLevel } from '../../services/api/levelService';
 import { createJob } from '../../services/api/jobService';

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { Modal, Form, Input, Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import './ApplyJobModal.css';
 import { uploadFileToFirebase } from '../../utils/firebaseUpload';
-import ImageUploader from '../../components/upload/ImageUploader';
 import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
 import FileUploader from '../../components/upload/FileUploader';
 interface ApplyJobModalProps {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Input, Select, DatePicker, InputNumber, Switch, Button, message } from 'antd';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { Card, Form, Input, Select, DatePicker, InputNumber, Switch, Button, message } from 'antd';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getListCategory } from '../../services/api/categoryService';
