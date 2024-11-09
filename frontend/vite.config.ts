@@ -7,6 +7,7 @@ export default defineConfig({
   root: "./",
   publicDir: 'public',
   build: {
+    minify: false,
     chunkSizeWarningLimit: 1000, // Tăng giới hạn cảnh báo lên 1000 kB
     rollupOptions: {
       output: {
