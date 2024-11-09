@@ -81,12 +81,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     icon: <FileTextOutlined />,
                     onClick: () => navigate(`/cv-profile`)
                 },
-                {
-                    key: 'change-password',
-                    label: 'Đổi mật khẩu',
-                    icon: <LockFilled />,
-                    onClick: () => navigate('/change-password')
-                },
+
                 {
                     key: 'logout',
                     label: 'Đăng xuất',
