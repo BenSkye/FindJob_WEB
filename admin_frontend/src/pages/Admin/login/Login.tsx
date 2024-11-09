@@ -23,7 +23,7 @@ const Login: React.FC = () => {
         const response = await login(data);
         console.log(response);
 
-        if (response.status === 200) {
+        if (response.success) {
             messageApi.open({
                 type: 'success',
                 content: 'Đăng nhập thành công!',
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
                     <div className="login-content">
                         <img src={logoImage} alt="Tìm việc" className="login-image circle-logo" />
                         <Title level={1}>Welcome</Title>
-                        <Text className="subtitle">Tìm công việc mơ ước của bạn với JobFinder</Text>
+                        <Text className="subtitle">Dashboard Admin</Text>
                     </div>
                 </Col>
 
@@ -86,34 +86,11 @@ const Login: React.FC = () => {
                                 />
                             </Form.Item>
 
-                            <Row justify="space-between" align="middle">
-                                <Form.Item name="remember" valuePropName="checked" noStyle>
-                                    <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-                                </Form.Item>
-                                <a href="/forgot-password" className="forgot-link">Quên mật khẩu?</a>
-                            </Row>
-
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" block className="login-button">
                                     Đăng nhập
                                 </Button>
                             </Form.Item>
-
-                            <Divider plain>Hoặc đăng nhập với</Divider>
-
-                            <div className="social-buttons">
-                                <Button icon={<GoogleOutlined />} className="social-button">
-                                    Google
-                                </Button>
-                                <Button icon={<LinkedinOutlined />} className="social-button">
-                                    LinkedIn
-                                </Button>
-                            </div>
-
-                            <div className="register-link">
-                                <Text>Bạn chưa có tài khoản? </Text>
-                                <a href="/register">Đăng ký ngay</a>
-                            </div>
                         </Form>
                     </Card>
                 </Col>

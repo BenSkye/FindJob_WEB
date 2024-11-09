@@ -69,5 +69,12 @@ class JobController {
         }).send(res);
     });
 
+    getJobStats = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get job stats successfully',
+            metadata: await JobService.getJobStats(),
+        }).send(res);
+    });
+
 }
 export default new JobController();

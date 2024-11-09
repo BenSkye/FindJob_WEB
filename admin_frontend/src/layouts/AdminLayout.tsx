@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Layout } from 'antd';
 import {
     DashboardOutlined,
-    FileAddOutlined,
-    TeamOutlined,
+    UsergroupAddOutlined,
+    TagsOutlined,
+    AppstoreOutlined,
+    BankOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
 import '../layouts/AdminLayoutStyle.css';
+import { colors } from '../config/theme';
 const { Content, Sider } = Layout;
 
 interface AdminLayoutProps {
@@ -26,32 +29,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             path: '/admin/dashboard',
         },
         {
-            key: 'post-job',
-            icon: <FileAddOutlined />,
-            label: 'Quản lý tin tuyển dụng',
-            path: '/admin/post-job',
-        },
-        {
             key: 'users',
-            icon: <TeamOutlined />,
+            icon: <UsergroupAddOutlined />,  // Changed: Better represents user management
             label: 'Quản lý người dùng',
             path: '/admin/users',
         },
         {
             key: 'levels',
-            icon: <TeamOutlined />,
+            icon: <TagsOutlined />,  // Changed: Represents levels/tags
             label: 'Quản lý cấp bậc',
             path: '/admin/levels',
         },
         {
             key: 'job-category',
-            icon: <TeamOutlined />,
+            icon: <AppstoreOutlined />,  // Changed: Better represents categories
             label: 'Quản lý danh mục',
             path: '/admin/job-category',
         },
         {
             key: 'companies',
-            icon: <TeamOutlined />,
+            icon: <BankOutlined />,  // Changed: Better represents companies
             label: 'Quản lý công ty',
             path: '/admin/companies',
         },
@@ -62,6 +59,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             path: '/admin/settings',
         },
     ];
+
 
     return (
         <Layout className="min-h-screen">
@@ -78,7 +76,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     <Sidebar menuItems={menuItems} />
                 </Sider>
                 <Layout className="site-layout">
-                    <div className="admin-welcome-banner">
+                    <div style={{ background: colors.gradients.dark }} className="admin-welcome-banner">
                         <div className="welcome-content">
                             <h2>Chào mừng đến với Trang Quản trị</h2>
                             <p>Quản lý và điều hành hệ thống tuyển dụng của bạn tại đây</p>

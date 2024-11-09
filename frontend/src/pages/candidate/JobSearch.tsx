@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography, Row, Col, Input, Select, Button, Spin, Checkbox, Pagination } from 'antd';
-import { SearchOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons';
+import Icon, { SearchOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons';
 import JobList from '../../components/candidate/JobList';
 import { Job } from '../../services/types/job.types';
 import { getListJobByCandidate } from '../../services/api/jobService';
@@ -10,6 +10,7 @@ import { getListCategory } from '../../services/api/categoryService';
 import { Province } from '../../services/types/province.type';
 import { fetchProvinces } from '../../services/api/districtWardService';
 import { JOB_TYPE_OPTIONS } from '../../config';
+import { colors } from '../../config/theme';
 
 const { Title } = Typography;
 
@@ -280,11 +281,10 @@ const JobSearch: React.FC = () => {
                             />
                             <Button
                                 className='button-hover'
-                                type="primary"
-                                style={styles.searchButton}
+                                style={{ backgroundColor: colors.brand.primary.main }}
                                 onClick={handleSearch}
                             >
-                                Tìm kiếm
+                                <span style={{ color: colors.brand.primary.contrast }}>Tìm kiếm</span>
                             </Button>
                         </Input.Group>
                     </Col>

@@ -42,3 +42,13 @@ export const adminGetUser = async (): Promise<UserWithCompany[]> => {
     }
 };
 
+export const adminGetUserStats = async (): Promise<any> => {
+    try {
+        const response = await apiClient.get<any>("/user-stats/get-user-stats");
+        return response.data;
+    } catch (error: any) {
+        console.error('Error get user stats:', error);
+        throw error;
+    }
+};
+

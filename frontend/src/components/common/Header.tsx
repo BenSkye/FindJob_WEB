@@ -238,11 +238,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         color: colors.brand.primary.contrast,
         borderBottom: '2px solid transparent',
     },
-    menuItemHover: {
-        color: colors.brand.primary.contrast,
-        backgroundColor: 'black',
-        borderBottom: `2px solid ${colors.brand.primary.contrast}`,
-    },
+
     menu: {
         flex: 1,
         justifyContent: 'center',

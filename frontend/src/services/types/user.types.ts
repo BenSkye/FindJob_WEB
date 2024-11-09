@@ -7,3 +7,7 @@ export interface User {
     role: string;
     address?: string;
 }
+
+export interface Employer extends User {
+    companyName: string;
+}

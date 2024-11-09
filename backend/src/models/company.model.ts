@@ -54,6 +54,8 @@ const companySchema = new Schema(
         },
         taxNumber: {
             type: String,
+            unique: true,
+            sparse: true,
             default: null
         },
         mainCategory: {
@@ -68,8 +70,13 @@ const companySchema = new Schema(
     }
 );
 
-// Indexes
+// Tách riêng index text search và unique index
+
+// Index cho text search
 companySchema.index({ name: 'text', description: 'text' });
+
+// Index cho taxNumber với unique và sparse
+companySchema.index({ taxNumber: 1 }, { unique: true, sparse: true });
 
 const companyModel = model(DOCUMENT_NAME, companySchema);
 export { companyModel };

@@ -13,4 +13,5 @@ paymentRouter.use(apiKey)
 paymentRouter.get('/get-personal-payment', paymentController.getPaymentByUserId);
 paymentRouter.get('/get-by-id/:id', paymentController.getPaymentById);
 paymentRouter.get('/get-list', permission('admin'), paymentController.getListPayment);
+paymentRouter.get('/get-payment-stats', permission('admin'), paymentController.getPaymentStats);
 export default paymentRouter;
