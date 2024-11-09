@@ -48,7 +48,7 @@ class CheckoutService {
             if (!subscription) {
                 throw new BadRequestError('Subscription not found');
             }
-            const paymentHasExtend = subscription.history.find((history: any) => history.paymentId.toString() === payment._id.toString());
+            const paymentHasExtend = subscription.history.find((history: any) => history.paymentId._id.toString() === payment._id.toString());
             if (paymentHasExtend) {
                 return null;
             }
