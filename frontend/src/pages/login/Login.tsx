@@ -95,8 +95,6 @@ const Login: React.FC = () => {
                     'Đăng nhập thành công!',
                     'Chào mừng bạn đã quay trở lại!'
                 );
-
-                navigate('/')
             }
             else if (response.code === 401) {
                 showNotification(

@@ -61,6 +61,7 @@ const CVBuilder = () => {
         if (cvPayload.content.avatar) {
             cvPayload.content.avatar = cvPayload.content.avatar.url;
         }
+        console.log('cvPayload', cvPayload);
         const response = await createCv(cvPayload as ICV);
         if (response.status !== 201) {
             throw new Error('Failed to create CV');
@@ -420,16 +421,19 @@ const CVBuilder = () => {
     const handleSubmit = async () => {
         try {
             setSaving(true);
-            await form.validateFields();
+            // await form.validateFields();
 
             // Convert Map to regular object
             const contentObject = Object.fromEntries(cvData.content);
 
             const cvPayload = {
                 ...cvData,
-                content: contentObject
+                content: contentObject,
+                status: 'active'
             };
-
+            if (cvPayload.content.avatar) {
+                cvPayload.content.avatar = cvPayload.content.avatar.url;
+            }
             console.log(cvPayload);
             const response = await createCv(cvPayload as ICV);
 
@@ -704,13 +708,6 @@ const CVBuilder = () => {
                         </Affix>
                     </Col>
                 </Row>
-                <Button
-                    type="primary"
-                    icon={<DownloadOutlined />}
-                    onClick={downloadPDF}
-                >
-                    Download PDF
-                </Button>
             </Content>
         </Layout>
     );

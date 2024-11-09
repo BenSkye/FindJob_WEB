@@ -6,7 +6,8 @@ import {
     TeamOutlined,
     SettingOutlined,
     ProfileOutlined,
-    AntDesignOutlined
+    AntDesignOutlined,
+    FileOutlined, DollarOutlined
 } from '@ant-design/icons';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
@@ -21,13 +22,13 @@ const EmployerLayout: React.FC = () => {
         {
             key: 'dashboard',
             icon: <DashboardOutlined />,
-            label: 'Dashboard',
+            label: 'Thống kê',
             path: '/employer/dashboard',
         },
         {
             key: 'post-job',
             icon: <FileAddOutlined />,
-            label: 'Post Job',
+            label: 'Đăng tin tuyển dụng',
             path: '/employer/post-job',
         },
 
@@ -35,31 +36,31 @@ const EmployerLayout: React.FC = () => {
         {
             key: 'editprofile',
             icon: <ProfileOutlined />,
-            label: 'Edit Profile',
+            label: 'Thông tin công ty',
             path: '/employer/editprofile',
         },
-        {
-            key: 'employerprofile',
-            icon: <AntDesignOutlined />,
-            label: 'Employer Profile',
-            path: '/employer/employerprofile',
-        },
-        {
-            key: 'managejobs',
-            icon: <SettingOutlined />,
-            label: 'ManageJobs',
-            path: '/employer/managejobs',
-        },
+        // {
+        //     key: 'employerprofile',
+        //     icon: <AntDesignOutlined />,
+        //     label: 'Employer Profile',
+        //     path: '/employer/employerprofile',
+        // },
+        // {
+        //     key: 'managejobs',
+        //     icon: <SettingOutlined />,
+        //     label: 'Quản lý bài đăng',
+        //     path: '/employer/managejobs',
+        // },
         {
             key: 'personal-job',
-            icon: <SettingOutlined />,
-            label: 'Các tin đăng',
+            icon: <FileOutlined />,
+            label: 'Quản lý bài đăng',
             path: '/employer/personal-job',
         },
         {
             key: 'payment',
-            icon: <SettingOutlined />,
-            label: 'Payment',
+            icon: <DollarOutlined />,
+            label: 'Các thanh toán',
             path: '/employer/payment',
         },
     ];
