@@ -75,6 +75,10 @@ class CVService {
 
         return await CVRepo.updateCVContent(cvId, content, selectedFields);
     }
+
+    static async findCVByUserId(userId: string) {
+        return await CVRepo.findCVByUserId(userId);
+    }
 }
 
 export default CVService;
