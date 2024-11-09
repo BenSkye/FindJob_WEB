@@ -7,7 +7,10 @@
     "noImplicitAny": false,
     "strict": false,
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+"paths": {      
+  "@ckeditor/*": ["./node_modules/@ckeditor/*"]
+} 
   },
   "files": [],
   "references": [
