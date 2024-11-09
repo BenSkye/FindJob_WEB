@@ -6,23 +6,22 @@ export default defineConfig({
   plugins: [react({
       jsxRuntime: 'automatic'
   })],
+   resolve: {
+    alias: {
+      'react': 'react',
+      'react-dom': 'react-dom'
+    }
+  },
+  optimizeDeps: {
+    include: ['@ckeditor/ckeditor5-react', '@ckeditor/ckeditor5-build-classic']
+  },
+  build: {
+    commonjsOptions: {
+      include: [/@ckeditor\/.*/, /node_modules/]
+    }
+  },
   root: "./",
   publicDir: 'public',
-  build: {
-    minify: false,
-    chunkSizeWarningLimit: 1000, // Tăng giới hạn cảnh báo lên 1000 kB
-    rollupOptions: {
-      output: {
-        manualChunks(id: any) {
-          // Tách các thư viện lớn thành các chunk riêng
-          if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString();
-          }
-        }
-      }
-    },
-    outDir: 'dist',
-  },
   server: {
     port: 2709,
   },
