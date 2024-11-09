@@ -24,20 +24,15 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
     const [activeMenuItem, setActiveMenuItem] = useState<string>('');
     const { user, logout } = useAuth();
+    const isEmployer = user?.roles?.includes('employer');
 
     useEffect(() => {
 
     }, [user]);
 
     const handleLogout = async () => {
-        if (user?.roles.includes('employer')) {
-            await logout();
-            console.log('navigate to login');
-            navigate('/login');
-        } else {
-            await logout();
-            navigate('/');
-        }
+        await logout();
+        navigate(isEmployer ? '/login' : '/');
     };
 
     const handleMenuClick = (key: string) => {
@@ -45,7 +40,27 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
         navigate(`/${key}`);
     };
 
-    const userMenu = (
+    const employerMenu = (
+        <Menu
+            items={[
+                {
+                    key: 'company-profile',
+                    label: 'Thông tin công ty',
+                    icon: <UserOutlined />,
+                    onClick: () => navigate('/employer/edit-profile')
+                },
+
+                {
+                    key: 'logout',
+                    label: 'Đăng xuất',
+                    icon: <LogoutOutlined />,
+                    onClick: handleLogout
+                },
+            ]}
+        />
+    );
+
+    const candidateMenu = (
         <Menu
             items={[
                 {
@@ -78,7 +93,6 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     icon: <LogoutOutlined />,
                     onClick: handleLogout
                 },
-
             ]}
         />
     );
@@ -90,36 +104,42 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     <img src={logo} alt="Logo" style={styles.logo} />
                 </Link>
 
-                <Menu mode="horizontal" style={styles.menu}>
-                    <Menu.Item
-                        key="home"
-                        style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('')}
-                    >
-                        Trang chủ
-                    </Menu.Item>
-                    <Menu.Item
-                        key="jobs"
-                        style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('job-search')}
-                    >
-                        Việc Làm
-                    </Menu.Item>
-                    <Menu.Item
-                        key="about"
-                        style={activeMenuItem === 'about' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('about')}
-                    >
-                        Giới thiệu
-                    </Menu.Item>
-                    <Menu.Item
-                        key="profile-cv"
-                        style={activeMenuItem === 'profile-cv' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                        onClick={() => handleMenuClick('template')}
-                    >
-                        Hồ sơ và CV
-                    </Menu.Item>
-                </Menu>
+                {isEmployer ? (
+                    <Menu mode="horizontal" style={styles.menu}>
+
+                    </Menu>
+                ) : (
+                    <Menu mode="horizontal" style={styles.menu}>
+                        <Menu.Item
+                            key="home"
+                            style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('')}
+                        >
+                            Trang chủ
+                        </Menu.Item>
+                        <Menu.Item
+                            key="jobs"
+                            style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('job-search')}
+                        >
+                            Việc Làm
+                        </Menu.Item>
+                        <Menu.Item
+                            key="about"
+                            style={activeMenuItem === 'about' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('about')}
+                        >
+                            Giới thiệu
+                        </Menu.Item>
+                        <Menu.Item
+                            key="profile-cv"
+                            style={activeMenuItem === 'profile-cv' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                            onClick={() => handleMenuClick('template')}
+                        >
+                            Hồ sơ và CV
+                        </Menu.Item>
+                    </Menu>
+                )}
 
                 {!user ? (
                     <div style={styles.authSection}>
@@ -141,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                 ) : (
                     <div style={styles.userSection}>
                         <BellOutlined style={styles.bellIcon} />
-                        <Dropdown overlay={userMenu} placement="bottomRight">
+                        <Dropdown overlay={isEmployer ? employerMenu : candidateMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
                                 <Avatar
                                     src={user.avatar}
