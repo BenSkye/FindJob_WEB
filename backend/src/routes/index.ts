@@ -13,6 +13,7 @@ import companyRouter from './company';
 import subscriptionRouter from './subscription';
 import userRouter from './user';
 import paymentRouter from './payment';
+import notificationRouter from './notificationRouter';
 
 
 const router = Router();
@@ -36,5 +37,6 @@ router.use('/v1/api/application', applicationRouter);
 router.use('/v1/api/subscription', subscriptionRouter);
 router.use('/v1/api/user-stats', userRouter);
 router.use('/v1/api/payment', paymentRouter);
+router.use('/v1/api/notification', notificationRouter);
 
 export default router;

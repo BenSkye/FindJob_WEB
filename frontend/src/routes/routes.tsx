@@ -21,6 +21,8 @@ import Payment from '../pages/employer/Payment';
 import CvProfile from '../pages/candidate/CvProfile';
 import RegisterEmployer from '../pages/login/RegisterEmployer';
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
+import ForgotPassword from '../pages/login/ForgotPassword';
+import ResetPassword from '../pages/login/ResetPassword';
 
 // Lazy load các layouts với dynamic import
 const MainLayout = lazy(() => import('../layouts/MainLayout').then(module => ({
@@ -157,6 +159,14 @@ export const routes: RouteObject[] = [
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />,
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />,
   }
   ,
   {

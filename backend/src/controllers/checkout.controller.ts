@@ -44,6 +44,21 @@ class CheckoutController {
         res.redirect(redirectUrl.toString());
     });
 
+    checkoutCVBuilder = asyncHandler(async (req: any, res: any, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Order successfully',
+            metadata: await CheckoutService.checkoutCVBuilder(req.keyStore.user, req.params.cvId),
+        }).send(res);
+    });
+
+    savePaymentCodeCVBuilder = asyncHandler(async (req: any, res: any, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Order successfully',
+            metadata: await CheckoutService.savePaymentCodeCVBuilder(req.keyStore.user, req.params.paymentCode),
+        }).send(res);
+    });
+
+
 }
 
 export default new CheckoutController();    

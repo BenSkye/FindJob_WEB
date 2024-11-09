@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
+import { Layout, Menu, Button, Avatar, Dropdown, Badge } from 'antd';
 import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled, FileTextOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
 import { useAuth } from '../../hooks/useAuth';
+import { getNotificationsByUserId } from '../../services/api/notification';
+import type Notification from "../../services/types/notification";
+import Noti from './Noti';
 
 const { Header: AntHeader } = Layout;
 
@@ -18,26 +21,32 @@ interface User {
     avatar?: string;
 }
 
-
-
 const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
     const [activeMenuItem, setActiveMenuItem] = useState<string>('');
     const { user, logout } = useAuth();
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
     useEffect(() => {
-
+        if (user) {
+            fetchNotifications();
+        }
     }, [user]);
 
-    const handleLogout = async () => {
-        if (user?.roles.includes('employer')) {
-            await logout();
-            console.log('navigate to login');
-            navigate('/login');
-        } else {
-            await logout();
-            navigate('/');
+    const fetchNotifications = async () => {
+        try {
+            if (user?.userId) {
+                const data = await getNotificationsByUserId({ userId: user.userId });
+                setNotifications(data);
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
         }
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        navigate(user?.roles.includes('employer') ? '/login' : '/');
     };
 
     const handleMenuClick = (key: string) => {
@@ -66,19 +75,13 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     icon: <FileTextOutlined />,
                     onClick: () => navigate(`/cv-profile`)
                 },
-                {
-                    key: 'change-password',
-                    label: 'Đổi mật khẩu',
-                    icon: <LockFilled />,
-                    onClick: () => navigate('/change-password')
-                },
+
                 {
                     key: 'logout',
                     label: 'Đăng xuất',
                     icon: <LogoutOutlined />,
                     onClick: handleLogout
                 },
-
             ]}
         />
     );
@@ -86,9 +89,17 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
     return (
         <AntHeader style={styles.header}>
             <div style={styles.container}>
-                <Link to="/" style={styles.logoWrapper} className='button-hover'>
-                    <img src={logo} alt="Logo" style={styles.logo} />
-                </Link>
+                {(!userType || userType === 'candidate') && (
+                    <Link to="/" style={styles.logoWrapper} className='button-hover'>
+                        <img src={logo} alt="Logo" style={styles.logo} />
+                    </Link>
+                )}
+                {userType === 'employer' && (
+                    <Link to="/employer/dashboard" style={styles.logoWrapper} className='button-hover'>
+                        <img src={logo} alt="Logo" style={styles.logo} />
+                    </Link>
+                )}
+
 
                 <Menu mode="horizontal" style={styles.menu}>
                     <Menu.Item
@@ -140,21 +151,17 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     </div>
                 ) : (
                     <div style={styles.userSection}>
-                        <BellOutlined style={styles.bellIcon} />
+                        <Noti notifications={notifications} />
                         <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
-                                <Avatar
-                                    src={user.avatar}
-                                    icon={<UserOutlined />}
-                                    style={styles.avatar}
-                                />
+                                <Avatar src={user.avatar} icon={<UserOutlined />} style={styles.avatar} />
                                 <span>{user.name}</span>
                             </div>
                         </Dropdown>
                     </div>
                 )}
             </div>
-        </AntHeader>
+        </AntHeader >
     );
 };
 
@@ -241,7 +248,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontWeight: 'bold',
         color: colors.brand.primary.contrast,
         backgroundColor: 'transparent',
-        // borderBottom: 'none',  // Thêm dòng này để loại bỏ border mặc định của Menu
     },
 }
 

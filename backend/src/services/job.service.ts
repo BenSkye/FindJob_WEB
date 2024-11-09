@@ -5,6 +5,7 @@ import applicationRepo from "../repositories/application.repo";
 import companyRepo from "../repositories/company.repo";
 import jobRepo from "../repositories/job.repo";
 import { convertObjectId } from "../utils";
+import NotificationService from './notification.service';
 
 
 class JobService {
@@ -13,6 +14,12 @@ class JobService {
         if (!user) {
             throw new Error('User not found');
         }
+
+        const company = await companyRepo.getCompanyById(user.companyId.toString());
+        if (!company) {
+            throw new Error('Company not found');
+        }
+
         const jobData = {
             employerId: userId,
             companyId: user.companyId,
@@ -29,7 +36,17 @@ class JobService {
             isHot: data.isHot,
             level: data.level,
         }
-        return await jobRepo.createJob(jobData);
+        
+        const newJob = await jobRepo.createJob(jobData);
+
+        // Tạo thông báo cho tất cả candidates với mức lương max
+        await NotificationService.createNotificationForAllCandidates({
+            title: 'Có việc làm mới phù hợp với bạn',
+            content: `${company.name} vừa đăng tuyển vị trí ${data.title} với mức lương lên đến ${data.salary.max.toLocaleString('vi-VN')} VNĐ`,
+            type: 'new_job'
+        });
+
+        return newJob;
     }
 
     static getListJobByCandidate = async (query: any) => {

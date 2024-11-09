@@ -45,6 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 setUser(decodedUser);
             }
         }
+        setIsLoading(false);
     }
     useEffect(() => {
         checkToken();
