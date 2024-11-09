@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Button, Avatar, Dropdown } from 'antd';
+import { Layout, Menu, Button, Avatar, Dropdown, Badge } from 'antd';
 import { UserOutlined, BellOutlined, LogoutOutlined, LockFilled, FileTextOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../../config/theme';
 import logo from '../../assets/images/ME.png';
 import { useAuth } from '../../hooks/useAuth';
+import { getNotificationsByUserId } from '../../services/api/notification';
+import type Notification from "../../services/types/notification";
+import Noti from './Noti';
 
 const { Header: AntHeader } = Layout;
 
@@ -18,21 +21,32 @@ interface User {
     avatar?: string;
 }
 
-
-
 const Header: React.FC<HeaderProps> = ({ userType }) => {
     const navigate = useNavigate();
     const [activeMenuItem, setActiveMenuItem] = useState<string>('');
     const { user, logout } = useAuth();
-    const isEmployer = user?.roles?.includes('employer');
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
     useEffect(() => {
-
+        if (user) {
+            fetchNotifications();
+        }
     }, [user]);
+
+    const fetchNotifications = async () => {
+        try {
+            if (user?.userId) {
+                const data = await getNotificationsByUserId({ userId: user.userId });
+                setNotifications(data);
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        }
+    };
 
     const handleLogout = async () => {
         await logout();
-        navigate(isEmployer ? '/login' : '/');
+        navigate(user?.roles.includes('employer') ? '/login' : '/');
     };
 
     const handleMenuClick = (key: string) => {
@@ -40,27 +54,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
         navigate(`/${key}`);
     };
 
-    const employerMenu = (
-        <Menu
-            items={[
-                {
-                    key: 'company-profile',
-                    label: 'Thông tin công ty',
-                    icon: <UserOutlined />,
-                    onClick: () => navigate('/employer/edit-profile')
-                },
-
-                {
-                    key: 'logout',
-                    label: 'Đăng xuất',
-                    icon: <LogoutOutlined />,
-                    onClick: handleLogout
-                },
-            ]}
-        />
-    );
-
-    const candidateMenu = (
+    const userMenu = (
         <Menu
             items={[
                 {
@@ -104,42 +98,36 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     <img src={logo} alt="Logo" style={styles.logo} />
                 </Link>
 
-                {isEmployer ? (
-                    <Menu mode="horizontal" style={styles.menu}>
-
-                    </Menu>
-                ) : (
-                    <Menu mode="horizontal" style={styles.menu}>
-                        <Menu.Item
-                            key="home"
-                            style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                            onClick={() => handleMenuClick('')}
-                        >
-                            Trang chủ
-                        </Menu.Item>
-                        <Menu.Item
-                            key="jobs"
-                            style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                            onClick={() => handleMenuClick('job-search')}
-                        >
-                            Việc Làm
-                        </Menu.Item>
-                        <Menu.Item
-                            key="about"
-                            style={activeMenuItem === 'about' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                            onClick={() => handleMenuClick('about')}
-                        >
-                            Giới thiệu
-                        </Menu.Item>
-                        <Menu.Item
-                            key="profile-cv"
-                            style={activeMenuItem === 'profile-cv' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
-                            onClick={() => handleMenuClick('template')}
-                        >
-                            Hồ sơ và CV
-                        </Menu.Item>
-                    </Menu>
-                )}
+                <Menu mode="horizontal" style={styles.menu}>
+                    <Menu.Item
+                        key="home"
+                        style={activeMenuItem === 'home' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                        onClick={() => handleMenuClick('')}
+                    >
+                        Trang chủ
+                    </Menu.Item>
+                    <Menu.Item
+                        key="jobs"
+                        style={activeMenuItem === 'jobs' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                        onClick={() => handleMenuClick('job-search')}
+                    >
+                        Việc Làm
+                    </Menu.Item>
+                    <Menu.Item
+                        key="about"
+                        style={activeMenuItem === 'about' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                        onClick={() => handleMenuClick('about')}
+                    >
+                        Giới thiệu
+                    </Menu.Item>
+                    <Menu.Item
+                        key="profile-cv"
+                        style={activeMenuItem === 'profile-cv' ? { ...styles.menuItem, ...styles.menuItemHover } : styles.menuItem}
+                        onClick={() => handleMenuClick('template')}
+                    >
+                        Hồ sơ và CV
+                    </Menu.Item>
+                </Menu>
 
                 {!user ? (
                     <div style={styles.authSection}>
@@ -160,14 +148,10 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     </div>
                 ) : (
                     <div style={styles.userSection}>
-                        <BellOutlined style={styles.bellIcon} />
-                        <Dropdown overlay={isEmployer ? employerMenu : candidateMenu} placement="bottomRight">
+                        <Noti notifications={notifications} />
+                        <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
-                                <Avatar
-                                    src={user.avatar}
-                                    icon={<UserOutlined />}
-                                    style={styles.avatar}
-                                />
+                                <Avatar src={user.avatar} icon={<UserOutlined />} style={styles.avatar} />
                                 <span>{user.name}</span>
                             </div>
                         </Dropdown>
@@ -265,7 +249,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontWeight: 'bold',
         color: colors.brand.primary.contrast,
         backgroundColor: 'transparent',
-        // borderBottom: 'none',  // Thêm dòng này để loại bỏ border mặc định của Menu
     },
 }
 
