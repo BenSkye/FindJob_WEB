@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:2024/v1/api',
+  baseURL: 'https://findjob-web.onrender.com/v1/api',
   headers: {
     'Content-Type': 'application/json',
   },
