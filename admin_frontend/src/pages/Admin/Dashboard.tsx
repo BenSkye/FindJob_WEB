@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
         return null;
     };
 
-    if (loading || !stats || !paymentStats) return <div>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
 
     return (
         <div className="dashboard">
