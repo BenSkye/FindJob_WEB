@@ -44,6 +44,14 @@ class CheckoutService {
             if (!payment) {
                 throw new BadRequestError('Payment not found');
             }
+            const subscription = await subscriptionRepo.getSubscriptionByUserId(payment.userId.toString());
+            if (!subscription) {
+                throw new BadRequestError('Subscription not found');
+            }
+            const paymentHasExtend = subscription.history.find((history: any) => history.paymentId.toString() === payment._id.toString());
+            if (paymentHasExtend) {
+                return null;
+            }
             updateSubscription = await SubscriptionService.extendSubscription(payment.userId.toString(), payment._id.toString());
             if (!updateSubscription) {
                 throw new BadRequestError('Update subscription failed');
