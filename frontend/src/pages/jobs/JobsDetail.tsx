@@ -11,7 +11,8 @@ import {
     Avatar,
     List,
     Space,
-    message
+    message,
+    Skeleton
 } from 'antd';
 import {
     EnvironmentOutlined,
@@ -65,13 +66,20 @@ const JobsDetail: React.FC = () => {
     const { appliedJobs, addAppliedJob } = useJobHasApply();
 
     const fetchJobById = async () => {
-        const response = await getJobById(id as string);
-        setJob(response.metadata);
+        try {
+            setLoading(true);
+            const response = await getJobById(id as string);
+            setJob(response.metadata);
+        } catch (error) {
+            message.error('Có lỗi xảy ra khi tải thông tin công việc');
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchJobById();
-        setLoading(false);
     }, [id]);
 
     const handleApply = () => {
@@ -116,14 +124,48 @@ const JobsDetail: React.FC = () => {
         message.info('Share functionality not implemented yet');
     };
 
+
+
+    const renderSkeletonContent = () => (
+        <Row gutter={[24, 24]}>
+            <Col xs={24} lg={16}>
+                <Card className="job-main-card" style={{ borderRadius: '12px', boxShadow: colors.boxShadow }}>
+                    <div className="job-header">
+                        <Space size={16} align="start">
+                            <Skeleton.Avatar active size={80} />
+                            <div style={{ width: '100%' }}>
+                                <Skeleton active paragraph={{ rows: 2 }} />
+                            </div>
+                        </Space>
+                    </div>
+                    <Divider />
+                    <Skeleton active paragraph={{ rows: 4 }} />
+                    <Divider />
+                    <Skeleton active paragraph={{ rows: 6 }} />
+                </Card>
+            </Col>
+            <Col xs={24} lg={8}>
+                <Card className="job-action-card" style={{ borderRadius: '12px', boxShadow: colors.boxShadow }}>
+                    <Skeleton.Button active block size="large" style={{ marginBottom: '20px' }} />
+                    <div className="action-buttons">
+                        <Skeleton.Button active style={{ marginRight: '10px' }} />
+                        <Skeleton.Button active />
+                    </div>
+                </Card>
+                <Card className="company-card" style={{ marginTop: '20px', borderRadius: '12px', boxShadow: colors.boxShadow }}>
+                    <Skeleton active paragraph={{ rows: 3 }} />
+                </Card>
+            </Col>
+        </Row>
+    );
+
     if (loading) {
-        return <div className="loading-container">Đang tải...</div>;
+        return (
+            <div className="job-detail-container" style={{ backgroundColor: colors.background.default, padding: '2rem' }}>
+                {renderSkeletonContent()}
+            </div>
+        );
     }
-
-    if (!job) {
-        return <div className="error-container">Không tìm thấy công việc</div>;
-    }
-
     return (
         <div className="job-detail-container" style={{ backgroundColor: colors.background.default, padding: '2rem' }}>
             <Row gutter={[24, 24]}>
@@ -198,15 +240,6 @@ const JobsDetail: React.FC = () => {
                                 )}
                             />
                         </div>
-
-                        {/* <div className="required-skills">
-                            <Title level={4}>Kỹ năng yêu cầu</Title>
-                            <Space wrap>
-                                {job.skills.map(skill => (
-                                    <Tag key={skill} color="blue">{skill}</Tag>
-                                ))}
-                            </Space>
-                        </div> */}
                     </Card>
                 </Col>
 

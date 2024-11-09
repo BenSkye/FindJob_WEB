@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Input, Button, Card, Row, Col, Statistic, Select } from 'antd';
+import { Typography, Input, Button, Card, Row, Col, Statistic, Select, Skeleton } from 'antd';
 import JobList from '../../components/candidate/JobList';
 import { Job } from '../../services/types/job.types';
 import FilterTags from '../../components/candidate/FilterTags';
@@ -149,6 +149,8 @@ const HomePage: React.FC = () => {
     const [recentJobs, setRecentJobs] = useState<Job[]>([]);
     const [categories, setCategories] = useState([]);
     const [provinces, setProvinces] = useState<Province[]>([]);
+    const [isLoadingJobs, setIsLoadingJobs] = useState(true);
+
 
     useEffect(() => {
         const fetchCategoriesAndLevels = async () => {
@@ -170,12 +172,19 @@ const HomePage: React.FC = () => {
     }, []);
 
     const fetchListJobByCandidate = async () => {
-        const response = await getListJobByCandidate({ skip: 0, limit: 5 });
-        console.log('response:', response);
-        setRecentJobs(response.metadata.results);
-        const hotResponse = await getHotListJobByCandidate({ skip: 0, limit: 5 });
-        console.log('hotResponse:', hotResponse);
-        setFeaturedJobs(hotResponse.metadata.results);
+        setIsLoadingJobs(true);
+        try {
+            const [recentResponse, hotResponse] = await Promise.all([
+                getListJobByCandidate({ skip: 0, limit: 5 }),
+                getHotListJobByCandidate({ skip: 0, limit: 5 })
+            ]);
+            setRecentJobs(recentResponse.metadata.results);
+            setFeaturedJobs(hotResponse.metadata.results);
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+        } finally {
+            setIsLoadingJobs(false);
+        }
     };
 
     useEffect(() => {
@@ -293,12 +302,15 @@ const HomePage: React.FC = () => {
             <div>
                 <Title level={2} style={styles.sectionTitle}>Việc làm mới nhất</Title>
 
-                <div style={styles.filterSection}>
-
-
-                </div>
-                <JobList jobs={recentJobs} type="recent" />
-
+                {isLoadingJobs ? (
+                    <div style={{ padding: '20px' }}>
+                        <Skeleton active />
+                        <Skeleton active />
+                        <Skeleton active />
+                    </div>
+                ) : (
+                    <JobList jobs={recentJobs} type="recent" />
+                )}
                 <div style={styles.buttonContainer}>
                     <Link to='/job-search'>
                         <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
@@ -309,7 +321,15 @@ const HomePage: React.FC = () => {
             {/* Featured Jobs Section */}
             <div>
                 <Title level={2} style={styles.sectionTitle}>Việc làm nổi bật</Title>
-                <JobList jobs={featuredJobs} type="featured" />
+                {isLoadingJobs ? (
+                    <div style={{ padding: '20px' }}>
+                        <Skeleton active />
+                        <Skeleton active />
+                        <Skeleton active />
+                    </div>
+                ) : (
+                    <JobList jobs={featuredJobs} type="featured" />
+                )}
                 <div style={styles.buttonContainer}>
                     <Link to='/job-search'>
                         <Button type="primary" className='button-hover'>Xem tất cả việc làm</Button>
