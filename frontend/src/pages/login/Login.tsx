@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Form, Input, Button, Card, Typography, Divider, Checkbox, Row, Col, notification } from 'antd';
-import { UserOutlined, LockOutlined, LinkedinOutlined, BulbOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, LinkedinOutlined } from '@ant-design/icons';
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const { Title, Text } = Typography;
@@ -95,6 +95,7 @@ const Login: React.FC = () => {
                     'Đăng nhập thành công!',
                     'Chào mừng bạn đã quay trở lại!'
                 );
+                navigate('/');
             }
             else if (response.code === 401) {
                 showNotification(
@@ -177,12 +178,6 @@ const Login: React.FC = () => {
                                     </Button>
                                 </Form.Item>
 
-                                <div className="register-link">
-                                    <Text>Bạn chưa có tài khoản? </Text>
-                                    <a href="/register">Đăng ký ngay</a>
-                                </div>
-
-
                                 <Divider plain>Hoặc đăng nhập với</Divider>
 
                                 <div className="social-buttons">
@@ -191,7 +186,7 @@ const Login: React.FC = () => {
                                             onSuccess={handleGoogleSuccess}
                                             onError={handleGoogleError}
                                             useOneTap
-                                            theme="outline  "
+                                            theme="filled_blue"
                                             size="large"
                                             text="signin_with"
                                             shape="rectangular"
@@ -201,16 +196,10 @@ const Login: React.FC = () => {
 
                                 </div>
 
-                                <Divider plain>Nhà tuyển dụng </Divider>
-
-                                <div className="social-buttons">
-                                    <Link to='/register/employer'>
-                                        <Button style={{ backgroundColor: '#ffb74d', color: '#fff' }} icon={<BulbOutlined />} className="social-button">
-                                            Đăng kí cho nhà tuyển dụng
-                                        </Button>
-                                    </Link>
+                                <div className="register-link">
+                                    <Text>Bạn chưa có tài khoản? </Text>
+                                    <a href="/register">Đăng ký ngay</a>
                                 </div>
-
                             </Form>
                         </Card>
                     </Col>

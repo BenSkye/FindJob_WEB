@@ -54,17 +54,6 @@ const Register: React.FC = () => {
             console.log('Register Response:', response);
 
             if (response.status === 201) {
-                if (response.metadata?.tokens) {
-                    localStorage.setItem('accessToken', response.metadata.tokens.accessToken);
-                    localStorage.setItem('user', JSON.stringify(response.metadata.user));
-                }
-
-                showNotification(
-                    'success',
-                    'Đăng ký thành công!',
-                    'Chào mừng bạn đến với JobFinder!'
-                );
-
                 setTimeout(() => {
                     navigate('/login');
                 }, 2000);
