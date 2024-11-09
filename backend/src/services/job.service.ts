@@ -114,5 +114,13 @@ class JobService {
         return await jobRepo.getJobsHasPay(userId);
     }
 
+    static checkJobExpired = async () => {
+        const jobs = await jobRepo.getJobs({ status: 'published', expiryDate: { $lte: new Date() } });
+        for (let job of jobs) {
+            job.status = 'expired';
+            await jobRepo.updateJob(job._id.toString(), job);
+        }
+    }
+
 }
 export default JobService;

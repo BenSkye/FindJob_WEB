@@ -60,12 +60,23 @@ const getApplicationsByJobId = async (jobId: string) => {
     }
 }
 
+const getApplicationByUserCompany = async () => {
+    try {
+        const response = await apiClient.get('/application/user-company-applications');
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getApplicationByUserCompany:', error);
+        return error.response.data;
+    }
+}
+
 export {
     sendApplication,
     getPersonalJobHasApplied,
     getPersonalApplications,
     getEmployerApplications,
     updateApplicationStatus,
-    getApplicationsByJobId
+    getApplicationsByJobId,
+    getApplicationByUserCompany
 };
 
