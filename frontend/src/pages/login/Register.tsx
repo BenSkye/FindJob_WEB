@@ -62,7 +62,7 @@ const Register: React.FC = () => {
                 showNotification(
                     'success',
                     'Đăng ký thành công!',
-                    'Vui lòng kiểm tra email để xác thực tài khoản của bạn.'
+                    'Chào mừng bạn đến với JobFinder!'
                 );
 
                 setTimeout(() => {
