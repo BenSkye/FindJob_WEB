@@ -320,7 +320,7 @@ const HomePage: React.FC = () => {
             {/* Categories Section */}
             <div>
                 <Title level={2} style={styles.sectionTitle}>Ngành nghề phổ biến</Title>
-                <Link to='/jobslist'>
+                <Link to='/job-search'>
                     <Row gutter={[16, 16]}>
                         {categories.slice(0, 8).map(category => (
                             <Col key={category.id} xs={24} sm={12} lg={6}>
