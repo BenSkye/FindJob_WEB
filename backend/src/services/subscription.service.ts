@@ -64,38 +64,38 @@ class SubscriptionService {
         return await subscriptionRepo.getSubscriptionByUserId(userId);
     }
 
-     static getSubscriptionStats = async () => {
-    const currentDate = new Date();
-    
-    // Thống kê theo ngày (7 ngày gần nhất)
-    const dailyStartDate = new Date(currentDate);
-    dailyStartDate.setDate(currentDate.getDate() - 6);
-    dailyStartDate.setHours(0, 0, 0, 0);
-    
-    // Thống kê theo tuần (4 tuần gần nhất)
-    const weeklyStartDate = new Date(currentDate);
-    weeklyStartDate.setDate(currentDate.getDate() - 28);
-    weeklyStartDate.setHours(0, 0, 0, 0);
-    
-    // Thống kê theo tháng (12 tháng gần nhất)
-    const monthlyStartDate = new Date(currentDate);
-    monthlyStartDate.setMonth(currentDate.getMonth() - 11);
-    monthlyStartDate.setHours(0, 0, 0, 0);
+    static getSubscriptionStats = async () => {
+        const currentDate = new Date();
 
-    const dailyStats = await subscriptionRepo.getSubscriptionStats({
-        startDate: dailyStartDate,
-        endDate: currentDate
-    });
+        // Thống kê theo ngày (7 ngày gần nhất)
+        const dailyStartDate = new Date(currentDate);
+        dailyStartDate.setDate(currentDate.getDate() - 6);
+        dailyStartDate.setHours(0, 0, 0, 0);
 
-    const weeklyStats = await processWeeklyStats(dailyStats);
-    const monthlyStats = await processMonthlyStats(dailyStats);
+        // Thống kê theo tuần (4 tuần gần nhất)
+        const weeklyStartDate = new Date(currentDate);
+        weeklyStartDate.setDate(currentDate.getDate() - 28);
+        weeklyStartDate.setHours(0, 0, 0, 0);
 
-    return {
-        daily: dailyStats,
-        weekly: weeklyStats,
-        monthly: monthlyStats
-    };
-}
+        // Thống kê theo tháng (12 tháng gần nhất)
+        const monthlyStartDate = new Date(currentDate);
+        monthlyStartDate.setMonth(currentDate.getMonth() - 11);
+        monthlyStartDate.setHours(0, 0, 0, 0);
+
+        const dailyStats = await subscriptionRepo.getSubscriptionStats({
+            startDate: dailyStartDate,
+            endDate: currentDate
+        });
+
+        const weeklyStats = await processWeeklyStats(dailyStats);
+        const monthlyStats = await processMonthlyStats(dailyStats);
+
+        return {
+            daily: dailyStats,
+            weekly: weeklyStats,
+            monthly: monthlyStats
+        };
+    }
 
 }
 
@@ -109,15 +109,15 @@ function getWeekNumber(date: Date): number {
 // Helper function để xử lý thống kê theo tuần
 const processWeeklyStats = (dailyStats: any[]) => {
     const weeklyData: { [key: string]: number } = {};
-    
+
     dailyStats.forEach(stat => {
         const date = new Date(stat._id.year, stat._id.month - 1, stat._id.day);
         const weekNumber = getWeekNumber(date);
         const weekKey = `${stat._id.year}-W${weekNumber}`;
-        
+
         weeklyData[weekKey] = (weeklyData[weekKey] || 0) + stat.count;
     });
-    
+
     return Object.entries(weeklyData).map(([week, count]) => ({
         week,
         count
@@ -127,12 +127,12 @@ const processWeeklyStats = (dailyStats: any[]) => {
 // Helper function để xử lý thống kê theo tháng
 const processMonthlyStats = (dailyStats: any[]) => {
     const monthlyData: { [key: string]: number } = {};
-    
+
     dailyStats.forEach(stat => {
         const monthKey = `${stat._id.year}-${stat._id.month.toString().padStart(2, '0')}`;
         monthlyData[monthKey] = (monthlyData[monthKey] || 0) + stat.count;
     });
-    
+
     return Object.entries(monthlyData).map(([month, count]) => ({
         month,
         count
