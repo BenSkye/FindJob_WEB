@@ -21,4 +21,24 @@ const checkoutSubscription = async () => {
     }
 }
 
-export { checkoutPublishJob, checkoutSubscription };
+const checkoutCVBuilder = async (cvId: string) => {
+    try {
+        const response = await apiClient.post(`/checkout/checkout-cv-builder/${cvId}`);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error creating order:', error);
+        throw error;
+    }
+}
+
+const savePaymentCodeCVBuilder = async (paymentCode: string) => {
+    try {
+        const response = await apiClient.post(`/checkout/save-payment-code-cv-builder/${paymentCode}`);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error creating order:', error);
+        throw error;
+    }
+}
+
+export { checkoutPublishJob, checkoutSubscription, checkoutCVBuilder, savePaymentCodeCVBuilder };

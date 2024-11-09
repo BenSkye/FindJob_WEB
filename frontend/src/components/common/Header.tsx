@@ -94,9 +94,17 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
     return (
         <AntHeader style={styles.header}>
             <div style={styles.container}>
-                <Link to="/" style={styles.logoWrapper} className='button-hover'>
-                    <img src={logo} alt="Logo" style={styles.logo} />
-                </Link>
+                {(!userType || userType === 'candidate') && (
+                    <Link to="/" style={styles.logoWrapper} className='button-hover'>
+                        <img src={logo} alt="Logo" style={styles.logo} />
+                    </Link>
+                )}
+                {userType === 'employer' && (
+                    <Link to="/employer/dashboard" style={styles.logoWrapper} className='button-hover'>
+                        <img src={logo} alt="Logo" style={styles.logo} />
+                    </Link>
+                )}
+
 
                 <Menu mode="horizontal" style={styles.menu}>
                     <Menu.Item
@@ -158,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     </div>
                 )}
             </div>
-        </AntHeader>
+        </AntHeader >
     );
 };
 

@@ -26,3 +26,27 @@ export const createPaymentLink = async (orderId: number,
     return paymentLink;
 }
 
+export const creatPaymentLinkFE = async (orderId: number,
+    amount: number,
+    description: string,
+    cancelUrl: string,
+    returnUrl: string,
+    items: {
+        name: string,
+        quantity: number,
+        price: number,
+        cvId: string
+    }[]
+) => {
+    const requestData = {
+        orderCode: orderId,
+        amount: amount,
+        description: description,
+        items: items,
+        cancelUrl: process.env.FRONTEND_URL + cancelUrl,
+        returnUrl: process.env.FRONTEND_URL + returnUrl,
+    }
+    const paymentLink = await payos.createPaymentLink(requestData);
+    return paymentLink;
+}
+
