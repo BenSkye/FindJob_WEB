@@ -13,4 +13,6 @@ checkoutRouter.use(authentication);
 checkoutRouter.use(apiKey)
 checkoutRouter.post('/checkout-subscription', checkoutController.checkoutSubscription);
 checkoutRouter.post('/checkout-publish-job/:jobId', checkoutController.checkoutPublishJob);
+checkoutRouter.post('/checkout-cv-builder/:cvId', checkoutController.checkoutCVBuilder);
+checkoutRouter.post('/save-payment-code-cv-builder/:paymentCode', checkoutController.savePaymentCodeCVBuilder);
 export default checkoutRouter;

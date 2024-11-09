@@ -4,11 +4,10 @@ import { ICV } from '../../services/types/cv.types';
 import { ITemplate } from '../../services/types/template.types';
 import { getTemplateById } from '../../services/api/templateApi';
 import CvPreview from '../../components/template/CvPreview';
-import { Layout, Row, Col, Form, Input, Button, Card, Select, Tabs, Space, Spin, message, Affix } from 'antd';
+import { Layout, Row, Col, Form, Input, Button, Card, Select, Tabs, Space, Spin, message, Affix, Alert, Modal } from 'antd';
 import ImageUploader from '../../components/upload/ImageUploader';
 import { createCv } from '../../services/api/cvApi';
 import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
-import PaymentConfirmModal from '../../components/payment/PaymentConfirmModal';
 import {
     DeleteOutlined,
     PlusOutlined,
@@ -27,11 +26,13 @@ import jsPDF from 'jspdf';
 import { useAuth } from '../../hooks/useAuth';
 
 
-
 const { Content } = Layout;
 const { TextArea } = Input;
 
+
 const CVBuilder = () => {
+    const { user } = useAuth();
+
     const { templateId } = useParams();
     const [template, setTemplate] = useState<ITemplate | null>(null);
     const [form] = Form.useForm();
@@ -40,8 +41,6 @@ const CVBuilder = () => {
     const [saving, setSaving] = useState(false);
     const [paymentModalVisible, setPaymentModalVisible] = useState(false);
     const [processing, setProcessing] = useState(false);
-
-    const { user } = useAuth();
 
     const [cvData, setCvData] = useState<ICV>({
         userId: user?.userId || '', // Will be set from auth context
@@ -58,9 +57,10 @@ const CVBuilder = () => {
             ...cvData,
             content: contentObject,
             status: 'active',
-            isPaid: true
         };
-        cvPayload.content.avatar = cvPayload.content.avatar.url;
+        if (cvPayload.content.avatar) {
+            cvPayload.content.avatar = cvPayload.content.avatar.url;
+        }
         const response = await createCv(cvPayload as ICV);
         if (response.status !== 201) {
             throw new Error('Failed to create CV');
@@ -471,25 +471,96 @@ const CVBuilder = () => {
     });
 
     const generatePDF = async () => {
-        const cvElement = document.getElementById('cv-preview');
-        if (!cvElement) {
-            throw new Error('Cannot find CV preview element');
+        try {
+            const cvElement = document.getElementById('cv-preview');
+            if (!cvElement) {
+                throw new Error('Cannot find CV preview element');
+            }
+
+            // Lưu style hiện tại
+            const originalStyle = {
+                width: cvElement.style.width,
+                height: cvElement.style.height,
+                transform: cvElement.style.transform,
+                position: cvElement.style.position
+            };
+
+            // Set kích thước cố định cho element (tương đương A4)
+            const a4Width = 794; // A4 width in pixels at 96 DPI
+            const a4Height = 1123; // A4 height in pixels at 96 DPI
+
+            cvElement.style.width = `${a4Width}px`;
+            cvElement.style.height = 'auto';
+            cvElement.style.transform = 'none';
+            cvElement.style.position = 'relative';
+
+            // Tạo canvas với scale cao hơn để đảm bảo chất lượng
+            const canvas = await html2canvas(cvElement, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff',
+                width: a4Width,
+                height: cvElement.scrollHeight,
+                windowWidth: a4Width,
+                windowHeight: cvElement.scrollHeight
+            });
+
+            // Khôi phục style ban đầu
+            Object.assign(cvElement.style, originalStyle);
+
+            // Tạo PDF với kích thước A4
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt', // Sử dụng points thay vì mm
+                format: 'a4'
+            });
+
+            // Tính toán số trang cần thiết
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = pdf.internal.pageSize.getWidth();
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const pageCount = Math.ceil(imgHeight / pageHeight);
+
+            // Thêm từng phần của canvas vào các trang PDF
+            let remainingHeight = canvas.height;
+            let currentPage = 0;
+
+            while (remainingHeight > 0) {
+                // Tạo trang mới cho các trang sau trang đầu tiên
+                if (currentPage > 0) {
+                    pdf.addPage();
+                }
+
+                // Tính toán phần của canvas sẽ được thêm vào trang hiện tại
+                const sourceY = canvas.height - remainingHeight;
+                const canvasChunkHeight = Math.min(remainingHeight, (pageHeight * canvas.width) / imgWidth);
+                const destHeight = (canvasChunkHeight * imgWidth) / canvas.width;
+
+                // Thêm phần của canvas vào PDF
+                pdf.addImage(
+                    canvas,
+                    'PNG',
+                    0,
+                    -sourceY * (imgWidth / canvas.width), // Điều chỉnh vị trí để khớp với phần cắt
+                    imgWidth,
+                    imgHeight,
+                    undefined,
+                    'FAST'
+                );
+
+                remainingHeight -= canvasChunkHeight;
+                currentPage++;
+            }
+
+            // Lưu file với tên có timestamp
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            pdf.save(`cv-${timestamp}.pdf`);
+
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            message.error('Có lỗi xảy ra khi tạo PDF');
         }
-
-        const canvas = await html2canvas(cvElement, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff'
-        });
-
-        const imgWidth = 210;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgData = canvas.toDataURL('image/png');
-
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        pdf.save('my-cv.pdf');
     };
 
     // Xử lý khi người dùng xác nhận thanh toán
@@ -520,7 +591,7 @@ const CVBuilder = () => {
         try {
             // Validate form trước khi hiện modal
             await form.validateFields();
-            setPaymentModalVisible(true);
+            handlePaymentConfirm();
         } catch (error) {
             message.error('Please fill in all required fields');
         }
@@ -630,20 +701,14 @@ const CVBuilder = () => {
                             </Card>
                         </Affix>
                     </Col>
-                    <Button
-                        type="primary"
-                        icon={<DownloadOutlined />}
-                        onClick={downloadPDF}
-                    >
-                        Download PDF
-                    </Button>
-                    <PaymentConfirmModal
-                        visible={paymentModalVisible}
-                        onConfirm={handlePaymentConfirm}
-                        onCancel={() => setPaymentModalVisible(false)}
-                        loading={processing}
-                    />
                 </Row>
+                <Button
+                    type="primary"
+                    icon={<DownloadOutlined />}
+                    onClick={downloadPDF}
+                >
+                    Download PDF
+                </Button>
             </Content>
         </Layout>
     );
