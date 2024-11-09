@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Upload, Button, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { Modal, Form, Input, Button, message } from 'antd';
 import './ApplyJobModal.css';
 import { uploadFileToFirebase } from '../../utils/firebaseUpload';
-import ImageUploader from '../../components/upload/ImageUploader';
 import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
 import FileUploader from '../../components/upload/FileUploader';
+import Editor from '../../components/editor/Editor';
 interface ApplyJobModalProps {
     isVisible: boolean;
     jobId: string;
@@ -24,6 +21,22 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
     const [form] = Form.useForm();
     const [coverLetter, setCoverLetter] = useState('');
     const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([]);
+
+    const editorConfig = {
+        toolbar: [
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            'link',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'undo',
+            'redo'
+        ],
+        placeholder: 'Viết giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp với vị trí này...',
+    };
 
     const handleSubmit = async (values: any) => {
         if (!coverLetter.trim()) {
@@ -131,28 +144,10 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
                     required
                 >
                     <div className="cover-letter-editor">
-                        <CKEditor
-                            editor={ClassicEditor}
+                        <Editor
                             data={coverLetter}
-                            config={{
-                                toolbar: [
-                                    'heading',
-                                    '|',
-                                    'bold',
-                                    'italic',
-                                    'link',
-                                    'bulletedList',
-                                    'numberedList',
-                                    '|',
-                                    'undo',
-                                    'redo'
-                                ],
-                                placeholder: 'Viết giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp với vị trí này...',
-                            }}
-                            onChange={(event: any, editor: any) => {
-                                const data = editor.getData();
-                                setCoverLetter(data);
-                            }}
+                            config={editorConfig}
+                            onChange={(data: string) => setCoverLetter(data)}
                         />
                     </div>
                     {!coverLetter && (

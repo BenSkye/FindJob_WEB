@@ -12,8 +12,8 @@
     "postinstall": "npm rebuild rollup"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^43.3.1",
-    "@ckeditor/ckeditor5-react": "^9.3.1",
+    "@ckeditor/ckeditor5-build-classic": "^38.1.1",
+    "@ckeditor/ckeditor5-react": "^5.1.0",
     "@payos/payos-checkout": "^1.0.8",
     "@react-oauth/google": "^0.12.1",
     "@types/dompurify": "^3.0.5",
