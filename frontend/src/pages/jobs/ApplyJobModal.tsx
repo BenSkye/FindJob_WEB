@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { Modal, Form, Input, Button, message } from 'antd';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import './ApplyJobModal.css';
 import { uploadFileToFirebase } from '../../utils/firebaseUpload';
 import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
 import FileUploader from '../../components/upload/FileUploader';
-import CustomCKEditor from '../../components/candidate/CustomCKEditor';
+import Editor from '../../components/editor/Editor';
 interface ApplyJobModalProps {
     isVisible: boolean;
     jobId: string;
@@ -23,6 +21,22 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
     const [form] = Form.useForm();
     const [coverLetter, setCoverLetter] = useState('');
     const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([]);
+
+    const editorConfig = {
+        toolbar: [
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            'link',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'undo',
+            'redo'
+        ],
+        placeholder: 'Viết giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp với vị trí này...',
+    };
 
     const handleSubmit = async (values: any) => {
         if (!coverLetter.trim()) {
@@ -130,10 +144,10 @@ const ApplyJobModal: React.FC<ApplyJobModalProps> = ({
                     required
                 >
                     <div className="cover-letter-editor">
-                        <CustomCKEditor
+                        <Editor
                             data={coverLetter}
-                            onChange={(data) => setCoverLetter(data)}
-                            placeholder="Viết giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp với vị trí này..."
+                            config={editorConfig}
+                            onChange={(data: string) => setCoverLetter(data)}
                         />
                     </div>
                     {!coverLetter && (

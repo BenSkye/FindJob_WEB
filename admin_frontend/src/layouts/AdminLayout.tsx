@@ -6,7 +6,6 @@ import {
     TagsOutlined,
     AppstoreOutlined,
     BankOutlined,
-    SettingOutlined,
 } from '@ant-design/icons';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
@@ -51,12 +50,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             icon: <BankOutlined />,  // Changed: Better represents companies
             label: 'Quản lý công ty',
             path: '/admin/companies',
-        },
-        {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: 'Cài đặt',
-            path: '/admin/settings',
         },
     ];
 
