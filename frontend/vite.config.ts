@@ -3,10 +3,13 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react({
+      jsxRuntime: 'automatic'
+  })],
   root: "./",
   publicDir: 'public',
   build: {
+    minify: false,
     chunkSizeWarningLimit: 1000, // Tăng giới hạn cảnh báo lên 1000 kB
     rollupOptions: {
       output: {
