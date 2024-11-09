@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Form, Input, Button, Card, Typography, Divider, Checkbox, Row, Col, notification } from 'antd';
-import { UserOutlined, LockOutlined, LinkedinOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, LinkedinOutlined, BulbOutlined } from '@ant-design/icons';
 import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 import logoImage from '../../assets/images/logo.png';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const { Title, Text } = Typography;
@@ -170,6 +170,12 @@ const Login: React.FC = () => {
                                     </Button>
                                 </Form.Item>
 
+                                <div className="register-link">
+                                    <Text>Bạn chưa có tài khoản? </Text>
+                                    <a href="/register">Đăng ký ngay</a>
+                                </div>
+
+
                                 <Divider plain>Hoặc đăng nhập với</Divider>
 
                                 <div className="social-buttons">
@@ -178,22 +184,25 @@ const Login: React.FC = () => {
                                             onSuccess={handleGoogleSuccess}
                                             onError={handleGoogleError}
                                             useOneTap
-                                            theme="filled_blue"
+                                            theme="outline  "
                                             size="large"
                                             text="signin_with"
                                             shape="rectangular"
                                             locale="vi"
                                         />
                                     </div>
-                                    <Button icon={<LinkedinOutlined />} className="social-button">
-                                        LinkedIn
-                                    </Button>
                                 </div>
 
-                                <div className="register-link">
-                                    <Text>Bạn chưa có tài khoản? </Text>
-                                    <a href="/register">Đăng ký ngay</a>
+                                <Divider plain>Nhà tuyển dụng </Divider>
+
+                                <div className="social-buttons">
+                                    <Link to='/register/employer'>
+                                        <Button style={{ backgroundColor: '#ffb74d', color: '#fff' }} icon={<BulbOutlined />} className="social-button">
+                                            Đăng kí cho nhà tuyển dụng
+                                        </Button>
+                                    </Link>
                                 </div>
+
                             </Form>
                         </Card>
                     </Col>

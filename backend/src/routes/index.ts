@@ -11,6 +11,8 @@ import cvRouter from './cv';
 import applicationRouter from './application';
 import companyRouter from './company';
 import subscriptionRouter from './subscription';
+import userRouter from './user';
+import paymentRouter from './payment';
 
 
 const router = Router();
@@ -32,5 +34,7 @@ router.use('/v1/api/template', templateRouter);
 router.use('/v1/api/cv', cvRouter);
 router.use('/v1/api/application', applicationRouter);
 router.use('/v1/api/subscription', subscriptionRouter);
+router.use('/v1/api/user-stats', userRouter);
+router.use('/v1/api/payment', paymentRouter);
 
 export default router;

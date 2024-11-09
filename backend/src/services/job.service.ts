@@ -1,3 +1,4 @@
+import { BadRequestError } from '../core/error.response';
 import { subscriptionModel } from "../models/subscription.model";
 import { userModel } from "../models/user.model";
 import applicationRepo from "../repositories/application.repo";
@@ -119,6 +120,36 @@ class JobService {
         for (let job of jobs) {
             job.status = 'expired';
             await jobRepo.updateJob(job._id.toString(), job);
+        }
+    }
+    
+    static async getJobStats() {
+        try {
+            const stats = await jobRepo.getJobStats();
+            
+            if (!stats) {
+                throw new BadRequestError('Cannot get job statistics');
+            }
+
+            return {
+                message: 'Get job statistics successfully',
+                status: 200,
+                metadata: {
+                    jobStatistics: stats.jobStatistics.map(year => ({
+                        year: year._id,
+                        monthlyStats: year.monthlyStats.map((month: any) => ({
+                            month: month.month,
+                            dailyStats: month.dailyStats,
+                            totalJobsInMonth: month.total
+                        })),
+                        totalJobsInYear: year.yearlyTotal
+                    })),
+                    averageApplicationsPerJob: Math.round(stats.averageApplicationsPerJob * 10) / 10, // Làm tròn đến 1 chữ số thập phân
+                    topCategories: stats.topCategories
+                }
+            };
+        } catch (error) {
+            throw new BadRequestError('Error while getting job statistics');
         }
     }
 

@@ -12,5 +12,13 @@ class SubscriptionController {
         }).send(res);
     });
 
+    getSubscriptionsByDateRange = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+        new SuccessResponse({
+            message: 'Get subscriptions by date range successfully',
+            metadata: await SubscriptionService.getSubscriptionStats(),
+        }).send(res);
+    });
+
 }
+
 export default new SubscriptionController();

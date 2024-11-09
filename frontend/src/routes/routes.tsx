@@ -19,6 +19,7 @@ import EditJob from '../pages/employer/EditJob';
 import JobApplications from '../pages/employer/JobApplications';
 import Payment from '../pages/employer/Payment';
 import CvProfile from '../pages/candidate/CvProfile';
+import RegisterEmployer from '../pages/login/RegisterEmployer';
 // import CreateTemplate from '../pages/candidate/CreateTemplate';
 
 // Lazy load các layouts với dynamic import
@@ -156,5 +157,10 @@ export const routes: RouteObject[] = [
   {
     path: '/register',
     element: <Register />,
+  }
+  ,
+  {
+    path: '/register/employer',
+    element: <RegisterEmployer />,
   }
 ];

@@ -1,6 +1,12 @@
 import apiClient from './apiClient';
 import { Company, CompanyUpdateDto } from '../types/company.types';
 
+interface CompanyResponse {
+    metadata: Company[];
+    message: string;
+    status: number;
+}
+
 const uploadLogo = async (formData: FormData) => {
     const response = await apiClient.post('/upload/company-logo', formData, {
         headers: {
@@ -27,4 +33,16 @@ export const companyApi = {
     },
 
     uploadLogo,
+};
+
+
+
+export const getListCompany = async (): Promise<Company[]> => {
+    try {
+        const response = await apiClient.get<CompanyResponse>("/company/get-list");
+        return response.data;
+    } catch (error: any) {
+        console.error('Error get list company:', error);
+        throw error;
+    }
 };

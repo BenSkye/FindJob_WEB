@@ -26,6 +26,29 @@ class SubscriptionRepo {
         return await subscriptionModel.findById(subscriptionId);
     }
 
+   async getSubscriptionStats(timeRange: { startDate: Date, endDate: Date }) {
+    return await subscriptionModel.aggregate([
+        {
+            $match: {
+                createdAt: { $gte: timeRange.startDate, $lte: timeRange.endDate }
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    year: { $year: "$createdAt" },
+                    month: { $month: "$createdAt" },
+                    day: { $dayOfMonth: "$createdAt" }
+                },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
+        }
+    ]);
+}
+
 
 }
 
