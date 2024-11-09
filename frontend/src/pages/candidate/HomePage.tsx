@@ -322,7 +322,7 @@ const HomePage: React.FC = () => {
                 <Title level={2} style={styles.sectionTitle}>Ngành nghề phổ biến</Title>
                 <Link to='/jobslist'>
                     <Row gutter={[16, 16]}>
-                        {categories.map(category => (
+                        {categories.slice(0, 8).map(category => (
                             <Col key={category.id} xs={24} sm={12} lg={6}>
                                 <Card className='card-hover' hoverable>
                                     <div style={styles.categoryIcon}>
@@ -344,9 +344,11 @@ const HomePage: React.FC = () => {
                     <Paragraph style={{ marginBottom: '2rem' }}>
                         Đăng tin tuyển dụng và tìm kiếm ứng viên phù hợp ngay hôm nay
                     </Paragraph>
-                    <Button type="primary" size="large" className='button-hover'>
-                        Đăng tin tuyển dụng
-                    </Button>
+                    <Link to='register/employer'>
+                        <Button type="primary" size="large" className='button-hover'>
+                            Đăng tin tuyển dụng
+                        </Button>
+                    </Link>
                 </div>
             </div >
         </div >
