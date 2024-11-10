@@ -174,23 +174,23 @@ const DanhSachCongViec: React.FC = () => {
                                         <Col xs={24} md={16}>
                                             <div className="job-info">
                                                 <Title level={4} className="job-title">
-                                                    {job.title}
+                                                    {job?.title}
                                                 </Title>
-                                                <Text className="company-name">{job.company}</Text>
-                                                {job.urgent && (
+                                                <Text className="company-name">{job?.company}</Text>
+                                                {job?.urgent && (
                                                     <Tag color="red" className="urgent-tag">
                                                         Khẩn cấp
                                                     </Tag>
                                                 )}
                                                 <Space className="job-meta" wrap>
                                                     <Tag icon={<EnvironmentOutlined />}>
-                                                        {job.location}
+                                                        {job?.location}
                                                     </Tag>
                                                     <Tag icon={<DollarOutlined />}>
                                                         {job.salary}
                                                     </Tag>
                                                     <Tag icon={<ClockCircleOutlined />}>
-                                                        {job.type}
+                                                        {job?.type}
                                                     </Tag>
                                                 </Space>
                                                 <div className="job-tags">
@@ -201,7 +201,7 @@ const DanhSachCongViec: React.FC = () => {
                                             </div>
                                         </Col>
                                         <Col xs={24} md={8} className="job-actions">
-                                            <Text type="secondary">{job.posted}</Text>
+                                            <Text type="secondary">{job?.posted}</Text>
                                             <Button type="primary" style={{ borderRadius: colors.borderRadius }}>Ứng Tuyển Ngay</Button>
                                         </Col>
                                     </Row>

@@ -72,18 +72,18 @@ const JobCard: React.FC<JobCardProps> = ({ job, type = 'featured' }) => {
                 <div style={styles.jobInfo}>
                     <div style={styles.jobHeader}>
                         <Title level={5} style={styles.jobTitle}>
-                            {job.title}
-                            {job.isHot && <Tag color="red">Hot</Tag>}
+                            {job?.title}
+                            {job?.isHot && <Tag color="red">Hot</Tag>}
                         </Title>
                         <div style={styles.jobTags}>
-                            <Tag color="blue">{job.mainCategory.name}</Tag>
-                            <Tag color="green">{job.level.name}</Tag>
+                            <Tag color="blue">{job.mainCategory?.name}</Tag>
+                            <Tag color="green">{job.level?.name}</Tag>
                         </div>
                     </div>
                     <div style={styles.jobMeta}>
-                        <span>{job.companyId.name}</span>
-                        <span><EnvironmentOutlined /> {job.location}</span>
-                        {!job.salary.negotiable ? <span><DollarOutlined /> {formatCurrency(job.salary.min)} - {formatCurrency(job.salary.max)}</span> : <span><DollarOutlined /> Giá thỏa thuận</span>}
+                        <span>{job.companyId?.name}</span>
+                        <span><EnvironmentOutlined /> {job?.location}</span>
+                        {!job.salary.negotiable ? <span><DollarOutlined /> {formatCurrency(job.salary?.min)} - {formatCurrency(job.salary?.max)}</span> : <span><DollarOutlined /> Giá thỏa thuận</span>}
                     </div>
                     {/* <div style={styles.tagContainer}>
                         {job.tags?.map(tag => (
@@ -101,14 +101,14 @@ const JobCard: React.FC<JobCardProps> = ({ job, type = 'featured' }) => {
             <div style={styles.jobHeader}>
                 {job.isHot && <Tag color="red">Hot</Tag>}
                 <div style={styles.jobTags}>
-                    <Tag color="blue">{job.mainCategory.name}</Tag>
-                    <Tag color="green">{job.level.name}</Tag>
+                    <Tag color="blue">{job.mainCategory?.name}</Tag>
+                    <Tag color="green">{job.level?.name}</Tag>
                 </div>
             </div>
             <Title level={4} style={styles.jobTitle}>{job.title}</Title>
-            <Paragraph>{job.companyId.name}</Paragraph>
+            <Paragraph>{job.companyId?.name}</Paragraph>
             <div style={styles.jobMeta}>
-                <span><EnvironmentOutlined /> {job.location}</span>
+                <span><EnvironmentOutlined /> {job?.location}</span>
                 {!job.salary.negotiable ? <span><DollarOutlined /> {job.salary.min} - {job.salary.max}</span> : <span><DollarOutlined /> Giá thỏa thuận</span>}
             </div>
             {/* <div style={styles.tagContainer}>

@@ -197,7 +197,7 @@ const JobsDetail: React.FC = () => {
                             <Row gutter={[16, 16]}>
                                 <Col span={8}>
                                     <Text type="secondary"><ClockCircleOutlined /> Kinh nghiệm</Text>
-                                    <div>{job.level.name}</div>
+                                    <div>{job.level?.name}</div>
                                 </Col>
                                 {/* <Col span={8}>
                                     <Text type="secondary"><TeamOutlined /> Vị trí</Text>
@@ -205,7 +205,7 @@ const JobsDetail: React.FC = () => {
                                 </Col> */}
                                 <Col span={8}>
                                     <Text type="secondary"><CalendarOutlined /> Hạn chót</Text>
-                                    <div>{formatDateTime.dateOnly(job.expiryDate)}</div>
+                                    <div>{formatDateTime.dateOnly(job?.expiryDate)}</div>
                                 </Col>
                             </Row>
                         </div>
@@ -220,7 +220,7 @@ const JobsDetail: React.FC = () => {
                         <div className="job-requirements">
                             <Title level={4}>Yêu cầu</Title>
                             <List
-                                dataSource={job.requirements.split('\n')}
+                                dataSource={job?.requirements?.split('\n')}
                                 renderItem={item => (
                                     <List.Item>
                                         <Text>• {item}</Text>
@@ -232,7 +232,7 @@ const JobsDetail: React.FC = () => {
                         <div className="job-benefits">
                             <Title level={4}>Phúc lợi</Title>
                             <List
-                                dataSource={job.benefits.split('\n')}
+                                dataSource={job?.benefits?.split('\n')}
                                 renderItem={item => (
                                     <List.Item>
                                         <Text>• {item}</Text>
