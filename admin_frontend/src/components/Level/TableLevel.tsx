@@ -33,27 +33,13 @@ const CustomTableLevel = <T extends DataType>({
             width: '20%',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button 
+                    <Button
                         type="primary"
                         icon={<EditOutlined />}
                         onClick={() => onUpdate?.(record)}
                     >
                         Sửa
                     </Button>
-                    <Popconfirm
-                        title="Xóa cấp độ"
-                        description="Bạn có chắc chắn muốn xóa cấp độ này?"
-                        onConfirm={() => onDelete?.(record)}
-                        okText="Có"
-                        cancelText="Không"
-                    >
-                        <Button 
-                            danger
-                            icon={<DeleteOutlined />}
-                        >
-                            Xóa
-                        </Button>
-                    </Popconfirm>
                 </Space>
             ),
         },

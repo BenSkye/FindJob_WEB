@@ -255,7 +255,7 @@ const EditJob = () => {
                             <Select placeholder="Chọn cấp bậc">
                                 {levels.map((level: any) => (
                                     <Option key={level._id} value={level._id}>
-                                        {level.name}
+                                        {level?.name}
                                     </Option>
                                 ))}
                             </Select>

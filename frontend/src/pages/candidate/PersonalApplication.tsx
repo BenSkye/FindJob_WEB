@@ -149,10 +149,10 @@ const PersonalApplication = () => {
                     <Col xs={24} key={application._id}>
                         <Card style={styles.card}>
                             <div style={styles.cardTitle}>
-                                {application.jobId?.title || 'Không có tiêu đề'}
+                                {application?.jobId?.title || 'Không có tiêu đề'}
                             </div>
                             <div style={styles.companyName}>
-                                {application.jobId?.companyId?.name || 'Không có tên công ty'}
+                                {application?.jobId?.companyId?.name || 'Không có tên công ty'}
                             </div>
 
                             <div style={styles.infoRow}>
@@ -162,10 +162,10 @@ const PersonalApplication = () => {
                                 </span>
                                 <span style={styles.infoItem}>
                                     <EnvironmentOutlined />
-                                    {application.jobId?.location || 'Không có địa điểm'}
+                                    {application?.jobId?.location || 'Không có địa điểm'}
                                 </span>
                                 <span style={styles.infoItem}>
-                                    {!application.jobId?.salary.negotiable ? <span><DollarOutlined /> {formatCurrency(application.jobId?.salary.min)} - {formatCurrency(application.jobId?.salary.max)}</span> : <span><DollarOutlined /> Lương thỏa thuận</span>}
+                                    {!application?.jobId?.salary.negotiable ? <span><DollarOutlined /> {formatCurrency(application?.jobId?.salary.min || 0)} - {formatCurrency(application?.jobId?.salary.max || 0)}</span> : <span><DollarOutlined /> Lương thỏa thuận</span>}
                                 </span>
                             </div>
 
