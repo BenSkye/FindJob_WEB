@@ -158,7 +158,7 @@ const EditJob = () => {
                             rules={[{ required: true, message: 'Vui lòng nhập yêu cầu công việc' }]}
                         >
                             <Editor
-                                data={initialValues.requirements}
+                                data={initialValues?.requirements || ''}
                                 onChange={(data: string) => form.setFieldsValue({ requirements: data })}
                             />
                         </Form.Item>
@@ -169,8 +169,8 @@ const EditJob = () => {
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả công việc' }]}
                         >
                             <Editor
-                                data={initialValues.requirements}
-                                onChange={(data: string) => form.setFieldsValue({ requirements: data })}
+                                data={initialValues?.description || ''}
+                                onChange={(data: string) => form.setFieldsValue({ description: data })}
                             />
                         </Form.Item>
 
@@ -223,7 +223,7 @@ const EditJob = () => {
                             rules={[{ required: true, message: 'Vui lòng nhập phúc lợi' }]}
                         >
                             <Editor
-                                data={initialValues.benefits}
+                                data={initialValues?.benefits || ''}
                                 onChange={(data: string) => form.setFieldsValue({ benefits: data })}
                             />
                         </Form.Item>
