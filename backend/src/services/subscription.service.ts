@@ -19,6 +19,7 @@ class SubscriptionService {
     static extendSubscription = async (userId: string, paymentId: string) => {
         // nếu status của subscription là active thì gia hạn 30 ngày kể từ endDate hiện tại
         // nếu status của subscription là expired thì gia hạn 30 ngày kể từ ngày hiện tại
+        //nếu status là inactive thì gia hạn 30 ngày kể từ ngày hiện tại
 
         const subscription = await subscriptionRepo.getSubscriptionByUserId(userId);
         if (!subscription) {
@@ -28,6 +29,8 @@ class SubscriptionService {
         let endDate: Date;
         if (subscription.status === 'active') {
             endDate = new Date(subscription.endDate);
+        } else if (subscription.status === 'expired') {
+            endDate = new Date();
         } else {
             endDate = new Date();
         }
@@ -36,7 +39,10 @@ class SubscriptionService {
 
         //thêm paymentId vào history
         const history = subscription.history || [];
-        history.push({ paymentId, endDate });
+        //nếu paymentId đã tồn tại trong history thì không thêm vào
+        if (!history.some((h: any) => h.paymentId.toString() === paymentId)) {
+            return null;
+        }
         const data = {
             endDate,
             history,

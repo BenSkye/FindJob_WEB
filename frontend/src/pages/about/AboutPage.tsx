@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => {
                 <div className="hero-image-container">
                     <img src={job} alt="About Hero" className="hero-image" />
                     <div className="hero-overlay">
-                        <Title level={1} className="hero-title">Về JobFinder</Title>
+                        <Title level={1} className="hero-title">Về ME</Title>
                         <Paragraph className="hero-text">
                             Chúng tôi là cầu nối vững chắc giữa người tìm việc và nhà tuyển dụng,
                             mang đến những cơ hội việc làm tốt nhất cho cộng đồng.
@@ -108,7 +108,7 @@ const AboutPage: React.FC = () => {
                         <div className="mission-content">
                             <Title level={2}>Sứ mệnh của chúng tôi</Title>
                             <Paragraph>
-                                JobFinder ra đời với sứ mệnh đổi mới thị trường tuyển dụng Việt Nam
+                                ME ra đời với sứ mệnh đổi mới thị trường tuyển dụng Việt Nam
                                 thông qua công nghệ. Chúng tôi tin rằng mỗi người đều xứng đáng có
                                 được công việc phù hợp với đam mê và năng lực của mình.
                             </Paragraph>
@@ -146,7 +146,7 @@ const AboutPage: React.FC = () => {
                         <div className="team-content">
                             <Title level={2}>Đội ngũ của chúng tôi</Title>
                             <Paragraph>
-                                Đội ngũ JobFinder gồm những chuyên gia giàu kinh nghiệm trong lĩnh vực
+                                Đội ngũ ME gồm những chuyên gia giàu kinh nghiệm trong lĩnh vực
                                 tuyển dụng và công nghệ. Chúng tôi luôn nỗ lực không ngừng để mang đến
                                 trải nghiệm tốt nhất cho cả ứng viên và nhà tuyển dụng.
                             </Paragraph>
