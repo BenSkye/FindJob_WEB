@@ -69,4 +69,15 @@ const getUserStats = async (): Promise<UserStats> => {
     };
 };
 
-export { findByEmail, getUserStats };
+const getUserById = async (userId: string) => {
+    console.log('userId', userId);
+    const user = await userModel.findById(userId).lean();
+    console.log('user', user);
+    return user;
+};
+
+const updateUserById = async (userId: string, user: any) => {
+    return await userModel.findByIdAndUpdate(userId, user, { new: true }).lean();
+};
+
+export { findByEmail, getUserStats, getUserById, updateUserById };

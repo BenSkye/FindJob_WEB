@@ -3,21 +3,34 @@ import { Form, Input, Button, Card, Typography, notification } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import './ProfilePage.css';
 import { User } from '../../services/types/user.types'; // Import User interface
+import { getUserById, updateUserById } from '../../services/api/authenService';
+import { useAuth } from '../../hooks/useAuth';
 
 const { Title } = Typography;
 
 const ProfilePage: React.FC = () => {
-    const [user, setUser] = useState<Partial<User> | null>(null); // Use Partial<User> to allow optional fields
+    const [form] = Form.useForm();
+    const [userInfo, setUserInfo] = useState<Partial<User> | null>(null);
     const [loading, setLoading] = useState(false);
     const [api, contextHolder] = notification.useNotification();
+    const { user, setUser } = useAuth();
 
     useEffect(() => {
-        // Fetch user data from localStorage or API
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-            setUser(JSON.parse(userStr));
-        }
-    }, []);
+        const fetchUser = async () => {
+            try {
+                setLoading(true);
+                const response = await getUserById();
+                setUserInfo(response.metadata);
+                form.setFieldsValue(response.metadata); // Cập nhật form với dữ liệu mới
+            } catch (error) {
+                showNotification('error', 'Lỗi', 'Không thể tải thông tin người dùng');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
+    }, [form]);
+
 
     const showNotification = (type: 'success' | 'error', message: string, description: string) => {
         api[type]({
@@ -28,31 +41,28 @@ const ProfilePage: React.FC = () => {
         });
     };
 
+
     const onFinish = async (values: Partial<User>) => {
         setLoading(true);
         try {
-            // Simulate API call to update user profile
-            console.log('Updated Profile:', values);
-            localStorage.setItem('user', JSON.stringify(values));
-            setUser(values);
-
-            showNotification('success', 'Cập nhật thành công!', 'Thông tin cá nhân đã được cập nhật.');
+            const response = await updateUserById(values);
+            setUserInfo(response.metadata);
+            form.setFieldsValue(response.metadata);
+            showNotification('success', 'Thành công', 'Thông tin cá nhân đã được cập nhật');
         } catch (error) {
-            console.error('Profile Update Error:', error);
-            showNotification('error', 'Cập nhật thất bại', 'Có lỗi xảy ra khi cập nhật thông tin cá nhân.');
+            showNotification('error', 'Thất bại', 'Có lỗi xảy ra khi cập nhật thông tin');
         } finally {
             setLoading(false);
         }
     };
-
     return (
         <div className="profile-container">
             {contextHolder}
-            <Card className="profile-card">
+            <Card className="profile-card" loading={loading}>
                 <Title level={2}>Thông tin cá nhân</Title>
                 <Form
+                    form={form}
                     name="profile"
-                    initialValues={user || {}}
                     onFinish={onFinish}
                     layout="vertical"
                     size="large"

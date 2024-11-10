@@ -4,7 +4,7 @@ import { CREATED, SuccessResponse } from '../core/success.response';
 import { asyncHandler } from '../helpers/asyncHandler';
 import { OAuth2Client } from 'google-auth-library';
 import { BadRequestError } from '../core/error.response';
-import {getUserStats} from '../services/user.service';
+import { getUserById, getUserStats, updateUserById } from '../services/user.service';
 
 class AccessController {
 
@@ -99,6 +99,19 @@ class AccessController {
     }).send(res);
   });
 
+  getUserById = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+    new SuccessResponse({
+      message: 'Get user by id successfully',
+      metadata: await getUserById(req.keyStore.user),
+    }).send(res);
+  });
+
+  updateUserById = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+    new SuccessResponse({
+      message: 'Update user by id successfully',
+      metadata: await updateUserById(req.keyStore.user, req.body),
+    }).send(res);
+  });
 
 
 }
