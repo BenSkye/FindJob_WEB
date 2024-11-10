@@ -40,9 +40,6 @@ class SubscriptionService {
         //thêm paymentId vào history
         const history = subscription.history || [];
         //nếu paymentId đã tồn tại trong history thì không thêm vào
-        if (!history.some((h: any) => h.paymentId.toString() === paymentId)) {
-            return null;
-        }
         history.push({ paymentId, endDate });
         const data = {
             endDate,
