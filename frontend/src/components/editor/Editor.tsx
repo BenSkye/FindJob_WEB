@@ -12,12 +12,22 @@ declare global {
     }
 }
 
+// ... existing imports ...
+
 const Editor: React.FC<EditorProps> = ({ onChange, data = '', config }) => {
     const editorRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const isEditorInitialized = useRef(false); // Thêm flag kiểm tra
 
     useEffect(() => {
+        // Kiểm tra nếu editor đã được khởi tạo
+        if (isEditorInitialized.current) {
+            return;
+        }
+
         if (containerRef.current && window.ClassicEditor) {
+            isEditorInitialized.current = true; // Đánh dấu đã khởi tạo
+
             window.ClassicEditor
                 .create(containerRef.current, {
                     ...config,
@@ -50,15 +60,17 @@ const Editor: React.FC<EditorProps> = ({ onChange, data = '', config }) => {
                 })
                 .catch((error: any) => {
                     console.error('Error initializing editor:', error);
+                    isEditorInitialized.current = false; // Reset flag nếu có lỗi
                 });
         }
 
         return () => {
             if (editorRef.current) {
                 editorRef.current.destroy();
+                isEditorInitialized.current = false; // Reset flag khi unmount
             }
         };
-    }, []);
+    }, [config, data, onChange]); // Thêm dependencies
 
     return <div ref={containerRef} />;
 };

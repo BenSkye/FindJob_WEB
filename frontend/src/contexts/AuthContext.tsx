@@ -7,7 +7,7 @@ import { useJobHasApply } from '../hooks/useJobHasApply';
 
 interface User {
     userId: string;
-    username: string;
+    name: string;
     email: string;
     roles: string[];
 }
@@ -24,6 +24,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     googleSignUp: (data: GoogleSignUpData) => Promise<any>;
+    setUser: (user: User | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -106,7 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const isAuthenticated = user !== null;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading, googleSignUp }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, isLoading, googleSignUp, setUser }}>
             {children}
         </AuthContext.Provider>
     );

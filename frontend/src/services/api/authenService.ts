@@ -48,7 +48,7 @@ export const signupEmployer = async (data: any) => {
 
         // Sử dụng apiClient thay vì axiosInstance (nếu có)
         const response = await apiClient.post('/user/signup-employer', registerData);
-        
+
         // Trả về response.data thay vì toàn bộ response
         return response.data;
     } catch (error: any) {
@@ -101,4 +101,25 @@ export const googleSignUp = async (data: GoogleSignUpData) => {
         throw error;
     }
 };
+
+
+export const getUserById = async () => {
+    try {
+        const response = await apiClient.get(`/user-stats/get-user-by-id`);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error getUserById:', error);
+        return error.response.data;
+    }
+}
+
+export const updateUserById = async (data: any) => {
+    try {
+        const response = await apiClient.put(`/user-stats/update-user-by-id`, data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error updateUserById:', error);
+        return error.response.data;
+    }
+}
 
