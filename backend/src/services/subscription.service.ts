@@ -43,6 +43,7 @@ class SubscriptionService {
         if (!history.some((h: any) => h.paymentId.toString() === paymentId)) {
             return null;
         }
+        history.push({ paymentId, endDate });
         const data = {
             endDate,
             history,
