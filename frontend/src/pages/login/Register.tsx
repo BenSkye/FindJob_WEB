@@ -304,24 +304,6 @@ const Register: React.FC = () => {
                                     </Button>
                                 </Form.Item>
 
-                                <Divider plain>Hoặc đăng ký với</Divider>
-
-                                <div className="social-buttons">
-                                    <div className="google-login-button">
-                                        <GoogleLogin
-                                            onSuccess={handleGoogleSuccess}
-                                            onError={handleGoogleError}
-                                            useOneTap
-                                            theme="filled_blue"
-                                            size="large"
-                                            text="signup_with"
-                                            shape="rectangular"
-                                            locale="vi"
-                                        />
-                                    </div>
-
-                                </div>
-
                                 <div className="register-link">
                                     <Text>Bạn đã có tài khoản? </Text>
                                     <a href="/login">Đăng nhập ngay</a>
