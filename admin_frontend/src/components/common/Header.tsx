@@ -101,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
     return (
         <AntHeader style={styles.header}>
             <div style={styles.container}>
-                <Link to="/" style={styles.logoWrapper} className='button-hover'>
+                <Link to="/admin/dashboard  " style={styles.logoWrapper} className='button-hover'>
                     <img src={logo} alt="Logo" style={styles.logo} />
                 </Link>
 
