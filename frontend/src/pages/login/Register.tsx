@@ -177,7 +177,7 @@ const Register: React.FC = () => {
                     <Col xs={24} md={12} className="login-left">
                         <div className="login-content">
                             <img src={logoImage} alt="Job Search" className="login-image circle-logo" />
-                            <Title level={1}>Chào mừng ứng viên</Title>
+                            <Title level={1}>Tạo tài khoản ứng viên</Title>
                             <Text className="subtitle">Tìm công việc mơ ước của bạn với ME</Text>
                         </div>
                     </Col>
