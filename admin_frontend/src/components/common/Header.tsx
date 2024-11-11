@@ -82,12 +82,12 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
     const userMenu = (
         <Menu
             items={[
-                {
-                    key: 'profile',
-                    label: 'Thông tin cá nhân',
-                    icon: <UserOutlined />,
-                    onClick: () => navigate(`/${userType}/profile`)
-                },
+                // {
+                //     key: 'profile',
+                //     label: 'Thông tin cá nhân',
+                //     icon: <UserOutlined />,
+                //     onClick: () => navigate(`/${userType}/profile`)
+                // },
                 {
                     key: 'logout',
                     label: 'Đăng xuất',
@@ -117,7 +117,7 @@ const Header: React.FC<HeaderProps> = ({ userType }) => {
                     </div>
                 ) : (
                     <div style={styles.userSection}>
-                        <BellOutlined style={styles.bellIcon} />
+                        {/* <BellOutlined style={styles.bellIcon} /> */}
                         <Dropdown overlay={userMenu} placement="bottomRight">
                             <div style={styles.userInfo}>
                                 <Avatar icon={<UserOutlined />} style={styles.avatar} />
