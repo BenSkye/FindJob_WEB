@@ -185,7 +185,7 @@ const Dashboard: React.FC = () => {
             ];
 
             setJobStats(stats);
-            setTotalJobs(jobs.length);
+            setTotalJobs(jobs.filter((job: any) => job.status === 'published').length);
         } catch (error) {
             console.error('Error fetching job data:', error);
         }
