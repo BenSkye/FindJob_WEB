@@ -1,127 +1,126 @@
-# 🚀 Find Job Web 🌐
+# 🚀 Find Job Web 🌐  
 
-![GitHub](https://img.shields.io/github/license/BenSkye/FindJob_WEB)
-![GitHub last commit](https://img.shields.io/github/last-commit/BenSkye/FindJob_WEB)
-![GitHub issues](https://img.shields.io/github/issues/BenSkye/FindJob_WEB)
-![GitHub stars](https://img.shields.io/github/stars/BenSkye/FindJob_WEB)
+![GitHub](https://img.shields.io/github/license/BenSkye/FindJob_WEB)  
+![GitHub last commit](https://img.shields.io/github/last-commit/BenSkye/FindJob_WEB)  
+![GitHub issues](https://img.shields.io/github/issues/BenSkye/FindJob_WEB)  
+![GitHub stars](https://img.shields.io/github/stars/BenSkye/FindJob_WEB)  
 
-**Benskye FindJob Web** là một nền tảng tìm kiếm việc làm trực tuyến, giúp kết nối nhà tuyển dụng và ứng viên một cách hiệu quả. Dự án bao gồm cả Backend và Frontend, hỗ trợ đa nền tảng và tích hợp nhiều tính năng hiện đại.
+**Benskye FindJob Web** is an online job search platform that efficiently connects employers and job seekers. The project includes both Backend and Frontend, supporting multiple platforms and integrating modern features.  
 
-🔗 **Link Deploy**:
-- 🌍 **Admin Dashboard**: [me-admin-timviec.vercel.app](https://me-admin-timviec.vercel.app/)
-- 🌍 **User Website**: [me-timviec.vercel.app](https://me-timviec.vercel.app/)
-
----
-
-## 🎯 Tính năng chính
-
-✅ **Tìm kiếm việc làm** - Ứng viên có thể dễ dàng tìm kiếm và ứng tuyển vào các công việc phù hợp.  
-🏢 **Quản lý công ty** - Nhà tuyển dụng có thể đăng bài tuyển dụng, quản lý hồ sơ công ty.  
-📄 **Quản lý CV** - Ứng viên có thể tạo và quản lý CV trực tuyến.  
-🔐 **Xác thực người dùng** - Hỗ trợ đăng nhập, đăng ký và bảo mật tài khoản bằng JWT.  
-📊 **Thống kê & Báo cáo** - Nhà tuyển dụng có thể theo dõi các chỉ số tuyển dụng.  
-📱 **Hỗ trợ đa nền tảng** - Web, Mobile (tương lai).  
+🔗 **Deployment Links**:  
+- 🌍 **Admin Dashboard**: [me-admin-timviec.vercel.app](https://me-admin-timviec.vercel.app/)  
+- 🌍 **User Website**: [me-timviec.vercel.app](https://me-timviec.vercel.app/)  
 
 ---
 
-## 🛠 Công nghệ sử dụng
+## 🎯 Key Features  
 
-### 🔧 Backend
-- 🌐 **Node.js** - Môi trường runtime.
-- 📦 **Express.js** - Framework web backend.
-- 🗄 **MongoDB** - Cơ sở dữ liệu NoSQL.
-- 🔑 **JWT** - Xác thực người dùng.
-- 🔄 **TypeScript** - Ngôn ngữ lập trình mạnh mẽ.
-
-### 🎨 Frontend
-- ⚛ **React.js** - Thư viện UI mạnh mẽ.
-- 🎨 **Tailwind CSS** - Framework CSS hiện đại.
-- ⚡ **Vite** - Công cụ build nhanh và hiệu quả.
-- 🔄 **TypeScript** - Giúp code an toàn và dễ bảo trì.
+✅ **Job Search** – Job seekers can easily find and apply for suitable positions.  
+🏢 **Company Management** – Employers can post job listings and manage company profiles.  
+📄 **CV Management** – Job seekers can create and manage their resumes online.  
+🔐 **User Authentication** – Secure login and registration using JWT authentication.  
+📊 **Analytics & Reports** – Employers can track recruitment metrics.  
+📱 **Multi-Platform Support** – Web and Mobile (future updates).  
 
 ---
 
-## 📂 Cấu trúc thư mục
+## 🛠 Technologies Used  
+
+### 🔧 Backend  
+- 🌐 **Node.js** – Runtime environment.  
+- 📦 **Express.js** – Backend web framework.  
+- 🗄 **MongoDB** – NoSQL database.  
+- 🔑 **JWT** – User authentication.  
+- 🔄 **TypeScript** – Strongly typed language for better maintainability.  
+
+### 🎨 Frontend  
+- ⚛ **React.js** – Powerful UI library.  
+- 🎨 **Tailwind CSS** – Modern CSS framework.  
+- ⚡ **Vite** – Fast and efficient build tool.  
+- 🔄 **TypeScript** – Ensures type safety and maintainability.  
+
+---
+
+## 📂 Project Structure  
 
 ```plaintext
 benskye-findjob_web/
-├── admin_frontend/        # Frontend cho Admin
+├── admin_frontend/        # Admin Frontend
 ├── backend/               # Backend API
-├── frontend/              # Frontend cho User
+├── frontend/              # User Frontend
 └── workflows/             # CI/CD Workflows
 ```
 
 ---
 
-## 🚀 Hướng dẫn cài đặt
+## 🚀 Installation Guide  
 
-### 🔹 Yêu cầu hệ thống
-- 📌 **Node.js** (>= v16.x)
-- 📌 **MongoDB** (>= v5.x)
-- 📌 **Yarn** hoặc **npm**
+### 🔹 System Requirements  
+- 📌 **Node.js** (>= v16.x)  
+- 📌 **MongoDB** (>= v5.x)  
+- 📌 **Yarn** or **npm**  
 
-### 🔧 Cài đặt Backend
+### 🔧 Backend Setup  
 
-1️⃣ **Clone repository**
+1️⃣ **Clone the repository**  
 ```bash
 git clone https://github.com/BenSkye/FindJob_WEB
-cd your-repo-name/backend
-```
+cd FindJob_WEB/backend
+```  
 
-2️⃣ **Cài đặt dependencies**
+2️⃣ **Install dependencies**  
 ```bash
 yarn install
-```
+```  
 
-3️⃣ **Cấu hình môi trường**
-- Tạo file `.env` từ `.env.example` và điền các biến môi trường cần thiết.
+3️⃣ **Configure environment variables**  
+- Create a `.env` file based on `.env.example` and fill in the required environment variables.  
 
-4️⃣ **Chạy server**
+4️⃣ **Run the server**  
 ```bash
 yarn start
-```
+```  
 
-### 🔧 Cài đặt Frontend
+### 🔧 Frontend Setup  
 
-1️⃣ **Vào thư mục Frontend**
+1️⃣ **Navigate to the frontend directory**  
 ```bash
 cd ../frontend
-```
+```  
 
-2️⃣ **Cài đặt dependencies**
+2️⃣ **Install dependencies**  
 ```bash
 yarn install
-```
+```  
 
-3️⃣ **Chạy ứng dụng**
+3️⃣ **Start the application**  
 ```bash
 yarn dev
-```
+```  
 
 ---
 
-## 🤝 Đóng góp
+## 🤝 Contributing  
 
-Bạn muốn đóng góp? Làm theo các bước sau:
+Want to contribute? Follow these steps:  
 
-1. 🍴 **Fork** repository.
-2. 🛠 **Tạo branch mới** (`git checkout -b feature/AmazingFeature`).
-3. ✨ **Commit thay đổi** (`git commit -m 'Add some AmazingFeature'`).
-4. 📤 **Push branch** (`git push origin feature/AmazingFeature`).
-5. 🔄 **Tạo Pull Request** và chờ xem xét!
-
----
-
-## 📜 Giấy phép
-
-Dự án này được cấp phép theo **MIT License**. Xem chi tiết trong file [LICENSE](LICENSE).
+1. 🍴 **Fork** the repository.  
+2. 🛠 **Create a new branch** (`git checkout -b feature/AmazingFeature`).  
+3. ✨ **Commit your changes** (`git commit -m 'Add some AmazingFeature'`).  
+4. 📤 **Push to the branch** (`git push origin feature/AmazingFeature`).  
+5. 🔄 **Open a Pull Request** and wait for review!  
 
 ---
 
-## 📞 Liên hệ
+## 📜 License  
 
-👤 **Tác giả**: [Duong Minh Nhat](https://github.com/BenSkye)  
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.  
+
+---
+
+## 📞 Contact  
+
+👤 **Author**: [Duong Minh Nhat](https://github.com/BenSkye)  
 📧 **Email**: [nhatdm9a7@gmail.com](mailto:nhatdm9a7@gmail.com)  
 
-📢 **Cảm ơn bạn đã ghé thăm dự án của chúng tôi!** 🎉
-
+📢 **Thank you for visiting our project!** 🎉
