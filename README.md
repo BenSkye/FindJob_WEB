@@ -1,4 +1,4 @@
-# 🚀 Benskye FindJob Web 🌐
+# 🚀 Find Job Web 🌐
 
 ![GitHub](https://img.shields.io/github/license/BenSkye/FindJob_WEB)
 ![GitHub last commit](https://img.shields.io/github/last-commit/BenSkye/FindJob_WEB)
