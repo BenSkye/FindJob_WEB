@@ -1,138 +1,127 @@
-# React + TypeScript + Vite
+# 🚀 Benskye FindJob Web 🌐
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![GitHub](https://img.shields.io/github/license/BenSkye/FindJob_WEB)
+![GitHub last commit](https://img.shields.io/github/last-commit/BenSkye/FindJob_WEB)
+![GitHub issues](https://img.shields.io/github/issues/BenSkye/FindJob_WEB)
+![GitHub stars](https://img.shields.io/github/stars/BenSkye/FindJob_WEB)
 
-Currently, two official plugins are available:
+**Benskye FindJob Web** là một nền tảng tìm kiếm việc làm trực tuyến, giúp kết nối nhà tuyển dụng và ứng viên một cách hiệu quả. Dự án bao gồm cả Backend và Frontend, hỗ trợ đa nền tảng và tích hợp nhiều tính năng hiện đại.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **Link Deploy**:
+- 🌍 **Admin Dashboard**: [me-admin-timviec.vercel.app](https://me-admin-timviec.vercel.app/)
+- 🌍 **User Website**: [me-timviec.vercel.app](https://me-timviec.vercel.app/)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🎯 Tính năng chính
 
-- Configure the top-level `parserOptions` property like this:
+✅ **Tìm kiếm việc làm** - Ứng viên có thể dễ dàng tìm kiếm và ứng tuyển vào các công việc phù hợp.  
+🏢 **Quản lý công ty** - Nhà tuyển dụng có thể đăng bài tuyển dụng, quản lý hồ sơ công ty.  
+📄 **Quản lý CV** - Ứng viên có thể tạo và quản lý CV trực tuyến.  
+🔐 **Xác thực người dùng** - Hỗ trợ đăng nhập, đăng ký và bảo mật tài khoản bằng JWT.  
+📊 **Thống kê & Báo cáo** - Nhà tuyển dụng có thể theo dõi các chỉ số tuyển dụng.  
+📱 **Hỗ trợ đa nền tảng** - Web, Mobile (tương lai).  
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🛠 Công nghệ sử dụng
+
+### 🔧 Backend
+- 🌐 **Node.js** - Môi trường runtime.
+- 📦 **Express.js** - Framework web backend.
+- 🗄 **MongoDB** - Cơ sở dữ liệu NoSQL.
+- 🔑 **JWT** - Xác thực người dùng.
+- 🔄 **TypeScript** - Ngôn ngữ lập trình mạnh mẽ.
+
+### 🎨 Frontend
+- ⚛ **React.js** - Thư viện UI mạnh mẽ.
+- 🎨 **Tailwind CSS** - Framework CSS hiện đại.
+- ⚡ **Vite** - Công cụ build nhanh và hiệu quả.
+- 🔄 **TypeScript** - Giúp code an toàn và dễ bảo trì.
+
+---
+
+## 📂 Cấu trúc thư mục
+
+```plaintext
+benskye-findjob_web/
+├── admin_frontend/        # Frontend cho Admin
+├── backend/               # Backend API
+├── frontend/              # Frontend cho User
+└── workflows/             # CI/CD Workflows
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🚀 Hướng dẫn cài đặt
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### 🔹 Yêu cầu hệ thống
+- 📌 **Node.js** (>= v16.x)
+- 📌 **MongoDB** (>= v5.x)
+- 📌 **Yarn** hoặc **npm**
 
+### 🔧 Cài đặt Backend
 
-
-job-search-portal/
-├── src/
-│   ├── assets/
-│   │   ├── images/
-│   │   └── styles/
-│   │       ├── global.css
-│   │       └── variables.css
-│   ├── layouts/
-│   │   ├── MainLayout.tsx        
-│   │   ├── CandidateLayout.tsx   
-│   │   └── EmployerLayout.tsx    
-│   ├── components/
-│   │   ├── common/
-│   │   │   ├── Header.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   ├── Loading.tsx
-│   │   │   ├── Sidebar.tsx
-│   │   │   └── Notification.tsx
-│   │   ├── candidate/
-│   │   │   ├── JobCard.tsx
-│   │   │   ├── JobList.tsx
-│   │   │   ├── CVTemplate.tsx
-│   │   │   └── ApplyForm.tsx
-│   │   └── employer/
-│   │       ├── JobPostForm.tsx
-│   │       ├── Dashboard/
-│   │       │   ├── Statistics.tsx
-│   │       │   ├── ApplicationList.tsx
-│   │       │   └── Chart.tsx
-│   │       └── PaymentForm.tsx
-│   ├── pages/
-│   │   ├── candidate/
-│   │   │   ├── HomePage.tsx
-│   │   │   ├── JobSearch.tsx
-│   │   │   ├── CVBuilder.tsx
-│   │   │   └── Profile.tsx
-│   │   └── employer/
-│   │       ├── Dashboard.tsx
-│   │       ├── PostJob.tsx
-│   │       ├── ManageJobs.tsx
-│   │       └── Applications.tsx
-│   ├── services/
-│   │   ├── api/
-│   │   │   ├── jobApi.ts
-│   │   │   ├── userApi.ts
-│   │   │   ├── paymentApi.ts
-│   │   │   └── cvApi.ts
-│   │   └── types/
-│   │       ├── job.types.ts
-│   │       ├── user.types.ts
-│   │       ├── payment.types.ts
-│   │       └── cv.types.ts
-│   ├── hooks/
-│   │   ├── useAuth.ts
-│   │   ├── useJobs.ts
-│   │   ├── usePayment.ts
-│   │   └── useNotification.ts
-│   ├── utils/
-│   │   ├── constants.ts
-│   │   ├── helpers.ts
-│   │   ├── validation.ts
-│   │   └── formatters.ts
-│   ├── contexts/
-│   │   ├── AuthContext.tsx
-│   │   └── ThemeContext.tsx
-│   ├── routes/
-│   │   ├── PrivateRoute.tsx
-│   │   ├── EmployerRoute.tsx
-│   │   └── routes.ts
-│   ├── config/
-│   │   ├── axios.ts
-│   │   └── theme.ts
-│   ├── App.tsx
-│   └── main.tsx
-├── public/
-│   ├── favicon.ico
-│   └── images/
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── .gitignore
-├── .env
-├── .env.example
-└── README.md
+1️⃣ **Clone repository**
+```bash
+git clone https://github.com/BenSkye/FindJob_WEB
+cd your-repo-name/backend
 ```
+
+2️⃣ **Cài đặt dependencies**
+```bash
+yarn install
+```
+
+3️⃣ **Cấu hình môi trường**
+- Tạo file `.env` từ `.env.example` và điền các biến môi trường cần thiết.
+
+4️⃣ **Chạy server**
+```bash
+yarn start
+```
+
+### 🔧 Cài đặt Frontend
+
+1️⃣ **Vào thư mục Frontend**
+```bash
+cd ../frontend
+```
+
+2️⃣ **Cài đặt dependencies**
+```bash
+yarn install
+```
+
+3️⃣ **Chạy ứng dụng**
+```bash
+yarn dev
+```
+
+---
+
+## 🤝 Đóng góp
+
+Bạn muốn đóng góp? Làm theo các bước sau:
+
+1. 🍴 **Fork** repository.
+2. 🛠 **Tạo branch mới** (`git checkout -b feature/AmazingFeature`).
+3. ✨ **Commit thay đổi** (`git commit -m 'Add some AmazingFeature'`).
+4. 📤 **Push branch** (`git push origin feature/AmazingFeature`).
+5. 🔄 **Tạo Pull Request** và chờ xem xét!
+
+---
+
+## 📜 Giấy phép
+
+Dự án này được cấp phép theo **MIT License**. Xem chi tiết trong file [LICENSE](LICENSE).
+
+---
+
+## 📞 Liên hệ
+
+👤 **Tác giả**: [Duong Minh Nhat](https://github.com/BenSkye)  
+📧 **Email**: [nhatdm9a7@gmail.com](mailto:nhatdm9a7@gmail.com)  
+
+📢 **Cảm ơn bạn đã ghé thăm dự án của chúng tôi!** 🎉
+
